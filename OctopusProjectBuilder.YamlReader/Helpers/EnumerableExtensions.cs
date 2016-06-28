@@ -9,5 +9,10 @@ namespace OctopusProjectBuilder.YamlReader.Helpers
         {
             return enumerable ?? Enumerable.Empty<T>();
         }
+
+        public static T[] NullIfEmpty<T>(this T[] array)
+        {
+            return array != null && array.Length > 0 ? array : null;
+        }
     }
 }

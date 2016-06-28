@@ -56,9 +56,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\DeploymentActionConverter.cs" />
+    <Compile Include="Converters\DeploymentProcessConverter.cs" />
+    <Compile Include="Converters\DeploymentStepConverter.cs" />
+    <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="ModelDownloader.cs" />
     <Compile Include="ModelUploader.cs" />
-    <Compile Include="ProjectGroupConverter.cs" />
+    <Compile Include="Converters\ProjectConverter.cs" />
+    <Compile Include="Converters\ProjectGroupConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

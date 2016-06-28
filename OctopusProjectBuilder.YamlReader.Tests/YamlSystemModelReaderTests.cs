@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using NUnit.Framework;
+using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Model;
 using OctopusProjectBuilder.YamlReader.Tests.Helpers;
 
@@ -38,6 +39,128 @@ namespace OctopusProjectBuilder.YamlReader.Tests
             var model = Read(content);
 
             model.ProjectGroups.AssertEqualsTo(expectedGroups);
+        }
+
+        [Test]
+        public void It_should_read_projects()
+        {
+            string content = @"Projects:
+    - Name: name1
+      RenamedFrom: oldName1
+      Description: some description 1
+      AutoCreateRelease: True
+      DefaultToSkipIfAlreadyInstalled: True
+      IsDisabled: True
+      LifecycleRef: lifecycle1
+      ProjectGroupRef: projectGroup1
+      DeploymentProcess:
+        Steps:
+            - Name: step1
+              Condition: Failure
+              RequiresPackagesToBeAcquired: True
+              StartTrigger: StartWithPrevious
+              Properties:
+                - Key: propKey
+                  Value: propValue
+                  IsSensitive: True
+                - Key: propKey2
+                  Value: propValue2
+              Actions:
+                - Name: actionName1
+                  ActionType: type1
+                  Properties:
+                    - Key: propKey3
+                      Value: propValue3
+                      IsSensitive: True
+                    - Key: propKey4
+                      Value: propValue4
+                - Name: actionName2
+                  ActionType: type2
+                  Properties:
+                    - Key: propKey3
+                      Value: propValue3
+                      IsSensitive: True
+                    - Key: propKey4
+                      Value: propValue4";
+            var expected = new[]
+            {
+                new YamlProject
+                {
+                    Name = "name1",
+                    Description = "some description 1",
+                    RenamedFrom = "oldName1",
+                    AutoCreateRelease = true,
+                    DefaultToSkipIfAlreadyInstalled = true,
+                    IsDisabled = true,
+                    LifecycleRef = "lifecycle1",
+                    ProjectGroupRef = "projectGroup1",
+                    DeploymentProcess = new YamlDeploymentProcess
+                    {
+                        Steps = new[]
+                        {
+                            new YamlDeploymentStep
+                            {
+                                Name = "step1",
+                                Condition = DeploymentStep.StepCondition.Failure,
+                                RequiresPackagesToBeAcquired = true,
+                                StartTrigger = DeploymentStep.StepStartTrigger.StartWithPrevious,
+                                Properties = new[]
+                                {
+                                    new YamlPropertyValue {Key = "propKey", Value = "propValue", IsSensitive = true},
+                                    new YamlPropertyValue {Key = "propKey2", Value = "propValue2", IsSensitive = false}
+                                },
+                                Actions = new[]
+                                {
+                                    new YamlDeploymentAction
+                                    {
+                                        ActionType = "type1",
+                                        Name = "actionName1",
+                                        Properties = new[]
+                                        {
+                                            new YamlPropertyValue
+                                            {
+                                                Key = "propKey3",
+                                                Value = "propValue3",
+                                                IsSensitive = true
+                                            },
+                                            new YamlPropertyValue
+                                            {
+                                                Key = "propKey4",
+                                                Value = "propValue4",
+                                                IsSensitive = false
+                                            }
+                                        }
+                                    },
+                                    new YamlDeploymentAction
+                                    {
+                                        ActionType = "type2",
+                                        Name = "actionName2",
+                                        Properties = new[]
+                                        {
+                                            new YamlPropertyValue
+                                            {
+                                                Key = "propKey3",
+                                                Value = "propValue3",
+                                                IsSensitive = true
+                                            },
+                                            new YamlPropertyValue
+                                            {
+                                                Key = "propKey4",
+                                                Value = "propValue4",
+                                                IsSensitive = false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var model = Read(content);
+
+            model.Projects.AssertEqualsTo(expected);
         }
 
         private YamlSystemModel Read(string content)

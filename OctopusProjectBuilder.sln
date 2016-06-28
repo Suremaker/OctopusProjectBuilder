@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctopusProjectBuilder.YamlR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctopusProjectBuilder.YamlReader.Tests", "OctopusProjectBuilder.YamlReader.Tests\OctopusProjectBuilder.YamlReader.Tests.csproj", "{4EB41E33-3D3D-4FE5-B76D-D223E0076438}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3C77B126-425E-4A79-B6A5-392AD39A483F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctopusProjectBuilder.Uploader.Tests", "OctopusProjectBuilder.Uploader.Tests\OctopusProjectBuilder.Uploader.Tests.csproj", "{48690002-C1AD-4AC1-9B46-DE7BB5ECA45E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,8 +43,16 @@ Global
 		{4EB41E33-3D3D-4FE5-B76D-D223E0076438}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EB41E33-3D3D-4FE5-B76D-D223E0076438}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EB41E33-3D3D-4FE5-B76D-D223E0076438}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48690002-C1AD-4AC1-9B46-DE7BB5ECA45E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48690002-C1AD-4AC1-9B46-DE7BB5ECA45E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48690002-C1AD-4AC1-9B46-DE7BB5ECA45E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48690002-C1AD-4AC1-9B46-DE7BB5ECA45E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4EB41E33-3D3D-4FE5-B76D-D223E0076438} = {3C77B126-425E-4A79-B6A5-392AD39A483F}
+		{48690002-C1AD-4AC1-9B46-DE7BB5ECA45E} = {3C77B126-425E-4A79-B6A5-392AD39A483F}
 	EndGlobalSection
 EndGlobal

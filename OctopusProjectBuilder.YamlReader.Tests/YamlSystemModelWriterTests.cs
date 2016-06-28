@@ -1,7 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using NUnit.Framework;
 using OctopusProjectBuilder.YamlReader.Model;
+using OctopusProjectBuilder.YamlReader.Tests.Helpers;
+using Ploeh.AutoFixture;
 
 namespace OctopusProjectBuilder.YamlReader.Tests
 {
@@ -17,29 +20,14 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         }
 
         [Test]
-        public void It_should_write_project_groups()
+        public void It_should_write_all_data()
         {
-            string expectedContent = @"%YAML 1.2
----
-ProjectGroups: 
-  - RenamedFrom: oldName1
-    Description: some description 1
-    Name: name1
-  - RenamedFrom: oldName2
-    Description: some description 2
-    Name: name2
-  - Name: name3
-...
-";
-            var groups = new[]
-            {
-                new YamlProjectGroup {Name = "name1", Description = "some description 1", RenamedFrom = "oldName1"},
-                new YamlProjectGroup {Name = "name2", Description = "some description 2", RenamedFrom = "oldName2"},
-                new YamlProjectGroup {Name = "name3", Description = null, RenamedFrom = null}
-            };
+            var expected = new Fixture().Create<YamlSystemModel>();
+            var content = Write(expected);
+            Console.WriteLine(content);
 
-            var content = Write(new YamlSystemModel { ProjectGroups = groups });
-            AssertContent(content, expectedContent);
+            var actual = new YamlSystemModelReader().Read(new MemoryStream(Encoding.UTF8.GetBytes(content)));
+            actual.AssertEqualsTo(expected);
         }
 
         private string Write(YamlSystemModel model)

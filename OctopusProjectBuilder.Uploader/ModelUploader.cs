@@ -1,65 +1,86 @@
-﻿using System;
-using Common.Logging;
+﻿using Common.Logging;
 using Octopus.Client;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories;
 using OctopusProjectBuilder.Model;
+using OctopusProjectBuilder.Uploader.Converters;
 
 namespace OctopusProjectBuilder.Uploader
 {
-    public class ModelUploader : IDisposable
+    public class ModelUploader
     {
         private static readonly ILog Logger = LogManager.GetLogger<ModelUploader>();
-        private readonly OctopusClient _client;
-        private readonly OctopusRepository _repository;
+        private readonly IOctopusRepository _repository;
 
-        public ModelUploader(string octopusUrl, string octopusApiKey)
+        public ModelUploader(string octopusUrl, string octopusApiKey) : this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
         {
-            _client = new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey));
-            _repository = new OctopusRepository(_client);
         }
 
-        public void Dispose()
+        public ModelUploader(IOctopusRepository repository)
         {
-            _client.Dispose();
+            _repository = repository;
         }
 
         public void UploadModel(SystemModel model)
         {
             foreach (var projectGroup in model.ProjectGroups)
                 UploadProjectGroup(projectGroup);
+
+            foreach (var project in model.Projects)
+                UploadProject(project);
+        }
+
+        private void UploadProject(Project project)
+        {
+            var projectGroupResource = _repository.ProjectGroups.FindByName(project.ProjectGroupRef.Name);
+            var lifecycleResource = _repository.Lifecycles.FindOne(r => r.Name == project.LifecycleRef.Name);
+            var projectResource = Upsert(_repository.Projects, LoadResource(_repository.Projects, project.Identifier).UpdateWith(project, projectGroupResource, lifecycleResource));
+
+            Update(
+                _repository.DeploymentProcesses,
+                _repository.DeploymentProcesses.Get(projectResource.DeploymentProcessId).UpdateWith(project.DeploymentProcess),
+                projectResource.Name);
+
         }
 
         private void UploadProjectGroup(ProjectGroup projectGroup)
         {
-            var resource = LoadResource(_repository.ProjectGroups, projectGroup.Reference).UpdateWith(projectGroup);
+            var resource = LoadResource(_repository.ProjectGroups, projectGroup.Identifier).UpdateWith(projectGroup);
             Upsert(_repository.ProjectGroups, resource);
         }
 
-        private void Upsert<TRepository, TResource>(TRepository repository, TResource resource) where TResource : IResource, INamedResource where TRepository : ICreate<TResource>, IModify<TResource>
+        private TResource Upsert<TRepository, TResource>(TRepository repository, TResource resource) where TResource : IResource, INamedResource where TRepository : ICreate<TResource>, IModify<TResource>
         {
-            if (string.IsNullOrWhiteSpace(resource.Id))
-                repository.Create(resource);
-            else
-                repository.Modify(resource);
+            var result = string.IsNullOrWhiteSpace(resource.Id)
+                ? repository.Create(resource)
+                : repository.Modify(resource);
+
             Logger.Info(string.Format($"Upserted {typeof(TResource).Name}: {resource.Name}"));
+            return result;
         }
 
-
-        public static TResource LoadResource<TResource>(IFindByName<TResource> finder, ElementReference reference) where TResource : new()
+        private TResource Update<TRepository, TResource>(TRepository repository, TResource resource, string parentName) where TResource : IResource where TRepository : IModify<TResource>
         {
-            var resource = finder.FindByName(reference.Name);
+            var result = repository.Modify(resource);
+
+            Logger.Info(string.Format($"Updated {parentName} {typeof(TResource).Name}: {resource.Id}"));
+            return result;
+        }
+
+        private static TResource LoadResource<TResource>(IFindByName<TResource> finder, ElementIdentifier identifier) where TResource : new()
+        {
+            var resource = finder.FindByName(identifier.Name);
             if (resource != null)
             {
-                Logger.InfoFormat("Updating {0}: {1}", typeof(TResource).Name, reference.Name);
+                Logger.InfoFormat("Updating {0}: {1}", typeof(TResource).Name, identifier.Name);
                 return resource;
             }
-            if (reference.RenamedFrom != null && (resource = finder.FindByName(reference.RenamedFrom)) != null)
+            if (identifier.RenamedFrom != null && (resource = finder.FindByName(identifier.RenamedFrom)) != null)
             {
-                Logger.InfoFormat("Updating {0}: {1} => {2}", typeof(TResource).Name, reference.RenamedFrom, reference.Name);
+                Logger.InfoFormat("Updating {0}: {1} => {2}", typeof(TResource).Name, identifier.RenamedFrom, identifier.Name);
                 return resource;
             }
-            Logger.InfoFormat("Creating {0}: {1}", typeof(TResource).Name, reference.Name);
+            Logger.InfoFormat("Creating {0}: {1}", typeof(TResource).Name, identifier.Name);
             return new TResource();
         }
     }

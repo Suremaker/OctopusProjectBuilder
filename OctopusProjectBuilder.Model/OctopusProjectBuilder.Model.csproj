@@ -40,9 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ISystemModelRepository.cs" />
-    <Compile Include="SystemModel.cs" />
+    <Compile Include="DeploymentAction.cs" />
+    <Compile Include="DeploymentProcess.cs" />
+    <Compile Include="DeploymentStep.cs" />
     <Compile Include="ElementReference.cs" />
+    <Compile Include="ISystemModelRepository.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="PropertyValue.cs" />
+    <Compile Include="SystemModel.cs" />
+    <Compile Include="ElementIdentifier.cs" />
     <Compile Include="ProjectGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemModelBuilder.cs" />

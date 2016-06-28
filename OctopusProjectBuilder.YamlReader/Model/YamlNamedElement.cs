@@ -9,9 +9,9 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [DefaultValue(null)]
         public string RenamedFrom { get; set; }
 
-        public ElementReference ToModelName()
+        public ElementIdentifier ToModelName()
         {
-            return new ElementReference(Name, RenamedFrom);
+            return new ElementIdentifier(Name, RenamedFrom);
         }
     }
 }

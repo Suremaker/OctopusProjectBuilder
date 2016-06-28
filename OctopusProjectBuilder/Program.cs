@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Common.Logging.Simple;
 using Fclp;
 using OctopusProjectBuilder.Uploader;
 using OctopusProjectBuilder.YamlReader;
@@ -10,6 +11,8 @@ namespace OctopusProjectBuilder
     {
         static int Main(string[] args)
         {
+            Common.Logging.LogManager.Adapter=new ConsoleOutLoggerFactoryAdapter();
+
             var options = ReadOptions(args);
             if (options == null)
                 return 1;
@@ -32,17 +35,13 @@ namespace OctopusProjectBuilder
         private static void UploadDefinitions(Options options)
         {
             var model = new YamlSystemModelRepository().Load(options.DefinitionsDir);
-            using (var uploader = new ModelUploader(options.OctopusUrl, options.OctopusApiKey))
-                uploader.UploadModel(model);
+            new ModelUploader(options.OctopusUrl, options.OctopusApiKey).UploadModel(model);
         }
 
         private static void DownloadDefinitions(Options options)
         {
-            using (var downloader = new ModelDownloader(options.OctopusUrl, options.OctopusApiKey))
-            {
-                var model = downloader.DownloadModel();
-                new YamlSystemModelRepository().Save(model, options.DefinitionsDir);
-            }
+            var model = new ModelDownloader(options.OctopusUrl, options.OctopusApiKey).DownloadModel();
+            new YamlSystemModelRepository().Save(model, options.DefinitionsDir);
         }
 
         public static Options ReadOptions(string[] args)

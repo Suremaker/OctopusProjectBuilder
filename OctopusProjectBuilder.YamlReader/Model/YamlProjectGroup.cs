@@ -17,8 +17,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
         {
             return new YamlProjectGroup
             {
-                Name = model.Reference.Name,
-                RenamedFrom = model.Reference.RenamedFrom,
+                Name = model.Identifier.Name,
+                RenamedFrom = model.Identifier.RenamedFrom,
                 Description = model.Description
             };
         }

@@ -4,20 +4,20 @@ namespace OctopusProjectBuilder.Model
 {
     public class ProjectGroup
     {
-        public ProjectGroup(ElementReference reference, string description)
+        public ProjectGroup(ElementIdentifier identifier, string description)
         {
-            if (reference == null)
-                throw new ArgumentNullException(nameof(reference));
-            Reference = reference;
+            if (identifier == null)
+                throw new ArgumentNullException(nameof(identifier));
+            Identifier = identifier;
             Description = description;
         }
 
-        public ElementReference Reference { get; }
+        public ElementIdentifier Identifier { get; }
         public string Description { get; }
 
         public override string ToString()
         {
-            return Reference.ToString();
+            return Identifier.ToString();
         }
     }
 }

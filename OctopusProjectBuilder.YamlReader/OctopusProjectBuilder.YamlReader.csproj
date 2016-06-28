@@ -44,6 +44,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\YamlDeploymentAction.cs" />
+    <Compile Include="Model\YamlDeploymentProcess.cs" />
+    <Compile Include="Model\YamlDeploymentStep.cs" />
+    <Compile Include="Model\YamlProject.cs" />
+    <Compile Include="Model\YamlPropertyValue.cs" />
     <Compile Include="YamlSystemModelReader.cs" />
     <Compile Include="YamlSystemModelRepository.cs" />
     <Compile Include="Helpers\EnumerableExtensions.cs" />
