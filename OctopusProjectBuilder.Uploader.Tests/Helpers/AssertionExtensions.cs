@@ -12,7 +12,16 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         {
             ArrayAssert(actual.ProjectGroups, expected.ProjectGroups, AssertEqualsTo, nameof(SystemModel.ProjectGroups));
             ArrayAssert(actual.Projects, expected.Projects, AssertEqualsTo, nameof(SystemModel.Projects));
-            ArrayAssert(actual.Lifecycles, expected.Lifecycles, AssertEqualsTo, nameof(SystemModel.Projects));
+            ArrayAssert(actual.Lifecycles, expected.Lifecycles, AssertEqualsTo, nameof(SystemModel.Lifecycles));
+            ArrayAssert(actual.LibraryVariableSets, expected.LibraryVariableSets, AssertEqualsTo, nameof(SystemModel.LibraryVariableSets));
+        }
+
+        private static void AssertEqualsTo(LibraryVariableSet actual, LibraryVariableSet expected)
+        {
+            AssertPropertyEqualsTo(actual, expected, x => x.Identifier, AssertEqualsTo, nameof(LibraryVariableSet.Identifier));
+            AssertPropertyEqualsTo(actual, expected, x => x.Description, nameof(LibraryVariableSet.Identifier));
+            AssertPropertyEqualsTo(actual, expected, x => x.ContentType, nameof(LibraryVariableSet.Identifier));
+            ArrayAssert(actual.Variables, expected.Variables, AssertEqualsTo, nameof(LibraryVariableSet.Variables));
         }
 
         private static void AssertEqualsTo(Lifecycle actual, Lifecycle expected)
@@ -69,6 +78,30 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             AssertPropertyEqualsTo(actual, expected, x => x.Description, nameof(Project.Description));
             AssertPropertyEqualsTo(actual, expected, x => x.IsDisabled, nameof(Project.IsDisabled));
             AssertEqualsTo(actual.DeploymentProcess, expected.DeploymentProcess);
+            ArrayAssert(actual.Variables, expected.Variables, AssertEqualsTo, nameof(Project.Variables));
+            ArrayAssert(actual.IncludedLibraryVariableSetRefs, expected.IncludedLibraryVariableSetRefs, AssertEqualsTo, nameof(Project.IncludedLibraryVariableSetRefs));
+        }
+
+        private static void AssertEqualsTo(Variable actual, Variable expected)
+        {
+            AssertPropertyEqualsTo(actual, expected, x => x.Name, nameof(Variable.Name));
+            AssertPropertyEqualsTo(actual, expected, x => x.IsEditable, nameof(Variable.IsEditable));
+            AssertPropertyEqualsTo(actual, expected, x => x.IsSensitive, nameof(Variable.IsSensitive));
+            AssertPropertyEqualsTo(actual, expected, x => x.Value, nameof(Variable.Value));
+            AssertPropertyEqualsTo(actual, expected, x => x.Prompt, AssertEqualsTo, nameof(Variable.Prompt));
+            DictionaryAssert(actual.Scope, expected.Scope, AssertEqualsTo, nameof(Variable.Scope));
+        }
+
+        private static void AssertEqualsTo(IEnumerable<ElementReference> actual, IEnumerable<ElementReference> expected)
+        {
+            ArrayAssert(actual, expected, AssertEqualsTo);
+        }
+
+        private static void AssertEqualsTo(VariablePrompt actual, VariablePrompt expected)
+        {
+            AssertPropertyEqualsTo(actual, expected, x => x.Description, nameof(VariablePrompt.Description));
+            AssertPropertyEqualsTo(actual, expected, x => x.Label, nameof(VariablePrompt.Label));
+            AssertPropertyEqualsTo(actual, expected, x => x.Required, nameof(VariablePrompt.Required));
         }
 
         private static void AssertEqualsTo(DeploymentProcess actual, DeploymentProcess expected)
@@ -86,12 +119,12 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             ArrayAssert(actual.Actions, expected.Actions, AssertEqualsTo, nameof(DeploymentStep.Actions));
         }
 
-        private static void DictionaryAssert<T>(IReadOnlyDictionary<string, T> actual, IReadOnlyDictionary<string, T> expected, Action<T, T> valueAssertion, string propertyName)
+        private static void DictionaryAssert<TKey, TVal>(IReadOnlyDictionary<TKey, TVal> actual, IReadOnlyDictionary<TKey, TVal> expected, Action<TVal, TVal> valueAssertion, string propertyName)
         {
             Assert.That(actual.Count, Is.EqualTo(expected.Count), "Count");
             foreach (var expectedPair in expected)
             {
-                T actualValue;
+                TVal actualValue;
                 if (!actual.TryGetValue(expectedPair.Key, out actualValue))
                     throw new AssertionException($"No value found for {propertyName}[{expectedPair.Key}]");
                 try

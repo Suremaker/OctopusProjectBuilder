@@ -12,7 +12,7 @@ namespace OctopusProjectBuilder
     {
         static int Main(string[] args)
         {
-            LogManager.Adapter=new ConsoleOutLoggerFactoryAdapter();
+            LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(LogLevel.All, false, false, true, "", true);
             var logger = LogManager.GetLogger<Program>();
 
             var options = ReadOptions(args);
@@ -28,7 +28,7 @@ namespace OctopusProjectBuilder
             }
             catch (Exception e)
             {
-                logger.ErrorFormat("Application Error: {0}",e,e.Message);
+                logger.ErrorFormat("Application Error: {0}", e, e.Message);
                 return 1;
             }
             return 0;

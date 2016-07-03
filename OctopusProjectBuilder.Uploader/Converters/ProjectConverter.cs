@@ -20,6 +20,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             resource.IsDisabled = model.IsDisabled;
             resource.LifecycleId = resolveResourceId;
             resource.ProjectGroupId = projectGroupResourceId;
+            resource.IncludedLibraryVariableSetIds = model.IncludedLibraryVariableSetRefs.Select(r => repository.LibraryVariableSets.ResolveResourceId(r)).ToList();
             return resource;
         }
 
@@ -70,6 +71,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 resource.DefaultToSkipIfAlreadyInstalled,
                 deploymentProcessResource.ToModel(),
                 repository.VariableSets.Get(resource.VariableSetId).ToModel(deploymentProcessResource, repository),
+                resource.IncludedLibraryVariableSetIds.Select(id => new ElementReference(repository.LibraryVariableSets.Get(id).Name)),
                 new ElementReference(repository.Lifecycles.Get(resource.LifecycleId).Name),
                 new ElementReference(repository.ProjectGroups.Get(resource.ProjectGroupId).Name));
         }

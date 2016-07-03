@@ -35,6 +35,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
                     return reference.Name;
                 case VariableScopeType.Action:
                     return GetDeploymentAction(deploymentProcess, a => a.Name == reference.Name).Id;
+
+                case VariableScopeType.Channel:
                 default:
                     throw new InvalidOperationException($"Unsupported ScopeField: {key}");
             }
@@ -46,14 +48,15 @@ namespace OctopusProjectBuilder.Uploader.Converters
             {
                 case ScopeField.Action:
                     return new ElementReference(GetDeploymentAction(deploymentProcessResource, a => a.Id == id).Name);
-                case ScopeField.Channel:
-                    return new ElementReference(repository.Channels.Get(id).Name);
                 case ScopeField.Environment:
                     return new ElementReference(repository.Environments.Get(id).Name);
                 case ScopeField.Machine:
                     return new ElementReference(repository.Machines.Get(id).Name);
                 case ScopeField.Role:
                     return new ElementReference(id);
+                // I do not know how to convert it back :(
+                /*case ScopeField.Channel:
+                    return new ElementReference(repository.Channels.Get(id).Name);*/
                 default:
                     throw new InvalidOperationException($"Unsupported ScopeField: {key}");
             }
@@ -61,6 +64,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
 
         private static DeploymentActionResource GetDeploymentAction(DeploymentProcessResource deploymentProcess, Func<DeploymentActionResource, bool> predicate)
         {
+            if (deploymentProcess == null)
+                throw new InvalidOperationException("Unable to retrieve deployment action if no deployment process is specified");
             return deploymentProcess.Steps.SelectMany(s => s.Actions).Single(predicate);
         }
     }

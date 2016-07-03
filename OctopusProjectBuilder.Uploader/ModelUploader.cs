@@ -30,8 +30,21 @@ namespace OctopusProjectBuilder.Uploader
             foreach (var projectGroup in model.ProjectGroups)
                 UploadProjectGroup(projectGroup);
 
+            foreach (var libraryVariableSet in model.LibraryVariableSets)
+                UploadLibraryVariableSet(libraryVariableSet);
+
             foreach (var project in model.Projects)
                 UploadProject(project);
+        }
+
+        private void UploadLibraryVariableSet(LibraryVariableSet libraryVariableSet)
+        {
+            var resource = LoadResource(_repository.LibraryVariableSets, libraryVariableSet.Identifier).UpdateWith(libraryVariableSet);
+            resource = Upsert(_repository.LibraryVariableSets, resource);
+            Update(
+                _repository.VariableSets,
+                _repository.VariableSets.Get(resource.VariableSetId).UpdateWith(libraryVariableSet, _repository, null),
+                resource.Name);
         }
 
         private void UploadLifecycle(Lifecycle lifecycle)
@@ -51,7 +64,7 @@ namespace OctopusProjectBuilder.Uploader
 
             Update(
                 _repository.VariableSets,
-                _repository.VariableSets.Get(projectResource.VariableSetId).UpdateWith(project.VariableSet, _repository, deploymentProcess),
+                _repository.VariableSets.Get(projectResource.VariableSetId).UpdateWith(project, _repository, deploymentProcess),
                 projectResource.Name);
         }
 
@@ -67,7 +80,18 @@ namespace OctopusProjectBuilder.Uploader
                 ? repository.Create(resource)
                 : repository.Modify(resource);
 
-            Logger.Info(string.Format($"Upserted {typeof(TResource).Name}: {resource.Name}"));
+            Logger.Debug($"Upserted {typeof(TResource).Name}: {resource.Name}");
+            return result;
+        }
+
+        // LibraryVariableSetResource does not implement INamedResource so the method cannot be generalized
+        private LibraryVariableSetResource Upsert(ILibraryVariableSetRepository repository, LibraryVariableSetResource resource)
+        {
+            var result = string.IsNullOrWhiteSpace(resource.Id)
+                ? repository.Create(resource)
+                : repository.Modify(resource);
+
+            Logger.Debug($"Upserted {nameof(LibraryVariableSetResource)}: {resource.Name}");
             return result;
         }
 
@@ -75,7 +99,7 @@ namespace OctopusProjectBuilder.Uploader
         {
             var result = repository.Modify(resource);
 
-            Logger.Info(string.Format($"Updated {parentName} {typeof(TResource).Name}: {resource.Id}"));
+            Logger.Debug($"Updated {parentName} -> {typeof(TResource).Name}: {resource.Id}");
             return result;
         }
 
@@ -84,7 +108,14 @@ namespace OctopusProjectBuilder.Uploader
             return LoadResource(finder.FindByName, identifier);
         }
 
+        // Some classes like ILifecyclesRepository does not implement IFindByName<T> so the more generic equivalent has to be used
         private static TResource LoadResource<TResource>(IPaginate<TResource> finder, ElementIdentifier identifier) where TResource : INamedResource, new()
+        {
+            return LoadResource(name => finder.FindOne(x => x.Name == name), identifier);
+        }
+
+        // LibraryVariableSetResource does not implement INamedResource so the method cannot be generalized
+        private static LibraryVariableSetResource LoadResource(IPaginate<LibraryVariableSetResource> finder, ElementIdentifier identifier)
         {
             return LoadResource(name => finder.FindOne(x => x.Name == name), identifier);
         }

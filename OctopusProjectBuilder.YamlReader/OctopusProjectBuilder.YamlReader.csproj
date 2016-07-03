@@ -48,6 +48,7 @@
     <Compile Include="Model\YamlDeploymentAction.cs" />
     <Compile Include="Model\YamlDeploymentProcess.cs" />
     <Compile Include="Model\YamlDeploymentStep.cs" />
+    <Compile Include="Model\YamlLibraryVariableSet.cs" />
     <Compile Include="Model\YamlLifecycle.cs" />
     <Compile Include="Model\YamlPhase.cs" />
     <Compile Include="Model\YamlProject.cs" />
@@ -56,7 +57,6 @@
     <Compile Include="Model\YamlVariable.cs" />
     <Compile Include="Model\YamlVariablePrompt.cs" />
     <Compile Include="Model\YamlVariableScope.cs" />
-    <Compile Include="Model\YamlVariableSet.cs" />
     <Compile Include="YamlSystemModelReader.cs" />
     <Compile Include="YamlSystemModelRepository.cs" />
     <Compile Include="Helpers\EnumerableExtensions.cs" />

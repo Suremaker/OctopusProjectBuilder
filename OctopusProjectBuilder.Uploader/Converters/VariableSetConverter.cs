@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Octopus.Client;
 using Octopus.Client.Model;
@@ -7,12 +8,12 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class VariableSetConverter
     {
-        public static VariableSet ToModel(this VariableSetResource resource, DeploymentProcessResource deploymentProcessResource, IOctopusRepository repository)
+        public static IEnumerable<Variable> ToModel(this VariableSetResource resource, DeploymentProcessResource deploymentProcessResource, IOctopusRepository repository)
         {
-            return new VariableSet(resource.Variables.Select(v => v.ToModel(deploymentProcessResource, repository)));
+            return resource.Variables.Select(v => v.ToModel(deploymentProcessResource, repository));
         }
 
-        public static VariableSetResource UpdateWith(this VariableSetResource resource, VariableSet model, IOctopusRepository repository, DeploymentProcessResource deploymentProcess)
+        public static VariableSetResource UpdateWith(this VariableSetResource resource, IVariableSet model, IOctopusRepository repository, DeploymentProcessResource deploymentProcess)
         {
             resource.Variables = model.Variables.Select(v => new VariableResource().UpdateWith(v, repository, deploymentProcess)).ToList();
             return resource;

@@ -11,12 +11,14 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             var fakeDeploymentProcessRepository = new FakeDeploymentProcessRepository();
 
             DeploymentProcesses = fakeDeploymentProcessRepository;
-            LibraryVariableSets = new FakeLibraryVariableSetRepository();
             ProjectGroups = new FakeProjectGroupRepository();
             VariableSets = fakeVariableSetRepository;
-            Projects = new FakeProjectRepository(fakeVariableSetRepository,fakeDeploymentProcessRepository);
+            LibraryVariableSets = new FakeLibraryVariableSetRepository(fakeVariableSetRepository);
+            Projects = new FakeProjectRepository(fakeVariableSetRepository, fakeDeploymentProcessRepository);
             Lifecycles = new FakeLifecycleRepository();
             Environments = new FakeEnvironmentRepository();
+            MachineRoles = FakeMachineRoles = new FakeMachineRoleRepository();
+            Machines = new FakeMachineRepository();
         }
 
         public IOctopusClient Client { get; }
@@ -50,5 +52,6 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public IRetentionPolicyRepository RetentionPolicies { get; }
         public IDefectsRepository Defects { get; }
         public IOctopusServerNodeRepository OctopusServerNodes { get; }
+        public FakeMachineRoleRepository FakeMachineRoles { get; }
     }
 }

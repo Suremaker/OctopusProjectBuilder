@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
+using System.Linq;
 using OctopusProjectBuilder.Model;
+using OctopusProjectBuilder.YamlReader.Helpers;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
@@ -16,7 +18,10 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public YamlDeploymentProcess DeploymentProcess { get; set; }
         public string LifecycleRef { get; set; }
         public string ProjectGroupRef { get; set; }
-        public YamlVariableSet VariableSet { get; set; }
+        [DefaultValue(null)]
+        public YamlVariable[] Variables { get; set; }
+        [DefaultValue(null)]
+        public string[] IncludedLibraryVariableSetRefs { get; set; }
 
         public Project ToModel()
         {
@@ -27,7 +32,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 AutoCreateRelease,
                 DefaultToSkipIfAlreadyInstalled,
                 DeploymentProcess.ToModel(),
-                VariableSet.ToModel(),
+                Variables.EnsureNotNull().Select(v => v.ToModel()),
+                IncludedLibraryVariableSetRefs.EnsureNotNull().Select(reference => new ElementReference(reference)),
                 new ElementReference(LifecycleRef),
                 new ElementReference(ProjectGroupRef));
         }
@@ -45,7 +51,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 DeploymentProcess = YamlDeploymentProcess.FromModel(model.DeploymentProcess),
                 LifecycleRef = model.LifecycleRef.Name,
                 ProjectGroupRef = model.ProjectGroupRef.Name,
-                VariableSet = YamlVariableSet.FromModel(model.VariableSet)
+                Variables = model.Variables.Select(YamlVariable.FromModel).ToArray().NullIfEmpty(),
+                IncludedLibraryVariableSetRefs = model.IncludedLibraryVariableSetRefs.Select(r => r.Name).ToArray().NullIfEmpty()
             };
         }
     }
