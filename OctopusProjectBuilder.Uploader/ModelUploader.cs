@@ -1,4 +1,5 @@
-﻿using Common.Logging;
+﻿using System;
+using Common.Logging;
 using Octopus.Client;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories;
@@ -23,6 +24,9 @@ namespace OctopusProjectBuilder.Uploader
 
         public void UploadModel(SystemModel model)
         {
+            foreach (var lifecycle in model.Lifecycles)
+                UploadLifecycle(lifecycle);
+
             foreach (var projectGroup in model.ProjectGroups)
                 UploadProjectGroup(projectGroup);
 
@@ -30,11 +34,15 @@ namespace OctopusProjectBuilder.Uploader
                 UploadProject(project);
         }
 
+        private void UploadLifecycle(Lifecycle lifecycle)
+        {
+            var resource = LoadResource(_repository.Lifecycles, lifecycle.Identifier).UpdateWith(lifecycle, _repository);
+            Upsert(_repository.Lifecycles, resource);
+        }
+
         private void UploadProject(Project project)
         {
-            var projectGroupResource = _repository.ProjectGroups.FindByName(project.ProjectGroupRef.Name);
-            var lifecycleResource = _repository.Lifecycles.FindOne(r => r.Name == project.LifecycleRef.Name);
-            var projectResource = Upsert(_repository.Projects, LoadResource(_repository.Projects, project.Identifier).UpdateWith(project, projectGroupResource, lifecycleResource));
+            var projectResource = Upsert(_repository.Projects, LoadResource(_repository.Projects, project.Identifier).UpdateWith(project, _repository));
 
             Update(
                 _repository.DeploymentProcesses,
@@ -69,13 +77,23 @@ namespace OctopusProjectBuilder.Uploader
 
         private static TResource LoadResource<TResource>(IFindByName<TResource> finder, ElementIdentifier identifier) where TResource : new()
         {
-            var resource = finder.FindByName(identifier.Name);
+            return LoadResource(finder.FindByName, identifier);
+        }
+
+        private static TResource LoadResource<TResource>(IPaginate<TResource> finder, ElementIdentifier identifier) where TResource : INamedResource, new()
+        {
+            return LoadResource(name => finder.FindOne(x => x.Name == name), identifier);
+        }
+
+        private static TResource LoadResource<TResource>(Func<string, TResource> finder, ElementIdentifier identifier) where TResource : new()
+        {
+            var resource = finder(identifier.Name);
             if (resource != null)
             {
                 Logger.InfoFormat("Updating {0}: {1}", typeof(TResource).Name, identifier.Name);
                 return resource;
             }
-            if (identifier.RenamedFrom != null && (resource = finder.FindByName(identifier.RenamedFrom)) != null)
+            if (identifier.RenamedFrom != null && (resource = finder(identifier.RenamedFrom)) != null)
             {
                 Logger.InfoFormat("Updating {0}: {1} => {2}", typeof(TResource).Name, identifier.RenamedFrom, identifier.Name);
                 return resource;

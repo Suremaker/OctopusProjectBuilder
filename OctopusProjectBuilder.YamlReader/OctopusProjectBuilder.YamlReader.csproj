@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,8 +48,11 @@
     <Compile Include="Model\YamlDeploymentAction.cs" />
     <Compile Include="Model\YamlDeploymentProcess.cs" />
     <Compile Include="Model\YamlDeploymentStep.cs" />
+    <Compile Include="Model\YamlLifecycle.cs" />
+    <Compile Include="Model\YamlPhase.cs" />
     <Compile Include="Model\YamlProject.cs" />
     <Compile Include="Model\YamlPropertyValue.cs" />
+    <Compile Include="Model\YamlRetentionPolicy.cs" />
     <Compile Include="YamlSystemModelReader.cs" />
     <Compile Include="YamlSystemModelRepository.cs" />
     <Compile Include="Helpers\EnumerableExtensions.cs" />

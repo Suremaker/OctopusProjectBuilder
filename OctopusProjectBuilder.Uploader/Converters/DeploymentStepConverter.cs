@@ -4,16 +4,16 @@ using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.Uploader.Converters
 {
-    public class DeploymentStepConverter
+    public static class DeploymentStepConverter
     {
-        public static DeploymentStep ToModel(DeploymentStepResource resource)
+        public static DeploymentStep ToModel(this DeploymentStepResource resource)
         {
             return new DeploymentStep(
                 resource.Name,
                 (DeploymentStep.StepCondition)resource.Condition,
                 resource.RequiresPackagesToBeAcquired,
                 (DeploymentStep.StepStartTrigger)resource.StartTrigger,
-                PropertyValueConverter.ToModel(resource.Properties),
+                resource.Properties.ToModel(),
                 resource.Actions.Select(DeploymentActionConverter.ToModel));
         }
     }

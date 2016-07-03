@@ -3,14 +3,14 @@ using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.Uploader.Converters
 {
-    public class DeploymentActionConverter
+    public static class DeploymentActionConverter
     {
-        public static DeploymentAction ToModel(DeploymentActionResource resource)
+        public static DeploymentAction ToModel(this DeploymentActionResource resource)
         {
             return new DeploymentAction(
                 resource.Name,
                 resource.ActionType,
-                PropertyValueConverter.ToModel(resource.Properties));
+                resource.Properties.ToModel());
         }
     }
 }

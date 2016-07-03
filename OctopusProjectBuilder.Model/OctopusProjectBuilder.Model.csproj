@@ -45,8 +45,11 @@
     <Compile Include="DeploymentStep.cs" />
     <Compile Include="ElementReference.cs" />
     <Compile Include="ISystemModelRepository.cs" />
+    <Compile Include="Lifecycle.cs" />
+    <Compile Include="Phase.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="PropertyValue.cs" />
+    <Compile Include="RetentionPolicy.cs" />
     <Compile Include="SystemModel.cs" />
     <Compile Include="ElementIdentifier.cs" />
     <Compile Include="ProjectGroup.cs" />

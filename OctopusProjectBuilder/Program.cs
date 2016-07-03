@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Common.Logging;
 using Common.Logging.Simple;
 using Fclp;
 using OctopusProjectBuilder.Uploader;
@@ -11,7 +12,8 @@ namespace OctopusProjectBuilder
     {
         static int Main(string[] args)
         {
-            Common.Logging.LogManager.Adapter=new ConsoleOutLoggerFactoryAdapter();
+            LogManager.Adapter=new ConsoleOutLoggerFactoryAdapter();
+            var logger = LogManager.GetLogger<Program>();
 
             var options = ReadOptions(args);
             if (options == null)
@@ -26,7 +28,7 @@ namespace OctopusProjectBuilder
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine(e.Message);
+                logger.ErrorFormat("Application Error: {0}",e,e.Message);
                 return 1;
             }
             return 0;

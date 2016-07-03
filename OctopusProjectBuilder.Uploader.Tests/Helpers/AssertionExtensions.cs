@@ -12,6 +12,43 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         {
             ArrayAssert(actual.ProjectGroups, expected.ProjectGroups, AssertEqualsTo, nameof(SystemModel.ProjectGroups));
             ArrayAssert(actual.Projects, expected.Projects, AssertEqualsTo, nameof(SystemModel.Projects));
+            ArrayAssert(actual.Lifecycles, expected.Lifecycles, AssertEqualsTo, nameof(SystemModel.Projects));
+        }
+
+        private static void AssertEqualsTo(Lifecycle actual, Lifecycle expected)
+        {
+            AssertPropertyEqualsTo(actual, expected, x => x.Identifier, AssertEqualsTo, nameof(Lifecycle.Identifier));
+            AssertPropertyEqualsTo(actual, expected, x => x.Description, nameof(Lifecycle.Description));
+            AssertPropertyEqualsTo(actual, expected, x => x.ReleaseRetentionPolicy, AssertEqualsTo, nameof(Lifecycle.ReleaseRetentionPolicy));
+            AssertPropertyEqualsTo(actual, expected, x => x.TentacleRetentionPolicy, AssertEqualsTo, nameof(Lifecycle.TentacleRetentionPolicy));
+            ArrayAssert(actual.Phases, expected.Phases, AssertEqualsTo, nameof(Lifecycle.Phases));
+        }
+
+        private static void AssertEqualsTo(Phase actual, Phase expected)
+        {
+            AssertPropertyEqualsTo(actual, expected, x => x.Identifier, AssertEqualsTo, nameof(Phase.Identifier));
+            AssertPropertyEqualsTo(actual, expected, x => x.MinimumEnvironmentsBeforePromotion, nameof(Phase.MinimumEnvironmentsBeforePromotion));
+            AssertPropertyEqualsTo(actual, expected, x => x.ReleaseRetentionPolicy, AssertEqualsTo, nameof(Phase.ReleaseRetentionPolicy));
+            AssertPropertyEqualsTo(actual, expected, x => x.TentacleRetentionPolicy, AssertEqualsTo, nameof(Phase.TentacleRetentionPolicy));
+            ArrayAssert(actual.AutomaticDeploymentTargetRefs, expected.AutomaticDeploymentTargetRefs, AssertEqualsTo, nameof(Phase.AutomaticDeploymentTargetRefs));
+            ArrayAssert(actual.OptionalDeploymentTargetRefs, expected.OptionalDeploymentTargetRefs, AssertEqualsTo, nameof(Phase.OptionalDeploymentTargetRefs));
+        }
+
+        private static void AssertEqualsTo(ElementReference actual, ElementReference expected)
+        {
+            AssertPropertyEqualsTo(actual, expected, x => x.Name, nameof(ElementReference.Name));
+        }
+
+        private static void AssertEqualsTo(RetentionPolicy actual, RetentionPolicy expected)
+        {
+            if (expected == null)
+                Assert.That(actual, Is.Null);
+            else
+            {
+                Assert.That(actual, Is.Not.Null);
+                AssertPropertyEqualsTo(actual, expected, x => x.QuantityToKeep, nameof(RetentionPolicy.QuantityToKeep));
+                AssertPropertyEqualsTo(actual, expected, x => x.Unit, nameof(RetentionPolicy.Unit));
+            }
         }
 
         public static void AssertEqualsTo(this ProjectGroup[] actual, ProjectGroup[] expected)
@@ -26,6 +63,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 
         private static void AssertEqualsTo(Project actual, Project expected)
         {
+            AssertPropertyEqualsTo(actual, expected, x => x.Identifier, AssertEqualsTo, nameof(Project.Identifier));
             AssertPropertyEqualsTo(actual, expected, x => x.AutoCreateRelease, nameof(Project.AutoCreateRelease));
             AssertPropertyEqualsTo(actual, expected, x => x.DefaultToSkipIfAlreadyInstalled, nameof(Project.DefaultToSkipIfAlreadyInstalled));
             AssertPropertyEqualsTo(actual, expected, x => x.Description, nameof(Project.Description));

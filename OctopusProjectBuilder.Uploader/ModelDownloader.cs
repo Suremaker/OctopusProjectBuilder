@@ -25,26 +25,28 @@ namespace OctopusProjectBuilder.Uploader
         public SystemModel DownloadModel()
         {
             return new SystemModel(
+                _repository.Lifecycles.FindAll().Select(ReadLifecycle),
                 _repository.ProjectGroups.FindAll().Select(ReadProjectGroup),
                 _repository.Projects.FindAll().Select(ReadProject));
+        }
+
+        private Lifecycle ReadLifecycle(LifecycleResource resource)
+        {
+            Logger.InfoFormat($"Reading {nameof(LifecycleResource)}: {resource.Name}");
+            return resource.ToModel(_repository);
         }
 
         private Project ReadProject(ProjectResource resource)
         {
             Logger.InfoFormat($"Reading {nameof(ProjectResource)}: {resource.Name}");
             
-            return ProjectConverter.ToModel(resource, 
-                _repository.DeploymentProcesses.Get(resource.DeploymentProcessId),
-                _repository.VariableSets.Get(resource.VariableSetId),
-                _repository.LibraryVariableSets.FindMany(r => resource.IncludedLibraryVariableSetIds.Contains(r.Id)),
-                _repository.Lifecycles.Get(resource.LifecycleId),
-                _repository.ProjectGroups.Get(resource.ProjectGroupId));
+            return resource.ToModel(_repository);
         }
 
         private static ProjectGroup ReadProjectGroup(ProjectGroupResource resource)
         {
             Logger.InfoFormat($"Reading {nameof(ProjectGroupResource)}: {resource.Name}");
-            return ProjectGroupConverter.ToModel(resource);
+            return resource.ToModel();
         }
     }
 }

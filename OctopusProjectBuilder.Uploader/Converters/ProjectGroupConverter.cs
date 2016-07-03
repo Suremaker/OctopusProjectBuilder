@@ -12,7 +12,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             return resource;
         }
 
-        public static ProjectGroup ToModel(ProjectGroupResource resource)
+        public static ProjectGroup ToModel(this ProjectGroupResource resource)
         {
             return new ProjectGroup(new ElementIdentifier(resource.Name), resource.Description);
         }

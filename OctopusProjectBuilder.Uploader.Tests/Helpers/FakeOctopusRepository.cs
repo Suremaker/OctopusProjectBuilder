@@ -16,6 +16,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             VariableSets = fakeVariableSetRepository;
             Projects = new FakeProjectRepository(fakeVariableSetRepository,fakeDeploymentProcessRepository);
             Lifecycles = new FakeLifecycleRepository();
+            Environments = new FakeEnvironmentRepository();
         }
 
         public IOctopusClient Client { get; }

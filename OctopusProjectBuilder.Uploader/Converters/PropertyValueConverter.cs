@@ -6,14 +6,14 @@ using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.Uploader.Converters
 {
-    public class PropertyValueConverter
+    public static class PropertyValueConverter
     {
-        public static PropertyValue ToModel(PropertyValueResource resource)
+        public static PropertyValue ToModel(this PropertyValueResource resource)
         {
             return new PropertyValue(resource.IsSensitive,resource.Value);
         }
 
-        public static Dictionary<string, PropertyValue> ToModel(IDictionary<string, PropertyValueResource> properties)
+        public static Dictionary<string, PropertyValue> ToModel(this IDictionary<string, PropertyValueResource> properties)
         {
             return properties
                 .Select(kv => Tuple.Create(kv.Key, ToModel(kv.Value)))

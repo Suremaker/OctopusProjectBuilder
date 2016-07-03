@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\AssertionExtensions.cs" />
+    <Compile Include="Helpers\FakeEnvironmentRepository.cs" />
     <Compile Include="Helpers\FakeLibraryVariableSetRepository.cs" />
     <Compile Include="Helpers\FakeDeploymentProcessRepository.cs" />
     <Compile Include="Helpers\FakeLifecycleRepository.cs" />

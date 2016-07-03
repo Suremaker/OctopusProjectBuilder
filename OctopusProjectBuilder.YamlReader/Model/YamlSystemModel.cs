@@ -11,6 +11,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public YamlProjectGroup[] ProjectGroups { get; set; }
         [DefaultValue(null)]
         public YamlProject[] Projects { get; set; }
+        [DefaultValue(null)]
+        public YamlLifecycle[] Lifecycles { get; set; }
 
         public SystemModelBuilder BuildWith(SystemModelBuilder builder)
         {
@@ -20,6 +22,9 @@ namespace OctopusProjectBuilder.YamlReader.Model
             foreach (var project in Projects.EnsureNotNull())
                 builder.AddProject(project.ToModel());
 
+            foreach (var lifecycle in Lifecycles.EnsureNotNull())
+                builder.AddLifecycle(lifecycle.ToModel());
+
             return builder;
         }
 
@@ -28,7 +33,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
             return new YamlSystemModel
             {
                 ProjectGroups = model.ProjectGroups.Select(YamlProjectGroup.FromModel).ToArray().NullIfEmpty(),
-                Projects = model.Projects.Select(YamlProject.FromModel).ToArray().NullIfEmpty()
+                Projects = model.Projects.Select(YamlProject.FromModel).ToArray().NullIfEmpty(),
+                Lifecycles = model.Lifecycles.Select(YamlLifecycle.FromModel).ToArray().NullIfEmpty(),
             };
         }
     }

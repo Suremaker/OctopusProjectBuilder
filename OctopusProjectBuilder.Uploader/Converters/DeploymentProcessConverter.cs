@@ -4,9 +4,9 @@ using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.Uploader.Converters
 {
-    public class DeploymentProcessConverter
+    public static class DeploymentProcessConverter
     {
-        public static DeploymentProcess ToModel(DeploymentProcessResource resource)
+        public static DeploymentProcess ToModel(this DeploymentProcessResource resource)
         {
             return new DeploymentProcess(resource.Steps.Select(DeploymentStepConverter.ToModel));
         }

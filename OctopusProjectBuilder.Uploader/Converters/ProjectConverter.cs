@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
 
@@ -7,16 +8,19 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class ProjectConverter
     {
-        public static ProjectResource UpdateWith(this ProjectResource resource, Project model, ProjectGroupResource projectGroupResource, LifecycleResource lifecycleResource)
+        public static ProjectResource UpdateWith(this ProjectResource resource, Project model, IOctopusRepository repository)
         {
+            var projectGroupResourceId = repository.ProjectGroups.ResolveResourceId(model.ProjectGroupRef);
+            var resolveResourceId = repository.Lifecycles.ResolveResourceId(model.LifecycleRef);
+
             resource.Name = model.Identifier.Name;
             //resource.ReleaseCreationStrategy;
             resource.AutoCreateRelease = model.AutoCreateRelease;
             resource.DefaultToSkipIfAlreadyInstalled = model.DefaultToSkipIfAlreadyInstalled;
             resource.Description = model.Description;
             resource.IsDisabled = model.IsDisabled;
-            resource.LifecycleId = lifecycleResource.Id;
-            resource.ProjectGroupId = projectGroupResource.Id;
+            resource.LifecycleId = resolveResourceId;
+            resource.ProjectGroupId = projectGroupResourceId;
             return resource;
         }
 
@@ -56,7 +60,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 resource.Add(keyValuePair.Key, new PropertyValueResource(keyValuePair.Value.Value, keyValuePair.Value.IsSensitive));
         }
 
-        public static Project ToModel(ProjectResource resource, DeploymentProcessResource deploymentProcessResource, VariableSetResource variableSetResource, List<LibraryVariableSetResource> libraryVariableSets, LifecycleResource lifecycleResource, ProjectGroupResource projectGroupResource)
+        public static Project ToModel(this ProjectResource resource, IOctopusRepository repository)
         {
             return new Project(
                 new ElementIdentifier(resource.Name),
@@ -64,9 +68,9 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 resource.IsDisabled,
                 resource.AutoCreateRelease,
                 resource.DefaultToSkipIfAlreadyInstalled,
-                DeploymentProcessConverter.ToModel(deploymentProcessResource),
-                new ElementReference(lifecycleResource.Name),
-                new ElementReference(projectGroupResource.Name));
+                repository.DeploymentProcesses.Get(resource.DeploymentProcessId).ToModel(),
+                new ElementReference(repository.Lifecycles.Get(resource.LifecycleId).Name),
+                new ElementReference(repository.ProjectGroups.Get(resource.ProjectGroupId).Name));
         }
     }
 }

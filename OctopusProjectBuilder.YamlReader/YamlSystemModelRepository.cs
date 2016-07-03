@@ -38,7 +38,9 @@ namespace OctopusProjectBuilder.YamlReader
         private string GetModelPath(YamlSystemModel splitModel, string modelDirectory)
         {
             var name = splitModel.ProjectGroups.EnsureNotNull().Select(x => $"ProjectGroup_{x.Name}.yml")
-                .Concat(splitModel.Projects.EnsureNotNull().Select(x => $"Project_{x.Name}.yml")).Single();
+                .Concat(splitModel.Projects.EnsureNotNull().Select(x => $"Project_{x.Name}.yml"))
+                .Concat(splitModel.Lifecycles.EnsureNotNull().Select(x => $"Lifecycle_{x.Name}.yml"))
+                .Single();
             return modelDirectory + "\\" + name;
         }
     }

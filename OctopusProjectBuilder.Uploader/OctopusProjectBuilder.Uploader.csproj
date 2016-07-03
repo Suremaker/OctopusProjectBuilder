@@ -59,7 +59,11 @@
     <Compile Include="Converters\DeploymentActionConverter.cs" />
     <Compile Include="Converters\DeploymentProcessConverter.cs" />
     <Compile Include="Converters\DeploymentStepConverter.cs" />
+    <Compile Include="Converters\LifecycleConverter.cs" />
+    <Compile Include="Converters\PhaseConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
+    <Compile Include="Converters\RetentionPeriodConverter.cs" />
+    <Compile Include="ElementReferenceExtensions.cs" />
     <Compile Include="ModelDownloader.cs" />
     <Compile Include="ModelUploader.cs" />
     <Compile Include="Converters\ProjectConverter.cs" />
