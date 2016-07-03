@@ -44,11 +44,15 @@ namespace OctopusProjectBuilder.Uploader
         {
             var projectResource = Upsert(_repository.Projects, LoadResource(_repository.Projects, project.Identifier).UpdateWith(project, _repository));
 
-            Update(
-                _repository.DeploymentProcesses,
-                _repository.DeploymentProcesses.Get(projectResource.DeploymentProcessId).UpdateWith(project.DeploymentProcess),
-                projectResource.Name);
+            var deploymentProcess = Update(
+                 _repository.DeploymentProcesses,
+                 _repository.DeploymentProcesses.Get(projectResource.DeploymentProcessId).UpdateWith(project.DeploymentProcess),
+                 projectResource.Name);
 
+            Update(
+                _repository.VariableSets,
+                _repository.VariableSets.Get(projectResource.VariableSetId).UpdateWith(project.VariableSet, _repository, deploymentProcess),
+                projectResource.Name);
         }
 
         private void UploadProjectGroup(ProjectGroup projectGroup)

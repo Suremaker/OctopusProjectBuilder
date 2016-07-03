@@ -53,6 +53,10 @@
     <Compile Include="Model\YamlProject.cs" />
     <Compile Include="Model\YamlPropertyValue.cs" />
     <Compile Include="Model\YamlRetentionPolicy.cs" />
+    <Compile Include="Model\YamlVariable.cs" />
+    <Compile Include="Model\YamlVariablePrompt.cs" />
+    <Compile Include="Model\YamlVariableScope.cs" />
+    <Compile Include="Model\YamlVariableSet.cs" />
     <Compile Include="YamlSystemModelReader.cs" />
     <Compile Include="YamlSystemModelRepository.cs" />
     <Compile Include="Helpers\EnumerableExtensions.cs" />

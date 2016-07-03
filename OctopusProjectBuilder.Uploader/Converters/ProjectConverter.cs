@@ -12,7 +12,6 @@ namespace OctopusProjectBuilder.Uploader.Converters
         {
             var projectGroupResourceId = repository.ProjectGroups.ResolveResourceId(model.ProjectGroupRef);
             var resolveResourceId = repository.Lifecycles.ResolveResourceId(model.LifecycleRef);
-
             resource.Name = model.Identifier.Name;
             //resource.ReleaseCreationStrategy;
             resource.AutoCreateRelease = model.AutoCreateRelease;
@@ -62,13 +61,15 @@ namespace OctopusProjectBuilder.Uploader.Converters
 
         public static Project ToModel(this ProjectResource resource, IOctopusRepository repository)
         {
+            var deploymentProcessResource = repository.DeploymentProcesses.Get(resource.DeploymentProcessId);
             return new Project(
                 new ElementIdentifier(resource.Name),
                 resource.Description,
                 resource.IsDisabled,
                 resource.AutoCreateRelease,
                 resource.DefaultToSkipIfAlreadyInstalled,
-                repository.DeploymentProcesses.Get(resource.DeploymentProcessId).ToModel(),
+                deploymentProcessResource.ToModel(),
+                repository.VariableSets.Get(resource.VariableSetId).ToModel(deploymentProcessResource, repository),
                 new ElementReference(repository.Lifecycles.Get(resource.LifecycleId).Name),
                 new ElementReference(repository.ProjectGroups.Get(resource.ProjectGroupId).Name));
         }

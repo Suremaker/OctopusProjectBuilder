@@ -16,10 +16,20 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public YamlDeploymentProcess DeploymentProcess { get; set; }
         public string LifecycleRef { get; set; }
         public string ProjectGroupRef { get; set; }
+        public YamlVariableSet VariableSet { get; set; }
 
         public Project ToModel()
         {
-            return new Project(ToModelName(), Description, IsDisabled, AutoCreateRelease, DefaultToSkipIfAlreadyInstalled, DeploymentProcess.ToModel(), new ElementReference(LifecycleRef), new ElementReference(ProjectGroupRef));
+            return new Project(
+                ToModelName(),
+                Description,
+                IsDisabled,
+                AutoCreateRelease,
+                DefaultToSkipIfAlreadyInstalled,
+                DeploymentProcess.ToModel(),
+                VariableSet.ToModel(),
+                new ElementReference(LifecycleRef),
+                new ElementReference(ProjectGroupRef));
         }
 
         public static YamlProject FromModel(Project model)
@@ -34,7 +44,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 DefaultToSkipIfAlreadyInstalled = model.DefaultToSkipIfAlreadyInstalled,
                 DeploymentProcess = YamlDeploymentProcess.FromModel(model.DeploymentProcess),
                 LifecycleRef = model.LifecycleRef.Name,
-                ProjectGroupRef = model.ProjectGroupRef.Name
+                ProjectGroupRef = model.ProjectGroupRef.Name,
+                VariableSet = YamlVariableSet.FromModel(model.VariableSet)
             };
         }
     }

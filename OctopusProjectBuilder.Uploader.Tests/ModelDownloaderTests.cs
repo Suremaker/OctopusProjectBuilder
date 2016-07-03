@@ -107,6 +107,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var model1 = new SystemModelBuilder()
                 .AddProject(new Project(new ElementIdentifier(name1), description1, false, false, false,
                     new DeploymentProcess(Enumerable.Empty<DeploymentStep>()),
+                    new VariableSet(Enumerable.Empty<Variable>()), 
                     new ElementReference("lifecycle1"),
                     new ElementReference("group1")))
                 .Build();
@@ -121,6 +122,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var model2 = new SystemModelBuilder()
                 .AddProject(new Project(new ElementIdentifier(name2, name1), description2, false, false, false,
                     new DeploymentProcess(Enumerable.Empty<DeploymentStep>()),
+                    new VariableSet(Enumerable.Empty<Variable>()),
                     new ElementReference("lifecycle1"),
                     new ElementReference("group1")))
                 .Build();
@@ -183,6 +185,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
             if (!withRename)
                 fixture.Register(() => new ElementIdentifier(fixture.Create<string>()));
             fixture.Register<IReadOnlyDictionary<string, PropertyValue>>(() => fixture.Create<Dictionary<string, PropertyValue>>());
+            fixture.Register<IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>>>(() => new Dictionary<VariableScopeType, IEnumerable<ElementReference>>());
             fixture.Register(() => new PropertyValue(false, fixture.Create<string>()));
             return fixture.Create<T>();
         }

@@ -63,6 +63,10 @@
     <Compile Include="Converters\PhaseConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\RetentionPeriodConverter.cs" />
+    <Compile Include="Converters\ScopeSpecificationConverter.cs" />
+    <Compile Include="Converters\VariableConverter.cs" />
+    <Compile Include="Converters\VariablePromptOptionsConverter.cs" />
+    <Compile Include="Converters\VariableSetConverter.cs" />
     <Compile Include="ElementReferenceExtensions.cs" />
     <Compile Include="ModelDownloader.cs" />
     <Compile Include="ModelUploader.cs" />
