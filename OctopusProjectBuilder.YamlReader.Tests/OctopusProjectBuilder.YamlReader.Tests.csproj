@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\AssertionExtensions.cs" />
+    <Compile Include="TemplateProcessorTests.cs" />
     <Compile Include="YamlSystemModelReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\YamlSystemModelTests.cs" />

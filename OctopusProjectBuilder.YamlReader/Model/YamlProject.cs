@@ -1,11 +1,14 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Helpers;
+using OctopusProjectBuilder.YamlReader.Model.Templates;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
-    public class YamlProject : YamlNamedElement
+    [Serializable]
+    public class YamlProject : YamlNamedElement, IYamlTemplateBased
     {
         [DefaultValue(null)]
         public string Description { get; set; }
@@ -22,6 +25,14 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public YamlVariable[] Variables { get; set; }
         [DefaultValue(null)]
         public string[] IncludedLibraryVariableSetRefs { get; set; }
+        [DefaultValue(null)]
+        public YamlTemplateReference UseTemplate { get; set; }
+        public void ApplyTemplate(YamlTemplates templates)
+        {
+            this.ApplyTemplate(templates.Projects);
+            foreach (var step in (DeploymentProcess?.Steps).EnsureNotNull())
+                step.ApplyTemplate(templates);
+        }
 
         public Project ToModel()
         {

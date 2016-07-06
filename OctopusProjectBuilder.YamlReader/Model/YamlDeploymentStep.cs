@@ -1,20 +1,29 @@
+using System;
+using System.ComponentModel;
 using System.Linq;
 using OctopusProjectBuilder.Model;
+using OctopusProjectBuilder.YamlReader.Helpers;
+using OctopusProjectBuilder.YamlReader.Model.Templates;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
-    public class YamlDeploymentStep
+    [Serializable]
+    public class YamlDeploymentStep : IYamlTemplateBased
     {
         public string Name { get; set; }
         public DeploymentStep.StepStartTrigger StartTrigger { get; set; }
-
         public bool RequiresPackagesToBeAcquired { get; set; }
-
         public DeploymentStep.StepCondition Condition { get; set; }
-
         public YamlDeploymentAction[] Actions { get; set; }
-
         public YamlPropertyValue[] Properties { get; set; }
+        [DefaultValue(null)]
+        public YamlTemplateReference UseTemplate { get; set; }
+        public void ApplyTemplate(YamlTemplates templates)
+        {
+            this.ApplyTemplate(templates.DeploymentSteps);
+            foreach (var action in Actions.EnsureNotNull())
+                action.ApplyTemplate(templates);
+        }
 
         public static YamlDeploymentStep FromModel(DeploymentStep model)
         {

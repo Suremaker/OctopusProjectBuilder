@@ -1,8 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
+    [Serializable]
     public class YamlNamedElement
     {
         public string Name { get; set; }

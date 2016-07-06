@@ -12,17 +12,17 @@ namespace OctopusProjectBuilder.YamlReader
         private readonly YamlSystemModelWriter _writer = new YamlSystemModelWriter();
         public SystemModel Load(string modelDirectory)
         {
-            SystemModelBuilder builder = new SystemModelBuilder();
+            YamlSystemModel model = new YamlSystemModel();
             var files = Directory.EnumerateFiles(modelDirectory, "*.yml", SearchOption.AllDirectories);
             foreach (var file in files)
-                ReadFile(file, builder);
-            return builder.Build();
+                model.MergeIn(ReadFile(file));
+            return model.ApplyTemplates().BuildWith(new SystemModelBuilder()).Build();
         }
 
-        private void ReadFile(string file, SystemModelBuilder builder)
+        private YamlSystemModel ReadFile(string file)
         {
             using (var stream = new FileStream(file, FileMode.Open))
-                _reader.Read(stream).BuildWith(builder);
+                return _reader.Read(stream);
         }
 
         public void Save(SystemModel model, string modelDirectory)

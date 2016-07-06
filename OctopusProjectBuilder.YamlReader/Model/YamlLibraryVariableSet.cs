@@ -1,10 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Helpers;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
+    [Serializable]
     public class YamlLibraryVariableSet : YamlNamedElement
     {
         [DefaultValue(null)]

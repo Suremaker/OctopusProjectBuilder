@@ -1,7 +1,9 @@
+using System;
 using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
+    [Serializable]
     public class YamlRetentionPolicy
     {
         public RetentionPolicy.RetentionUnit Unit { get; set; }

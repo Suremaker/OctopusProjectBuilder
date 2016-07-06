@@ -7,7 +7,7 @@ namespace OctopusProjectBuilder.YamlReader
 {
     public class YamlSystemModelWriter
     {
-        private readonly YamlSerializer _serializer = new YamlSerializer(new YamlConfig { OmitTagForRootNode = true});
+        private readonly YamlSerializer _serializer = new YamlSerializer(new YamlConfig { OmitTagForRootNode = true, ExplicitlyPreserveLineBreaks=false });
 
         public void Write(Stream stream, YamlSystemModel splitModel)
         {

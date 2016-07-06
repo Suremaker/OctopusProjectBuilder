@@ -30,6 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -45,15 +53,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Templates\IYamlTemplate.cs" />
+    <Compile Include="Model\IYamlTemplateBased.cs" />
+    <Compile Include="Model\Templates\TemplateProcessor.cs" />
+    <Compile Include="Model\Templates\YamlDeploymentActionTemplate.cs" />
+    <Compile Include="Model\Templates\YamlDeploymentStepTemplate.cs" />
+    <Compile Include="Model\Templates\YamlTemplateParameter.cs" />
+    <Compile Include="Model\Templates\YamlTemplates.cs" />
     <Compile Include="Model\YamlDeploymentAction.cs" />
     <Compile Include="Model\YamlDeploymentProcess.cs" />
     <Compile Include="Model\YamlDeploymentStep.cs" />
     <Compile Include="Model\YamlLibraryVariableSet.cs" />
     <Compile Include="Model\YamlLifecycle.cs" />
+    <Compile Include="Model\YamlModelExtensions.cs" />
     <Compile Include="Model\YamlPhase.cs" />
     <Compile Include="Model\YamlProject.cs" />
+    <Compile Include="Model\Templates\YamlProjectTemplate.cs" />
     <Compile Include="Model\YamlPropertyValue.cs" />
     <Compile Include="Model\YamlRetentionPolicy.cs" />
+    <Compile Include="Model\Templates\YamlTemplateReference.cs" />
     <Compile Include="Model\YamlVariable.cs" />
     <Compile Include="Model\YamlVariablePrompt.cs" />
     <Compile Include="Model\YamlVariableScope.cs" />

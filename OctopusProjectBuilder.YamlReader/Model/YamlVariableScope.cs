@@ -7,6 +7,7 @@ using OctopusProjectBuilder.YamlReader.Helpers;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
+    [Serializable]
     public class YamlVariableScope
     {
         [DefaultValue(null)]

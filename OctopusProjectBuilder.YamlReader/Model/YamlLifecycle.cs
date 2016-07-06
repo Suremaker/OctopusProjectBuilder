@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
+    [Serializable]
     public class YamlLifecycle : YamlNamedElement
     {
         public YamlPhase[] Phases { get; set; }

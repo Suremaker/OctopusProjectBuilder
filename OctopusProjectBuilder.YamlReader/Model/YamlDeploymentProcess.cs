@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
+    [Serializable]
     public class YamlDeploymentProcess
     {
         public DeploymentProcess ToModel()

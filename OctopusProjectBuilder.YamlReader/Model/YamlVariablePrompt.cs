@@ -1,7 +1,9 @@
-﻿using OctopusProjectBuilder.Model;
+﻿using System;
+using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
+    [Serializable]
     public class YamlVariablePrompt
     {
         public string Description { get; set; }
