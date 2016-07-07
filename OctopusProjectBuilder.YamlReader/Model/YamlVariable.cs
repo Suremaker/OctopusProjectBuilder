@@ -13,7 +13,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public YamlVariableScope Scope { get; set; }
         public string Value { get; set; }
         [DefaultValue(false)]
-        public bool IsSensistive { get; set; }
+        public bool IsSensitive { get; set; }
         [DefaultValue(true)]
         public bool IsEditable { get; set; }
         public string Name { get; set; }
@@ -24,7 +24,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
             {
                 Name = model.Name,
                 IsEditable = model.IsEditable,
-                IsSensistive = model.IsSensitive,
+                IsSensitive = model.IsSensitive,
                 Value = model.Value,
                 Scope = YamlVariableScope.FromModel(model.Scope),
                 Prompt = YamlVariablePrompt.FromModel(model.Prompt),
@@ -33,7 +33,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
 
         public Variable ToModel()
         {
-            return new Variable(Name, IsEditable, IsSensistive, Value, (Scope ?? new YamlVariableScope()).ToModel(), Prompt?.ToModel());
+            return new Variable(Name, IsEditable, IsSensitive, Value, (Scope ?? new YamlVariableScope()).ToModel(), Prompt?.ToModel());
         }
     }
 }
