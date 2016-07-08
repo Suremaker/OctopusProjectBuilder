@@ -7,12 +7,10 @@ namespace OctopusProjectBuilder.YamlReader
 {
     public class YamlSystemModelReader
     {
-        private readonly YamlSerializer _serializer = new YamlSerializer();
+        private readonly YamlClassSerializer _serializer = new YamlClassSerializer();
         public YamlSystemModel Read(Stream stream)
         {
-            return _serializer.Deserialize(stream, typeof(YamlSystemModel))
-                .Cast<YamlSystemModel>()
-                .Single();
+            return _serializer.Deserialize<YamlSystemModel>(stream);
         }
     }
 }

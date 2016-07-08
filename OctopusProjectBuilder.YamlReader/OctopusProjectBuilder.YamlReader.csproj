@@ -75,6 +75,7 @@
     <Compile Include="Model\YamlVariable.cs" />
     <Compile Include="Model\YamlVariablePrompt.cs" />
     <Compile Include="Model\YamlVariableScope.cs" />
+    <Compile Include="YamlClassSerializer.cs" />
     <Compile Include="YamlSystemModelReader.cs" />
     <Compile Include="YamlSystemModelRepository.cs" />
     <Compile Include="Helpers\EnumerableExtensions.cs" />
