@@ -7,12 +7,12 @@ namespace OctopusProjectBuilder.YamlReader.Model
     [Serializable]
     public class YamlDeploymentProcess
     {
+        public YamlDeploymentStep[] Steps { get; set; }
+
         public DeploymentProcess ToModel()
         {
             return new DeploymentProcess(Steps.Select(s => s.ToModel()));
         }
-
-        public YamlDeploymentStep[] Steps { get; set; }
 
         public static YamlDeploymentProcess FromModel(DeploymentProcess model)
         {

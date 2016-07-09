@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OctopusProjectBuilder.YamlReader.Model;
@@ -26,22 +27,29 @@ namespace OctopusProjectBuilder.YamlReader.Tests
             var content = Write(expected);
             Console.WriteLine(content);
 
-            var actual = new YamlSystemModelReader().Read(new MemoryStream(Encoding.UTF8.GetBytes(content)));
+            var actual = new YamlSystemModelReader().Read(new MemoryStream(Encoding.UTF8.GetBytes(content))).Single();
             actual.AssertEqualsTo(expected);
         }
 
-        private string Write(YamlSystemModel model)
+        [Test]
+        public void It_should_allow_writing_more_documents()
+        {
+            var expected1 = new Fixture().Create<YamlSystemModel>();
+            var expected2 = new Fixture().Create<YamlSystemModel>();
+            var content = Write(expected1, expected2);
+            var actual = new YamlSystemModelReader().Read(new MemoryStream(Encoding.UTF8.GetBytes(content)));
+            Assert.That(actual.Length, Is.EqualTo(2));
+            actual[0].AssertEqualsTo(expected1);
+            actual[1].AssertEqualsTo(expected2);
+        }
+
+        private string Write(params YamlSystemModel[] models)
         {
             using (var stream = new MemoryStream())
             {
-                _writer.Write(stream, model);
+                _writer.Write(stream, models);
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
-        }
-
-        private static void AssertContent(string content, string expectedContent)
-        {
-            Assert.That(content.Replace("\r\n", "\n"), Is.EqualTo(expectedContent.Replace("\r\n", "\n")), $"Expected:\n{expectedContent}\n\nGot:\n{content}");
         }
     }
 }

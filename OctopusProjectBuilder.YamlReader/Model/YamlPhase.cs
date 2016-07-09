@@ -3,21 +3,23 @@ using System.ComponentModel;
 using System.Linq;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Helpers;
+using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
     public class YamlPhase : YamlNamedElement
     {
+        [YamlMember(Order = 3)]
         public int MinimumEnvironmentsBeforePromotion { get; set; }
-        [DefaultValue(null)]
+        [YamlMember(Order = 4)]
         public YamlRetentionPolicy TentacleRetentionPolicy { get; set; }
-        [DefaultValue(null)]
+        [YamlMember(Order = 5)]
         public YamlRetentionPolicy ReleaseRetentionPolicy { get; set; }
-        [DefaultValue(null)]
-        public string[] OptionalDeploymentTargetRefs { get; set; }
-        [DefaultValue(null)]
+        [YamlMember(Order = 6)]
         public string[] AutomaticDeploymentTargetRefs { get; set; }
+        [YamlMember(Order = 7)]
+        public string[] OptionalDeploymentTargetRefs { get; set; }
 
         public Phase ToModel()
         {
@@ -36,8 +38,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 ReleaseRetentionPolicy = YamlRetentionPolicy.FromModel(model.ReleaseRetentionPolicy),
                 TentacleRetentionPolicy = YamlRetentionPolicy.FromModel(model.TentacleRetentionPolicy),
                 MinimumEnvironmentsBeforePromotion = model.MinimumEnvironmentsBeforePromotion,
-                AutomaticDeploymentTargetRefs = model.AutomaticDeploymentTargetRefs.Select(r=>r.Name).ToArray().NullIfEmpty(),
-                OptionalDeploymentTargetRefs = model.OptionalDeploymentTargetRefs.Select(r=>r.Name).ToArray().NullIfEmpty()
+                AutomaticDeploymentTargetRefs = model.AutomaticDeploymentTargetRefs.Select(r => r.Name).ToArray().NullIfEmpty(),
+                OptionalDeploymentTargetRefs = model.OptionalDeploymentTargetRefs.Select(r => r.Name).ToArray().NullIfEmpty()
             };
         }
     }

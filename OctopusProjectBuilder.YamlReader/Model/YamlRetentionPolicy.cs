@@ -1,13 +1,18 @@
 using System;
+using System.ComponentModel;
 using OctopusProjectBuilder.Model;
+using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
     public class YamlRetentionPolicy
     {
-        public RetentionPolicy.RetentionUnit Unit { get; set; }
+        [YamlMember(Order = 1)]
+        [DefaultValue(-1)] // To force rendering 0
         public int QuantityToKeep { get; set; }
+        [YamlMember(Order = 2)]
+        public RetentionPolicy.RetentionUnit Unit { get; set; }
 
         public static YamlRetentionPolicy FromModel(RetentionPolicy model)
         {

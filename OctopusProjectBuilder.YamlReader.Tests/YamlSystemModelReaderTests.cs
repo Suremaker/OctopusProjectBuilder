@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OctopusProjectBuilder.Model;
@@ -21,14 +22,16 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         [Test]
         public void It_should_read_project_groups()
         {
-            string content = @"ProjectGroups:
+            string content = @"---
+ProjectGroups:
     - Name: name1
       RenamedFrom: oldName1
       Description: some description 1
     - Name: name2
       RenamedFrom: oldName2
       Description: some description 2
-    - Name: name3";
+    - Name: name3
+...";
             var expectedGroups = new[]
             {
                 new YamlProjectGroup {Name = "name1", Description = "some description 1", RenamedFrom = "oldName1"},
@@ -165,7 +168,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
 
         private YamlSystemModel Read(string content)
         {
-            return _reader.Read(new MemoryStream(Encoding.UTF8.GetBytes(content), false));
+            return _reader.Read(new MemoryStream(Encoding.UTF8.GetBytes(content), false)).Single();
         }
     }
 }

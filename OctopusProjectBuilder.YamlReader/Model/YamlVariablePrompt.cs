@@ -1,13 +1,18 @@
 ﻿using System;
 using OctopusProjectBuilder.Model;
+using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
     public class YamlVariablePrompt
     {
-        public string Description { get; set; }
+        [YamlMember(Order = 1)]
         public string Label { get; set; }
+        [YamlMember(Order = 2)]
+        public string Description { get; set; }
+
+        [YamlMember(Order = 3)]
         public bool Required { get; set; }
 
         public VariablePrompt ToModel()

@@ -2,18 +2,22 @@ using System;
 using System.ComponentModel;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Model.Templates;
+using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
     public class YamlDeploymentAction : IYamlTemplateBased
     {
-        [DefaultValue(null)]
-        public YamlPropertyValue[] Properties { get; set; }
-        public string ActionType { get; set; }
+        [YamlMember(Order = 1)]
         public string Name { get; set; }
-        [DefaultValue(null)]
+        [YamlMember(Order = 2)]
         public YamlTemplateReference UseTemplate { get; set; }
+        [YamlMember(Order = 3)]
+        public string ActionType { get; set; }
+        [YamlMember(Order = 4)]
+        public YamlPropertyValue[] Properties { get; set; }
+
         public void ApplyTemplate(YamlTemplates templates)
         {
             this.ApplyTemplate(templates.DeploymentActions);

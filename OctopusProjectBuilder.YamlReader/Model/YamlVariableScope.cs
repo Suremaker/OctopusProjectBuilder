@@ -10,15 +10,10 @@ namespace OctopusProjectBuilder.YamlReader.Model
     [Serializable]
     public class YamlVariableScope
     {
-        [DefaultValue(null)]
         public string[] RoleRefs { get; set; }
-        [DefaultValue(null)]
         public string[] MachineRefs { get; set; }
-        [DefaultValue(null)]
         public string[] EnvironmentRefs { get; set; }
-        [DefaultValue(null)]
         public string[] ChannelRefs { get; set; }
-        [DefaultValue(null)]
         public string[] ActionRefs { get; set; }
 
         public IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>> ToModel()

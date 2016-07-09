@@ -46,9 +46,14 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet, Version=3.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\YamlDotNet.3.9.0\lib\net35\YamlDotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\AssertionExtensions.cs" />
+    <Compile Include="SerializerTests.cs" />
     <Compile Include="TemplateProcessorTests.cs" />
     <Compile Include="YamlSystemModelReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

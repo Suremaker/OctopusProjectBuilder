@@ -10,15 +10,10 @@ namespace OctopusProjectBuilder.YamlReader.Model
     [Serializable]
     public class YamlSystemModel
     {
-        [DefaultValue(null)]
         public YamlProjectGroup[] ProjectGroups { get; set; }
-        [DefaultValue(null)]
         public YamlProject[] Projects { get; set; }
-        [DefaultValue(null)]
         public YamlLifecycle[] Lifecycles { get; set; }
-        [DefaultValue(null)]
         public YamlLibraryVariableSet[] LibraryVariableSets { get; set; }
-        [DefaultValue(null)]
         public YamlTemplates Templates { get; set; }
 
         public YamlSystemModel ApplyTemplates()

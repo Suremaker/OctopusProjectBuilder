@@ -1,17 +1,24 @@
 ﻿using System.IO;
-using System.Yaml;
-using System.Yaml.Serialization;
 using OctopusProjectBuilder.YamlReader.Model;
+using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader
 {
     public class YamlSystemModelWriter
     {
-        private readonly YamlClassSerializer _serializer = new YamlClassSerializer(new YamlConfig { OmitTagForRootNode = true, ExplicitlyPreserveLineBreaks = false });
+        private readonly Serializer _serializer = new Serializer();
 
-        public void Write(Stream stream, YamlSystemModel splitModel)
+        public void Write(Stream stream, params YamlSystemModel[] models)
         {
-            _serializer.Serialize(stream, splitModel);
+            using (var writer = new StreamWriter(stream))
+            {
+                foreach (var model in models)
+                {
+                    writer.WriteLine("---");
+                    _serializer.Serialize(writer, model);
+                }
+                writer.WriteLine("...");
+            }
         }
     }
 }

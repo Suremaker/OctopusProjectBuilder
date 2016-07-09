@@ -4,29 +4,34 @@ using System.Linq;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Helpers;
 using OctopusProjectBuilder.YamlReader.Model.Templates;
+using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
     public class YamlProject : YamlNamedElement, IYamlTemplateBased
     {
-        [DefaultValue(null)]
-        public string Description { get; set; }
-        [DefaultValue(false)]
-        public bool IsDisabled { get; set; }
-        [DefaultValue(false)]
-        public bool AutoCreateRelease { get; set; }
-        [DefaultValue(false)]
-        public bool DefaultToSkipIfAlreadyInstalled { get; set; }
-        public YamlDeploymentProcess DeploymentProcess { get; set; }
-        public string LifecycleRef { get; set; }
-        public string ProjectGroupRef { get; set; }
-        [DefaultValue(null)]
-        public YamlVariable[] Variables { get; set; }
-        [DefaultValue(null)]
-        public string[] IncludedLibraryVariableSetRefs { get; set; }
-        [DefaultValue(null)]
+        [YamlMember(Order = 3)]
         public YamlTemplateReference UseTemplate { get; set; }
+        [YamlMember(Order = 4)]
+        public string Description { get; set; }
+        [YamlMember(Order = 5)]
+        public string LifecycleRef { get; set; }
+        [YamlMember(Order = 6)]
+        public string ProjectGroupRef { get; set; }
+        [YamlMember(Order = 7)]
+        public string[] IncludedLibraryVariableSetRefs { get; set; }
+        [YamlMember(Order = 8)]
+        public bool IsDisabled { get; set; }
+        [YamlMember(Order = 9)]
+        public bool AutoCreateRelease { get; set; }
+        [YamlMember(Order = 10)]
+        public bool DefaultToSkipIfAlreadyInstalled { get; set; }
+        [YamlMember(Order = 11)]
+        public YamlDeploymentProcess DeploymentProcess { get; set; }
+        [YamlMember(Order = 12)]
+        public YamlVariable[] Variables { get; set; }
+
         public void ApplyTemplate(YamlTemplates templates)
         {
             this.ApplyTemplate(templates.Projects);

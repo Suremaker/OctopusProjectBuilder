@@ -25,6 +25,8 @@ namespace OctopusProjectBuilder
                     UploadDefinitions(options);
                 else if (options.Action == Options.Verb.Download)
                     DownloadDefinitions(options);
+                else if (options.Action == Options.Verb.CleanupConfig)
+                    CleanupConfig(options);
             }
             catch (Exception e)
             {
@@ -32,6 +34,11 @@ namespace OctopusProjectBuilder
                 return 1;
             }
             return 0;
+        }
+
+        private static void CleanupConfig(Options options)
+        {
+            new YamlSystemModelRepository().CleanupConfig(options.DefinitionsDir);
         }
 
         private static void UploadDefinitions(Options options)

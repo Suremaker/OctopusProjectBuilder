@@ -1,22 +1,26 @@
 ﻿using System;
 using System.ComponentModel;
 using OctopusProjectBuilder.Model;
+using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
     public class YamlVariable
     {
-        [DefaultValue(null)]
-        public YamlVariablePrompt Prompt { get; set; }
-        [DefaultValue(null)]
-        public YamlVariableScope Scope { get; set; }
-        public string Value { get; set; }
-        [DefaultValue(false)]
-        public bool IsSensitive { get; set; }
-        [DefaultValue(true)]
-        public bool IsEditable { get; set; }
+        [YamlMember(Order = 1)]
         public string Name { get; set; }
+        [YamlMember(Order = 2)]
+        public string Value { get; set; }
+        [YamlMember(Order = 3)]
+        public bool IsSensitive { get; set; }
+        [YamlMember(Order = 4)]
+        [DefaultValue(true)]
+        public bool IsEditable { get; set; } = true;
+        [YamlMember(Order = 5)]
+        public YamlVariableScope Scope { get; set; }
+        [YamlMember(Order = 6)]
+        public YamlVariablePrompt Prompt { get; set; }
 
         public static YamlVariable FromModel(Variable model)
         {

@@ -2,18 +2,21 @@
 using System.ComponentModel;
 using System.Linq;
 using OctopusProjectBuilder.Model;
+using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
     public class YamlLifecycle : YamlNamedElement
     {
-        public YamlPhase[] Phases { get; set; }
-        [DefaultValue(null)]
-        public YamlRetentionPolicy TentacleRetentionPolicy { get; set; }
-        [DefaultValue(null)]
-        public YamlRetentionPolicy ReleaseRetentionPolicy { get; set; }
+        [YamlMember(Order = 3)]
         public string Description { get; set; }
+        [YamlMember(Order = 4)]
+        public YamlRetentionPolicy TentacleRetentionPolicy { get; set; }
+        [YamlMember(Order = 5)]
+        public YamlRetentionPolicy ReleaseRetentionPolicy { get; set; }
+        [YamlMember(Order = 6)]
+        public YamlPhase[] Phases { get; set; }
 
         public Lifecycle ToModel()
         {

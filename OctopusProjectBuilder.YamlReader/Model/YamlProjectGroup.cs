@@ -1,13 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
 using OctopusProjectBuilder.Model;
+using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
     public class YamlProjectGroup : YamlNamedElement
     {
-        [DefaultValue(null)]
+        [YamlMember(Order = 3)]
         public string Description { get; set; }
 
         public ProjectGroup ToModel()

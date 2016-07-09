@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Helpers;
@@ -13,13 +14,23 @@ namespace OctopusProjectBuilder.YamlReader
         public SystemModel Load(string modelDirectory)
         {
             YamlSystemModel model = new YamlSystemModel();
-            var files = Directory.EnumerateFiles(modelDirectory, "*.yml", SearchOption.AllDirectories);
-            foreach (var file in files)
-                model.MergeIn(ReadFile(file));
+            var files = FindFiles(modelDirectory);
+            foreach (var subModel in files.SelectMany(ReadFile))
+                model.MergeIn(subModel);
             return model.ApplyTemplates().BuildWith(new SystemModelBuilder()).Build();
         }
 
-        private YamlSystemModel ReadFile(string file)
+        public void CleanupConfig(string modelDirectory)
+        {
+            foreach (var file in FindFiles(modelDirectory))
+            {
+                WriteFile(file + ".new", ReadFile(file).ToArray());
+                File.Move(file, file + ".old");
+                File.Move(file + ".new", file);
+            }
+        }
+
+        private YamlSystemModel[] ReadFile(string file)
         {
             using (var stream = new FileStream(file, FileMode.Open))
                 return _reader.Read(stream);
@@ -29,10 +40,13 @@ namespace OctopusProjectBuilder.YamlReader
         {
             Directory.CreateDirectory(modelDirectory);
             foreach (var splitModel in model.SplitModel().Select(YamlSystemModel.FromModel))
-            {
-                using (var stream = new FileStream(GetModelPath(splitModel, modelDirectory), FileMode.Create))
-                    _writer.Write(stream, splitModel);
-            }
+                WriteFile(GetModelPath(splitModel, modelDirectory), splitModel);
+        }
+
+        private void WriteFile(string file,params YamlSystemModel[] models)
+        {
+            using (var stream = new FileStream(file, FileMode.Create))
+                _writer.Write(stream, models);
         }
 
         private string GetModelPath(YamlSystemModel splitModel, string modelDirectory)
@@ -43,6 +57,11 @@ namespace OctopusProjectBuilder.YamlReader
                 .Concat(splitModel.LibraryVariableSets.EnsureNotNull().Select(x => $"LibraryVariableSet_{x.Name}.yml"))
                 .Single();
             return modelDirectory + "\\" + name;
+        }
+
+        private static IEnumerable<string> FindFiles(string modelDirectory)
+        {
+            return Directory.EnumerateFiles(modelDirectory, "*.yml", SearchOption.AllDirectories);
         }
     }
 }

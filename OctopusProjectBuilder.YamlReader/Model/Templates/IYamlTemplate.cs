@@ -1,3 +1,5 @@
+using YamlDotNet.Serialization;
+
 namespace OctopusProjectBuilder.YamlReader.Model.Templates
 {
     public interface IYamlTemplate

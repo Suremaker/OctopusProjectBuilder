@@ -3,16 +3,19 @@ using System.ComponentModel;
 using System.Linq;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Helpers;
+using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
     public class YamlLibraryVariableSet : YamlNamedElement
     {
-        [DefaultValue(null)]
-        public YamlVariable[] Variables { get; set; }
-        public LibraryVariableSet.VariableSetContentType ContentType { get; set; }
+        [YamlMember(Order = 3)]
         public string Description { get; set; }
+        [YamlMember(Order = 4)]
+        public LibraryVariableSet.VariableSetContentType ContentType { get; set; }
+        [YamlMember(Order = 5)]
+        public YamlVariable[] Variables { get; set; }
 
         public LibraryVariableSet ToModel()
         {
