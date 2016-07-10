@@ -14,9 +14,9 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
         [Test]
         public void It_should_convert_to_and_from_domain_model()
         {
-            var yamlModel = new Fixture().Create<YamlSystemModel>();
+            var yamlModel = new Fixture().Create<YamlOctopusModel>();
             var model = yamlModel.BuildWith(new SystemModelBuilder()).Build();
-            var restoredModel = YamlSystemModel.FromModel(model);
+            var restoredModel = YamlOctopusModel.FromModel(model);
 
             restoredModel.AssertEqualsTo(yamlModel);
         }
@@ -24,7 +24,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
         [Test]
         public void It_should_apply_templates_on_model_convertion()
         {
-            var yamlModel = new YamlSystemModel
+            var yamlModel = new YamlOctopusModel
             {
                 Templates = new YamlTemplates
                 {
@@ -106,7 +106,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
         [Test]
         public void It_should_merge_models()
         {
-            var model1 = new YamlSystemModel
+            var model1 = new YamlOctopusModel
             {
                 LibraryVariableSets = new[] { new YamlLibraryVariableSet { Name = "N1" } },
                 ProjectGroups = new[] { new YamlProjectGroup { Name = "N1" } },
@@ -119,7 +119,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
                     DeploymentActions = new[] { new YamlDeploymentActionTemplate { Name = "PA1" } }
                 }
             };
-            var model2 = new YamlSystemModel
+            var model2 = new YamlOctopusModel
             {
                 LibraryVariableSets = new[] { new YamlLibraryVariableSet { Name = "N2" } },
                 ProjectGroups = new[] { new YamlProjectGroup { Name = "N2" } },
@@ -146,7 +146,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
         [Test]
         public void It_should_merge_models_with_nulls()
         {
-            var model1 = new YamlSystemModel
+            var model1 = new YamlOctopusModel
             {
                 Lifecycles = new[] { new YamlLifecycle { Name = "N1" } },
                 Projects = new[] { new YamlProject { Name = "N1" } },
@@ -155,7 +155,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
                     DeploymentActions = new[] { new YamlDeploymentActionTemplate { Name = "PA1" } }
                 }
             };
-            var model2 = new YamlSystemModel
+            var model2 = new YamlOctopusModel
             {
                 ProjectGroups = new[] { new YamlProjectGroup { Name = "N2" } },
                 Templates = new YamlTemplates

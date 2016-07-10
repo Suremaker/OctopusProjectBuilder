@@ -13,7 +13,7 @@ namespace OctopusProjectBuilder.YamlReader
         private readonly YamlSystemModelWriter _writer = new YamlSystemModelWriter();
         public SystemModel Load(string modelDirectory)
         {
-            YamlSystemModel model = new YamlSystemModel();
+            YamlOctopusModel model = new YamlOctopusModel();
             var files = FindFiles(modelDirectory);
             foreach (var subModel in files.SelectMany(ReadFile))
                 model.MergeIn(subModel);
@@ -30,7 +30,7 @@ namespace OctopusProjectBuilder.YamlReader
             }
         }
 
-        private YamlSystemModel[] ReadFile(string file)
+        private YamlOctopusModel[] ReadFile(string file)
         {
             using (var stream = new FileStream(file, FileMode.Open))
                 return _reader.Read(stream);
@@ -39,17 +39,17 @@ namespace OctopusProjectBuilder.YamlReader
         public void Save(SystemModel model, string modelDirectory)
         {
             Directory.CreateDirectory(modelDirectory);
-            foreach (var splitModel in model.SplitModel().Select(YamlSystemModel.FromModel))
+            foreach (var splitModel in model.SplitModel().Select(YamlOctopusModel.FromModel))
                 WriteFile(GetModelPath(splitModel, modelDirectory), splitModel);
         }
 
-        private void WriteFile(string file,params YamlSystemModel[] models)
+        private void WriteFile(string file,params YamlOctopusModel[] models)
         {
             using (var stream = new FileStream(file, FileMode.Create))
                 _writer.Write(stream, models);
         }
 
-        private string GetModelPath(YamlSystemModel splitModel, string modelDirectory)
+        private string GetModelPath(YamlOctopusModel splitModel, string modelDirectory)
         {
             var name = splitModel.ProjectGroups.EnsureNotNull().Select(x => $"ProjectGroup_{x.Name}.yml")
                 .Concat(splitModel.Projects.EnsureNotNull().Select(x => $"Project_{x.Name}.yml"))

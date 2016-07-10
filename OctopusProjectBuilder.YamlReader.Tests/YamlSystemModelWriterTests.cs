@@ -23,7 +23,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         [Test]
         public void It_should_write_all_data()
         {
-            var expected = new Fixture().Create<YamlSystemModel>();
+            var expected = new Fixture().Create<YamlOctopusModel>();
             var content = Write(expected);
             Console.WriteLine(content);
 
@@ -34,8 +34,8 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         [Test]
         public void It_should_allow_writing_more_documents()
         {
-            var expected1 = new Fixture().Create<YamlSystemModel>();
-            var expected2 = new Fixture().Create<YamlSystemModel>();
+            var expected1 = new Fixture().Create<YamlOctopusModel>();
+            var expected2 = new Fixture().Create<YamlOctopusModel>();
             var content = Write(expected1, expected2);
             var actual = new YamlSystemModelReader().Read(new MemoryStream(Encoding.UTF8.GetBytes(content)));
             Assert.That(actual.Length, Is.EqualTo(2));
@@ -43,7 +43,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
             actual[1].AssertEqualsTo(expected2);
         }
 
-        private string Write(params YamlSystemModel[] models)
+        private string Write(params YamlOctopusModel[] models)
         {
             using (var stream = new MemoryStream())
             {

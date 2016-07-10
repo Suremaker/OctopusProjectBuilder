@@ -53,9 +53,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\TemplateProcessor.cs" />
+    <Compile Include="Helpers\YamlModelExtensions.cs" />
     <Compile Include="Model\Templates\IYamlTemplate.cs" />
     <Compile Include="Model\IYamlTemplateBased.cs" />
-    <Compile Include="Model\Templates\TemplateProcessor.cs" />
     <Compile Include="Model\Templates\YamlDeploymentActionTemplate.cs" />
     <Compile Include="Model\Templates\YamlDeploymentStepTemplate.cs" />
     <Compile Include="Model\Templates\YamlTemplateParameter.cs" />
@@ -65,7 +66,6 @@
     <Compile Include="Model\YamlDeploymentStep.cs" />
     <Compile Include="Model\YamlLibraryVariableSet.cs" />
     <Compile Include="Model\YamlLifecycle.cs" />
-    <Compile Include="Model\YamlModelExtensions.cs" />
     <Compile Include="Model\YamlPhase.cs" />
     <Compile Include="Model\YamlProject.cs" />
     <Compile Include="Model\Templates\YamlProjectTemplate.cs" />
@@ -80,7 +80,7 @@
     <Compile Include="Helpers\EnumerableExtensions.cs" />
     <Compile Include="Model\YamlNamedElement.cs" />
     <Compile Include="Model\YamlProjectGroup.cs" />
-    <Compile Include="Model\YamlSystemModel.cs" />
+    <Compile Include="Model\YamlOctopusModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="YamlSystemModelWriter.cs" />
   </ItemGroup>

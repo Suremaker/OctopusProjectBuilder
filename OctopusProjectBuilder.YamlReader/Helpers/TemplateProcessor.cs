@@ -6,9 +6,10 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
-using OctopusProjectBuilder.YamlReader.Helpers;
+using OctopusProjectBuilder.YamlReader.Model;
+using OctopusProjectBuilder.YamlReader.Model.Templates;
 
-namespace OctopusProjectBuilder.YamlReader.Model.Templates
+namespace OctopusProjectBuilder.YamlReader.Helpers
 {
     public static class TemplateProcessor
     {

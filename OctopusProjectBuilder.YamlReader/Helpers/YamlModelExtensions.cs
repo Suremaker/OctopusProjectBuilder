@@ -1,8 +1,7 @@
 using System;
 using System.Linq;
-using OctopusProjectBuilder.YamlReader.Helpers;
 
-namespace OctopusProjectBuilder.YamlReader.Model
+namespace OctopusProjectBuilder.YamlReader.Helpers
 {
     internal static class YamlModelExtensions
     {

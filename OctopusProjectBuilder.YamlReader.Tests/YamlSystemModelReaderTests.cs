@@ -166,7 +166,7 @@ ProjectGroups:
             model.Projects.AssertEqualsTo(expected);
         }
 
-        private YamlSystemModel Read(string content)
+        private YamlOctopusModel Read(string content)
         {
             return _reader.Read(new MemoryStream(Encoding.UTF8.GetBytes(content), false)).Single();
         }

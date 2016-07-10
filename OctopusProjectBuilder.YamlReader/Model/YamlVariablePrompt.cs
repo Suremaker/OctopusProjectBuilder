@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using OctopusProjectBuilder.Model;
 using YamlDotNet.Serialization;
 
@@ -9,6 +10,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
     {
         [YamlMember(Order = 1)]
         public string Label { get; set; }
+
         [YamlMember(Order = 2)]
         public string Description { get; set; }
 

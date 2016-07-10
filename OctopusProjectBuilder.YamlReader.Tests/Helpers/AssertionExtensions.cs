@@ -6,10 +6,10 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Helpers
 {
     public static class AssertionExtensions
     {
-        public static void AssertEqualsTo(this YamlSystemModel actual, YamlSystemModel expected)
+        public static void AssertEqualsTo(this YamlOctopusModel actual, YamlOctopusModel expected)
         {
-            ArrayAssert(actual.ProjectGroups, expected.ProjectGroups, AssertEqualsTo, nameof(YamlSystemModel.ProjectGroups));
-            ArrayAssert(actual.Projects, expected.Projects, AssertEqualsTo, nameof(YamlSystemModel.Projects));
+            ArrayAssert(actual.ProjectGroups, expected.ProjectGroups, AssertEqualsTo, nameof(YamlOctopusModel.ProjectGroups));
+            ArrayAssert(actual.Projects, expected.Projects, AssertEqualsTo, nameof(YamlOctopusModel.Projects));
         }
 
         public static void AssertEqualsTo(this YamlProjectGroup[] actual, YamlProjectGroup[] expected)

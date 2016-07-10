@@ -6,15 +6,23 @@ using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
+    [Description("Lifecycle model definition.")]
     [Serializable]
     public class YamlLifecycle : YamlNamedElement
     {
+        [Description("Lifecycle resource description.")]
         [YamlMember(Order = 3)]
         public string Description { get; set; }
+
+        [Description("Tentacle retention policy, defining how long deployments are being kept on machines.")]
         [YamlMember(Order = 4)]
         public YamlRetentionPolicy TentacleRetentionPolicy { get; set; }
+
+        [Description("Release retention policy, defining how long releases are being kept in Octopus.")]
         [YamlMember(Order = 5)]
         public YamlRetentionPolicy ReleaseRetentionPolicy { get; set; }
+
+        [Description("List of deployment phases.")]
         [YamlMember(Order = 6)]
         public YamlPhase[] Phases { get; set; }
 

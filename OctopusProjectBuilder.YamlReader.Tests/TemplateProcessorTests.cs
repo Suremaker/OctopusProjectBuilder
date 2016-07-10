@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using OctopusProjectBuilder.YamlReader.Helpers;
 using OctopusProjectBuilder.YamlReader.Model;
 using OctopusProjectBuilder.YamlReader.Model.Templates;
 

@@ -8,7 +8,7 @@ namespace OctopusProjectBuilder.YamlReader
     {
         private readonly Serializer _serializer = new Serializer();
 
-        public void Write(Stream stream, params YamlSystemModel[] models)
+        public void Write(Stream stream, params YamlOctopusModel[] models)
         {
             using (var writer = new StreamWriter(stream))
             {

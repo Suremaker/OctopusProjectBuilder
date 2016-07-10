@@ -7,13 +7,24 @@ using OctopusProjectBuilder.YamlReader.Helpers;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
+    [Description(@"Variable scope definition. It can limit variable visibility to specific context. 
+The variable scope should be understand as `(role1 OR ...roleN) AND (machine1 OR ...machineN) AND (env1 OR envN) AND...` where if none resource references are defined of specific type \(like role or machine etc.\) then variable is available to all the resources of that type.")]
     [Serializable]
     public class YamlVariableScope
     {
+        [Description("List of Role references (based on the name) where variable is applicable to. The roles correspond to roles that Machines have specified. If none are specified, then variable is available to all of them.")]
         public string[] RoleRefs { get; set; }
+
+        [Description("List of Machine references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them.")]
         public string[] MachineRefs { get; set; }
+
+        [Description("List of Environment references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them.")]
         public string[] EnvironmentRefs { get; set; }
+
+        [Description("List of Channel references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them.")]
         public string[] ChannelRefs { get; set; }
+
+        [Description("List of Action references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them. The Action references can be only specified in Project variables (LibraryVariableSets does not support them).")]
         public string[] ActionRefs { get; set; }
 
         public IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>> ToModel()

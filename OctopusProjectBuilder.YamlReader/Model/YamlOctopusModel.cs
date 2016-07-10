@@ -8,15 +8,21 @@ using OctopusProjectBuilder.YamlReader.Model.Templates;
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
-    public class YamlSystemModel
+    [Description("Octopus model root type.")]
+    public class YamlOctopusModel
     {
+        [Description("List of Project Groups.")]
         public YamlProjectGroup[] ProjectGroups { get; set; }
+        [Description("List of Projects.")]
         public YamlProject[] Projects { get; set; }
+        [Description("List of Lifecycles.")]
         public YamlLifecycle[] Lifecycles { get; set; }
+        [Description("List of Library Variable Sets (including Script modules).")]
         public YamlLibraryVariableSet[] LibraryVariableSets { get; set; }
+        [Description("Templates node allowing to define templates for other octopus model elements.")]
         public YamlTemplates Templates { get; set; }
 
-        public YamlSystemModel ApplyTemplates()
+        public YamlOctopusModel ApplyTemplates()
         {
             foreach (var project in Projects)
                 project.ApplyTemplate(Templates);
@@ -40,9 +46,9 @@ namespace OctopusProjectBuilder.YamlReader.Model
             return builder;
         }
 
-        public static YamlSystemModel FromModel(SystemModel model)
+        public static YamlOctopusModel FromModel(SystemModel model)
         {
-            return new YamlSystemModel
+            return new YamlOctopusModel
             {
                 ProjectGroups = model.ProjectGroups.Select(YamlProjectGroup.FromModel).ToArray().NullIfEmpty(),
                 Projects = model.Projects.Select(YamlProject.FromModel).ToArray().NullIfEmpty(),
@@ -51,7 +57,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
             };
         }
 
-        public YamlSystemModel MergeIn(YamlSystemModel model)
+        public YamlOctopusModel MergeIn(YamlOctopusModel model)
         {
             ProjectGroups = this.MergeItemsIn(model, x => x.ProjectGroups);
             LibraryVariableSets = this.MergeItemsIn(model, x => x.LibraryVariableSets);

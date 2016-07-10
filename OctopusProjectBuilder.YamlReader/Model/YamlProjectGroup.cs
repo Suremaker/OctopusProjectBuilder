@@ -6,8 +6,10 @@ using YamlDotNet.Serialization;
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Serializable]
+    [Description("Project Group model.")]
     public class YamlProjectGroup : YamlNamedElement
     {
+        [Description("Resource description.")]
         [YamlMember(Order = 3)]
         public string Description { get; set; }
 

@@ -11,16 +11,16 @@ namespace OctopusProjectBuilder.YamlReader
     {
         private readonly Deserializer _deserializer = new Deserializer();
 
-        public YamlSystemModel[] Read(Stream stream)
+        public YamlOctopusModel[] Read(Stream stream)
         {
-            List<YamlSystemModel> models = new List<YamlSystemModel>();
+            List<YamlOctopusModel> models = new List<YamlOctopusModel>();
             using (var reader = new StreamReader(stream))
             {
                 var eventReader = new EventReader(new Parser(reader));
                 eventReader.Expect<StreamStart>();
 
                 while (eventReader.Accept<DocumentStart>())
-                    models.Add(_deserializer.Deserialize<YamlSystemModel>(eventReader));
+                    models.Add(_deserializer.Deserialize<YamlOctopusModel>(eventReader));
 
                 return models.ToArray();
             }

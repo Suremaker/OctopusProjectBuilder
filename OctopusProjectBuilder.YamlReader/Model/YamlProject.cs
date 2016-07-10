@@ -8,27 +8,46 @@ using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
+    [Description("Octopus Project model.")]
     [Serializable]
     public class YamlProject : YamlNamedElement, IYamlTemplateBased
     {
+        [Description("Indicates that the resource is template based.")]
         [YamlMember(Order = 3)]
         public YamlTemplateReference UseTemplate { get; set; }
+
+        [Description("Project description.")]
         [YamlMember(Order = 4)]
         public string Description { get; set; }
+
+        [Description("Lifecycle reference.")]
         [YamlMember(Order = 5)]
         public string LifecycleRef { get; set; }
+
+        [Description("Project Group reference.")]
         [YamlMember(Order = 6)]
         public string ProjectGroupRef { get; set; }
+
+        [Description("References of Library Variable Sets that should be included in the project.")]
         [YamlMember(Order = 7)]
         public string[] IncludedLibraryVariableSetRefs { get; set; }
+
+        [Description("Disable a project to prevent releases or deployments from being created.")]
         [YamlMember(Order = 8)]
         public bool IsDisabled { get; set; }
+
         [YamlMember(Order = 9)]
         public bool AutoCreateRelease { get; set; }
+
+        [Description("Skips package deployment and installation if it is already installed.")]
         [YamlMember(Order = 10)]
         public bool DefaultToSkipIfAlreadyInstalled { get; set; }
+
+        [Description("Deployment process definition.")]
         [YamlMember(Order = 11)]
         public YamlDeploymentProcess DeploymentProcess { get; set; }
+
+        [Description("Project variables.")]
         [YamlMember(Order = 12)]
         public YamlVariable[] Variables { get; set; }
 
