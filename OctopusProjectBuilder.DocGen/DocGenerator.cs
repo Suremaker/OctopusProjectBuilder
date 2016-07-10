@@ -53,7 +53,7 @@ namespace OctopusProjectBuilder.DocGen
                 var name = propertyInfo.Name;
                 var propertyType = GetPropertyTypeText(propertyInfo.PropertyType);
                 var description = GetPropertyText(propertyInfo);
-                builder.AppendLine($"|**{name}**|{propertyType}|{description}");
+                builder.AppendLine($"|**{name}**|{propertyType}|{description}|");
             }
         }
 
@@ -106,7 +106,7 @@ namespace OctopusProjectBuilder.DocGen
         {
             var description = GetDescription(type);
             if (description.Length > 0)
-                builder.AppendLine(description);
+                builder.AppendLine(description).AppendLine();
         }
 
         private void GenerateTableOfContents(StringBuilder builder)
