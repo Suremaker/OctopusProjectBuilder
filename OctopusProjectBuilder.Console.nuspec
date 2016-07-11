@@ -1,0 +1,31 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>OctopusProjectBuilder.Console</id>
+    <version>$version$</version>
+    <title>OctopusProjectBuilder.Console</title>
+    <authors>Wojciech Kotlarski</authors>
+    <owners>Wojciech Kotlarski</owners>
+    <licenseUrl>http://opensource.org/licenses/BSD-2-Clause</licenseUrl>
+    <projectUrl>https://github.com/Suremaker/OctopusProjectBuilder</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Console application allowing to configure Octopus resources from YAML files.</description>
+    <summary>Console application allowing to configure Octopus resources from YAML files.</summary>
+    <releaseNotes>
+      Initial release supporting:
+      * configuration of: Project Groups, Lifecycles, Projects, Library Variable Sets,
+      * templating.
+    </releaseNotes>
+    <copyright>Copyright © Wojciech Kotlarski 2016</copyright>
+    <tags>octopus yaml configuration</tags>
+    <language>en-US</language>
+  </metadata>
+  <files>
+    <file src="OctopusProjectBuilder.Console\bin\Release\*.dll" target="." />
+    <file src="OctopusProjectBuilder.Console\bin\Release\*.exe" target="." />
+    <file src="LICENSE" target="LICENSE" />
+    <file src="LICENSE-YamlDotNet" target="LICENSE-YamlDotNet" />
+    <file src="README.md" target="." />
+    <file src="Manual.md" target="." />
+  </files>
+</package>

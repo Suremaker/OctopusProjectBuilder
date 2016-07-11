@@ -90,7 +90,6 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         private static T SerializeAndDeserialize<T>(T model)
         {
             var yaml = Serialize(model);
-            Console.WriteLine(yaml);
             return Deserialize<T>(yaml);
         }
 

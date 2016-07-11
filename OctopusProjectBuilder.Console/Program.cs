@@ -6,7 +6,7 @@ using Fclp;
 using OctopusProjectBuilder.Uploader;
 using OctopusProjectBuilder.YamlReader;
 
-namespace OctopusProjectBuilder
+namespace OctopusProjectBuilder.Console
 {
     class Program
     {
@@ -60,12 +60,12 @@ namespace OctopusProjectBuilder
             parser.Setup(o => o.DefinitionsDir).As('d', "definitions").Required().WithDescription("Definitions directory");
             parser.Setup(o => o.OctopusUrl).As('u', "octopusUrl").Required().WithDescription("Octopus Url");
             parser.Setup(o => o.OctopusApiKey).As('k', "octopusApiKey").Required().WithDescription("Octopus API key");
-            parser.SetupHelp("?", "help").Callback(text => Console.WriteLine(text));
+            parser.SetupHelp("?", "help").Callback(text => System.Console.WriteLine(text));
 
             var result = parser.Parse(args);
             if (result.HasErrors)
             {
-                Console.Error.WriteLine(result.ErrorText);
+                System.Console.Error.WriteLine(result.ErrorText);
                 parser.HelpOption.ShowHelp(parser.Options);
                 return null;
             }

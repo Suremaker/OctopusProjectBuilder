@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using OctopusProjectBuilder.Model;
 using YamlDotNet.Serialization;
 

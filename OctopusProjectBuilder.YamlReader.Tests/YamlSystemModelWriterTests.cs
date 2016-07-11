@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -25,7 +24,6 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         {
             var expected = new Fixture().Create<YamlOctopusModel>();
             var content = Write(expected);
-            Console.WriteLine(content);
 
             var actual = new YamlSystemModelReader().Read(new MemoryStream(Encoding.UTF8.GetBytes(content))).Single();
             actual.AssertEqualsTo(expected);

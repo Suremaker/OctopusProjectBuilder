@@ -20,7 +20,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [YamlMember(Order = 2)]
         public string Value { get; set; }
 
-        [Description("Should Octopus store this property value in encrypted format? \\(Please note that at this moment the sensitive values have to be stored in plain text in yaml definiton.\\)")]
+        [Description("Should Octopus store this property value in encrypted format? \\(Please note that at this moment the sensitive values have to be stored in plain text in yaml definition.\\)")]
         [YamlMember(Order = 3)]
         public bool IsSensitive { get; set; }
         public static IReadOnlyDictionary<string, PropertyValue> ToModel(YamlPropertyValue[] properties)

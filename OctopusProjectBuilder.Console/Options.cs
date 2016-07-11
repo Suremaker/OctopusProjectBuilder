@@ -1,4 +1,4 @@
-﻿namespace OctopusProjectBuilder
+﻿namespace OctopusProjectBuilder.Console
 {
     class Options
     {

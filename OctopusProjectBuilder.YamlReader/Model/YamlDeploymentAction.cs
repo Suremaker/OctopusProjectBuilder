@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
 {
-    [Description(@"Project step deployment action definiton.
+    [Description(@"Project step deployment action definition.
 Because Octopus Action definitions are generic (based on ActionType and list of properties), the easiest way to check how to define new actions is to model them first in Octopus and then use OctopusProjectBuilder.exe to download them to yaml files.")]
     [Serializable]
     public class YamlDeploymentAction : IYamlTemplateBased

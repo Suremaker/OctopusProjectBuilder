@@ -8,7 +8,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
     [Serializable]
     public class YamlNamedElement
     {
-        [Description("Uniqueue name. It can be used in other models to refer to this item.")]
+        [Description("Unique name. It can be used in other models to refer to this item.")]
         [YamlMember(Order = 1)]
         public string Name { get; set; }
 

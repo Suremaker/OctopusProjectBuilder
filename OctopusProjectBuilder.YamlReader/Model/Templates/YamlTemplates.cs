@@ -10,7 +10,7 @@ The templating mechanism allows to simplify the model definitions and speed-up t
 
 #### Specifying template values and applying it to the model
 The model template allows to define values of all the properties that are defined in model.
-The model defintion itself can refer to the template, but it also can have own specification of the properties.
+The model definition itself can refer to the template, but it also can have own specification of the properties.
 When the resource is being instantiated, the template would be used to provide the default values of the properties, that would be then customized with model definition.
 
 #### Model property override
@@ -20,8 +20,8 @@ The property value resolution is implemented in a following way:
 * if model have defined the value, it is being used,
 * if model does not have defined property value (it is null), then template value is used.
 
-Please note, that properties of value type (like int, bool etc) would never be null, so they cannot be templated.
-Please also note that properties of collection type (arrays, dictionaries) cannot be partially overriden. If model would contain a definition of such properties, the template property value would be ignored.
+Please note, that properties of value type (like int, bool etc.) would never be null, so they cannot be templated.
+Please also note that properties of collection type (arrays, dictionaries) cannot be partially overridden. If model would contain a definition of such properties, the template property value would be ignored.
 
 #### Parameterized templates
 It is possible to parameterize templates with a list of parameters (consisting of alphanumeric and/or underscore characters).
@@ -29,7 +29,7 @@ The parameters can be used in property values defined in the template (at any tr
 They are referenced with `${paramName}` syntax. It is possible to escape the `$` character with `\` if string like should not be updated: `\${this_is_not_a_param}`.
 
 Example:
-Assumming that we have parameters: 
+Assuming that we have parameters: 
 * packageId=My_project
 * packageVersion='1.2.3.4'
 

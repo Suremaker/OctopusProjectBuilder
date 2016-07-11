@@ -53,6 +53,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Helpers\TemplateProcessor.cs" />
     <Compile Include="Helpers\YamlModelExtensions.cs" />
     <Compile Include="Model\Templates\IYamlTemplate.cs" />

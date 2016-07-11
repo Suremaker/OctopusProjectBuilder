@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using OctopusProjectBuilder.YamlReader.Model.Templates;
 
 namespace OctopusProjectBuilder.YamlReader.Model

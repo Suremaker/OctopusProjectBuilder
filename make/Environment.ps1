@@ -1,0 +1,1 @@
+$VERSION = (Get-Content -Path 'current_version' | Out-String).Trim()

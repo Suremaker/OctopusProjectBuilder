@@ -4,3 +4,5 @@ packages
 .vs
 *.user
 make/psmake.3.1.4.0
+*.nupkg
+reports/

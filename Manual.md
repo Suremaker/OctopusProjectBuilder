@@ -1,4 +1,4 @@
-## Table of contents
+﻿## Table of contents
 
 1. [YamlDeploymentActionTemplate](#YamlDeploymentActionTemplate)
 2. [YamlDeploymentStepTemplate](#YamlDeploymentStepTemplate)
@@ -62,7 +62,7 @@ Project Template model definition.
 |--------|----|:----------|
 |**TemplateName**|String|Unique template name. Default value: **null**. |
 |**TemplateParameters**|String\[\]|List of template parameters, where accepted names should consist of alphanumeric characters and/or underscores. If template is not parameterized, the list should be left empty or undefined. Default value: **null**. |
-|**Name**|String|Uniqueue name. It can be used in other models to refer to this item. Default value: **null**. |
+|**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
 |**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
 |**UseTemplate**|[YamlTemplateReference](#YamlTemplateReference)|Indicates that the resource is template based. Default value: **null**. |
 |**Description**|String|Project description. Default value: **null**. |
@@ -101,7 +101,7 @@ The templating mechanism allows to simplify the model definitions and speed-up t
 
 #### Specifying template values and applying it to the model
 The model template allows to define values of all the properties that are defined in model.
-The model defintion itself can refer to the template, but it also can have own specification of the properties.
+The model definition itself can refer to the template, but it also can have own specification of the properties.
 When the resource is being instantiated, the template would be used to provide the default values of the properties, that would be then customized with model definition.
 
 #### Model property override
@@ -111,8 +111,8 @@ The property value resolution is implemented in a following way:
 * if model have defined the value, it is being used,
 * if model does not have defined property value (it is null), then template value is used.
 
-Please note, that properties of value type (like int, bool etc) would never be null, so they cannot be templated.
-Please also note that properties of collection type (arrays, dictionaries) cannot be partially overriden. If model would contain a definition of such properties, the template property value would be ignored.
+Please note, that properties of value type (like int, bool etc.) would never be null, so they cannot be templated.
+Please also note that properties of collection type (arrays, dictionaries) cannot be partially overridden. If model would contain a definition of such properties, the template property value would be ignored.
 
 #### Parameterized templates
 It is possible to parameterize templates with a list of parameters (consisting of alphanumeric and/or underscore characters).
@@ -120,7 +120,7 @@ The parameters can be used in property values defined in the template (at any tr
 They are referenced with `${paramName}` syntax. It is possible to escape the `$` character with `\` if string like should not be updated: `\${this_is_not_a_param}`.
 
 Example:
-Assumming that we have parameters: 
+Assuming that we have parameters: 
 * packageId=My_project
 * packageVersion='1.2.3.4'
 
@@ -134,7 +134,7 @@ the property value `"${packageId} ver ${packageVersion}"` would be updated to `"
 
 ### <a name="YamlDeploymentAction"></a>7. YamlDeploymentAction
 
-Project step deployment action definiton.
+Project step deployment action definition.
 Because Octopus Action definitions are generic (based on ActionType and list of properties), the easiest way to check how to define new actions is to model them first in Octopus and then use OctopusProjectBuilder.exe to download them to yaml files.
 
 |Property|Type|Description|
@@ -172,7 +172,7 @@ Library Variable Set model definition allowing to define library variable sets a
 
 |Property|Type|Description|
 |--------|----|:----------|
-|**Name**|String|Uniqueue name. It can be used in other models to refer to this item. Default value: **null**. |
+|**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
 |**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
 |**Description**|String|Resource description. Default value: **null**. |
 |**ContentType**|VariableSetContentType|Variable set type. Possible values: **Variables**, **ScriptModule**. Default value: **Variables**. |
@@ -184,7 +184,7 @@ Lifecycle model definition.
 
 |Property|Type|Description|
 |--------|----|:----------|
-|**Name**|String|Uniqueue name. It can be used in other models to refer to this item. Default value: **null**. |
+|**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
 |**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
 |**Description**|String|Lifecycle resource description. Default value: **null**. |
 |**TentacleRetentionPolicy**|[YamlRetentionPolicy](#YamlRetentionPolicy)|Tentacle retention policy, defining how long deployments are being kept on machines. Default value: **null**. |
@@ -195,7 +195,7 @@ Lifecycle model definition.
 
 |Property|Type|Description|
 |--------|----|:----------|
-|**Name**|String|Uniqueue name. It can be used in other models to refer to this item. Default value: **null**. |
+|**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
 |**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
 
 ### <a name="YamlOctopusModel"></a>13. YamlOctopusModel
@@ -216,7 +216,7 @@ Lifecycle deployment Phase definition.
 
 |Property|Type|Description|
 |--------|----|:----------|
-|**Name**|String|Uniqueue name. It can be used in other models to refer to this item. Default value: **null**. |
+|**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
 |**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
 |**MinimumEnvironmentsBeforePromotion**|Int32|Number of environments where release has to be deployed in order to proceed to next phase, where **0** means **all**. Default value: **0**. |
 |**TentacleRetentionPolicy**|[YamlRetentionPolicy](#YamlRetentionPolicy)|Tentacle retention policy, defining how long deployments are being kept on machines. If ReleaseRetentionPolicy and TentacleRetentionPolicy are not specified in this resource, the Lifecycle retention policies are used. Default value: **null**. |
@@ -230,7 +230,7 @@ Octopus Project model.
 
 |Property|Type|Description|
 |--------|----|:----------|
-|**Name**|String|Uniqueue name. It can be used in other models to refer to this item. Default value: **null**. |
+|**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
 |**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
 |**UseTemplate**|[YamlTemplateReference](#YamlTemplateReference)|Indicates that the resource is template based. Default value: **null**. |
 |**Description**|String|Project description. Default value: **null**. |
@@ -249,7 +249,7 @@ Project Group model.
 
 |Property|Type|Description|
 |--------|----|:----------|
-|**Name**|String|Uniqueue name. It can be used in other models to refer to this item. Default value: **null**. |
+|**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
 |**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
 |**Description**|String|Resource description. Default value: **null**. |
 
@@ -261,7 +261,7 @@ Property Value definition.
 |--------|----|:----------|
 |**Key**|String|Unique property key. Default value: **null**. |
 |**Value**|String|Property value. Default value: **null**. |
-|**IsSensitive**|Boolean|Should Octopus store this property value in encrypted format? \(Please note that at this moment the sensitive values have to be stored in plain text in yaml definiton.\) Default value: **False**. |
+|**IsSensitive**|Boolean|Should Octopus store this property value in encrypted format? \(Please note that at this moment the sensitive values have to be stored in plain text in yaml definition.\) Default value: **False**. |
 
 ### <a name="YamlRetentionPolicy"></a>18. YamlRetentionPolicy
 
@@ -269,7 +269,7 @@ Retention policy definition.
 
 |Property|Type|Description|
 |--------|----|:----------|
-|**QuantityToKeep**|Int32|Quantity to keep, where 0 means **all**. Default value: **-1**. |
+|**QuantityToKeep**|Int32|Quantity to keep, where 0 means **all**. Default value: **0**. |
 |**Unit**|RetentionUnit|Retention unit type. Possible values: **Days**, **Items**. Default value: **Days**. |
 
 ### <a name="YamlVariable"></a>19. YamlVariable
@@ -280,7 +280,7 @@ Variable definition.
 |--------|----|:----------|
 |**Name**|String|Variable name. Default value: **null**. |
 |**Value**|String|Variable value. \(Please note that OctopusProjectBuilder is not able to retrieve values of sensitive variables from Octopus\) Default value: **null**. |
-|**IsSensitive**|Boolean|Should Octopus store this variable in encrypted format? \(Please note that at this moment the sensitive values have to be stored in plain text in yaml definiton.\) Default value: **False**. |
+|**IsSensitive**|Boolean|Should Octopus store this variable in encrypted format? \(Please note that at this moment the sensitive values have to be stored in plain text in yaml definition.\) Default value: **False**. |
 |**IsEditable**|Boolean| Default value: **True**. |
 |**Scope**|[YamlVariableScope](#YamlVariableScope)|Variable scope, including roles, machines, environments, channels and actions. If none specified, variable will be always available in given context. Default value: **null**. |
 |**Prompt**|[YamlVariablePrompt](#YamlVariablePrompt)| Default value: **null**. |

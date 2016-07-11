@@ -11,7 +11,6 @@ namespace OctopusProjectBuilder.YamlReader.Model
     {
         [Description("Quantity to keep, where 0 means **all**.")]
         [YamlMember(Order = 1)]
-        [DefaultValue(-1)] // To force rendering 0
         public int QuantityToKeep { get; set; }
 
         [Description("Retention unit type.")]
