@@ -96,7 +96,7 @@ namespace OctopusProjectBuilder.DocGen
             if (propertyType.IsArray)
                 return GetPropertyTypeText(propertyType.GetElementType()) + "\\[\\]";
             if (propertyType.IsGenericType)
-                return propertyType.GetGenericTypeDefinition().Name + "<" + string.Join(", ", propertyType.GetGenericArguments().Select(GetPropertyTypeText)) + ">";
+                return propertyType.GetGenericTypeDefinition().Name.Split('`')[0] + "<" + string.Join(", ", propertyType.GetGenericArguments().Select(GetPropertyTypeText)) + ">";
             if (_modelTypes.ContainsKey(propertyType.FullName))
                 return $"[{propertyType.Name}](#{propertyType.Name})";
             return propertyType.Name;

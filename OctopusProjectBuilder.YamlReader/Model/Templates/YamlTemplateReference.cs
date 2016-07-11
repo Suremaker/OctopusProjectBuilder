@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using YamlDotNet.Serialization;
 
@@ -12,8 +13,8 @@ namespace OctopusProjectBuilder.YamlReader.Model.Templates
         [YamlMember(Order = 1)]
         public string Name { get; set; }
 
-        [Description("The list of template parameters. The specified list has to correspond to the parameter list in template definition.")]
+        [Description("The dictionary of template parameters-values. The specified arguments have to correspond to the parameter list in template definition.")]
         [YamlMember(Order = 2)]
-        public YamlTemplateParameter[] Parameters { get; set; }
+        public Dictionary<string,string> Arguments { get; set; }
     }
 }

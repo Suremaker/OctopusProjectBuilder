@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Model;
@@ -52,7 +53,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
                                     UseTemplate = new YamlTemplateReference
                                     {
                                         Name = "templateAction",
-                                        Parameters = new [] {new YamlTemplateParameter {Name = "name", Value = "${name}_action"}}
+                                        Arguments = new Dictionary<string, string>{{"name", "${name}_action"}}
                                     }
                                 }
                             }
@@ -75,7 +76,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
                                         UseTemplate = new YamlTemplateReference
                                         {
                                             Name = "templateStep",
-                                            Parameters = new [] {new YamlTemplateParameter {Name = "name", Value = "${name}_step"}}
+                                            Arguments = new Dictionary<string, string>{{"name", "${name}_step"}}
                                         }
                                     }
                                 }
@@ -90,7 +91,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
                         UseTemplate = new YamlTemplateReference
                         {
                             Name = "templateProject",
-                            Parameters = new [] {new YamlTemplateParameter {Name = "name", Value = "My_project"}}
+                            Arguments = new Dictionary<string, string>{{"name", "My_project"}}
                         }
                     }
                 }

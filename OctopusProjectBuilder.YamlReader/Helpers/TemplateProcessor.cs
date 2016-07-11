@@ -28,7 +28,7 @@ namespace OctopusProjectBuilder.YamlReader.Helpers
             if (template == null)
                 throw new InvalidOperationException($"No template with name '{model.UseTemplate.Name}' has been found.");
 
-            var modelParameters = model.UseTemplate.Parameters.EnsureNotNull().ToDictionary(p=>p.Name,p=>p.Value);
+            var modelParameters = model.UseTemplate.Arguments ?? new Dictionary<string, string>();
 
             VerifyTemplateParameters(template, modelParameters);
             try

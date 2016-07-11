@@ -55,7 +55,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
                 UseTemplate = new YamlTemplateReference
                 {
                     Name = "template",
-                    Parameters = new[] { new YamlTemplateParameter { Name = "p1", Value = "val1" }, new YamlTemplateParameter { Name = "p2", Value = "val2" } }
+                    Arguments = new Dictionary<string, string> { { "p1", "val1" }, { "p2", "val2" } }
                 }
             };
 
@@ -90,7 +90,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
                 UseTemplate = new YamlTemplateReference
                 {
                     Name = "template",
-                    Parameters = new[] { new YamlTemplateParameter { Name = "p1", Value = "val1" }, new YamlTemplateParameter { Name = "p2", Value = "val2" } }
+                    Arguments = new Dictionary<string, string> { { "p1", "val1" }, { "p2", "val2" } }
                 }
             };
 
@@ -99,7 +99,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
                 UseTemplate = new YamlTemplateReference
                 {
                     Name = "template",
-                    Parameters = new[] { new YamlTemplateParameter { Name = "p1", Value = "val3" }, new YamlTemplateParameter { Name = "p2", Value = "val4" } }
+                    Arguments = new Dictionary<string, string> { { "p1", "val3" }, { "p2", "val4" } }
                 }
             };
 
@@ -122,10 +122,10 @@ namespace OctopusProjectBuilder.YamlReader.Tests
             var templateName = "temp1";
 
             var template = new ModelTemplate { TemplateName = templateName, TemplateParameters = new[] { "t1", "t2" } };
-            var model = new Model { UseTemplate = new YamlTemplateReference { Name = templateName, Parameters = modelParams.Select(p => new YamlTemplateParameter { Name = p, Value = p }).ToArray() } };
+            var model = new Model { UseTemplate = new YamlTemplateReference { Name = templateName, Arguments = modelParams.ToDictionary(p => p) } };
 
             var ex = Assert.Throws<InvalidOperationException>(() => model.ApplyTemplate(template));
-            Assert.That(ex.Message, Is.EqualTo($"Invalid template parameters used for template { template.TemplateName}, expected: { string.Join(", ", template.TemplateParameters)}, got: { string.Join(", ", model.UseTemplate.Parameters.Select(kv => kv.Name))}"));
+            Assert.That(ex.Message, Is.EqualTo($"Invalid template parameters used for template { template.TemplateName}, expected: { string.Join(", ", template.TemplateParameters)}, got: { string.Join(", ", model.UseTemplate.Arguments.Select(kv => kv.Key))}"));
         }
 
         [Test]
@@ -172,7 +172,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         {
             var templateName = "temp1";
             var template = new ModelTemplate { TemplateName = templateName, TemplateParameters = new[] { "p1" }, Value = "${p2}" };
-            var model = new Model { UseTemplate = new YamlTemplateReference { Name = templateName, Parameters = new[] { new YamlTemplateParameter { Name = "p1", Value = "v1" } } } };
+            var model = new Model { UseTemplate = new YamlTemplateReference { Name = templateName, Arguments = new Dictionary<string, string> { { "p1", "v1" } } } };
 
             var ex = Assert.Throws<InvalidOperationException>(() => model.ApplyTemplate(template));
             Assert.That(ex.Message, Is.EqualTo("Unable to apply template temp1: Parameter ${p2} is not specified in template"));

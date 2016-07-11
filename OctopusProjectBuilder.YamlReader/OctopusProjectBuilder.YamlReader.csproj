@@ -62,7 +62,6 @@
     <Compile Include="Model\IYamlTemplateBased.cs" />
     <Compile Include="Model\Templates\YamlDeploymentActionTemplate.cs" />
     <Compile Include="Model\Templates\YamlDeploymentStepTemplate.cs" />
-    <Compile Include="Model\Templates\YamlTemplateParameter.cs" />
     <Compile Include="Model\Templates\YamlTemplates.cs" />
     <Compile Include="Model\YamlDeploymentAction.cs" />
     <Compile Include="Model\YamlDeploymentProcess.cs" />
