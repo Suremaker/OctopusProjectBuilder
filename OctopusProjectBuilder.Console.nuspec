@@ -25,7 +25,6 @@
     <file src="OctopusProjectBuilder.Console\bin\Release\*.exe" target="." />
     <file src="LICENSE" target="LICENSE" />
     <file src="LICENSE-YamlDotNet" target="LICENSE-YamlDotNet" />
-    <file src="README.md" target="." />
     <file src="Manual.md" target="." />
   </files>
 </package>

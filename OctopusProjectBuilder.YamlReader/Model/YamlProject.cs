@@ -43,12 +43,16 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [YamlMember(Order = 10)]
         public bool DefaultToSkipIfAlreadyInstalled { get; set; }
 
-        [Description("Deployment process definition.")]
+        [Description("Versioning strategy.")]
         [YamlMember(Order = 11)]
+        public YamlVersioningStrategy VersioningStrategy { get; set; }
+
+        [Description("Deployment process definition.")]
+        [YamlMember(Order = 12)]
         public YamlDeploymentProcess DeploymentProcess { get; set; }
 
         [Description("Project variables.")]
-        [YamlMember(Order = 12)]
+        [YamlMember(Order = 13)]
         public YamlVariable[] Variables { get; set; }
 
         public void ApplyTemplate(YamlTemplates templates)
@@ -70,7 +74,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 Variables.EnsureNotNull().Select(v => v.ToModel()),
                 IncludedLibraryVariableSetRefs.EnsureNotNull().Select(reference => new ElementReference(reference)),
                 new ElementReference(LifecycleRef),
-                new ElementReference(ProjectGroupRef));
+                new ElementReference(ProjectGroupRef),
+                VersioningStrategy?.ToModel());
         }
 
         public static YamlProject FromModel(Project model)
@@ -87,7 +92,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 LifecycleRef = model.LifecycleRef.Name,
                 ProjectGroupRef = model.ProjectGroupRef.Name,
                 Variables = model.Variables.Select(YamlVariable.FromModel).ToArray().NullIfEmpty(),
-                IncludedLibraryVariableSetRefs = model.IncludedLibraryVariableSetRefs.Select(r => r.Name).ToArray().NullIfEmpty()
+                IncludedLibraryVariableSetRefs = model.IncludedLibraryVariableSetRefs.Select(r => r.Name).ToArray().NullIfEmpty(),
+                VersioningStrategy = YamlVersioningStrategy.FromModel(model.VersioningStrategy)
             };
         }
     }

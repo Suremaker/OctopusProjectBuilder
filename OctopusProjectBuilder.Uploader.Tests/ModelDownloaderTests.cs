@@ -143,7 +143,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<Variable>(),
                     Enumerable.Empty<ElementReference>(),
                     new ElementReference("lifecycle1"),
-                    new ElementReference("group1")))
+                    new ElementReference("group1"), null))
                 .Build();
 
             _repository.Lifecycles.Create(new LifecycleResource { Name = "lifecycle1" });
@@ -159,7 +159,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<Variable>(),
                     Enumerable.Empty<ElementReference>(),
                     new ElementReference("lifecycle1"),
-                    new ElementReference("group1")))
+                    new ElementReference("group1"), null))
                 .Build();
             _uploader.UploadModel(model2);
 
@@ -194,8 +194,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(), scope, CreateItem<VariablePrompt>())
             };
 
-            var project1 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name));
-            var project2 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name));
+            var project1 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), CreateItem<VersioningStrategy>());
+            var project2 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), null);
 
             var expected = new SystemModelBuilder()
                 .AddProject(project1)

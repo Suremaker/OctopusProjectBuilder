@@ -21,6 +21,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
             resource.LifecycleId = resolveResourceId;
             resource.ProjectGroupId = projectGroupResourceId;
             resource.IncludedLibraryVariableSetIds = model.IncludedLibraryVariableSetRefs.Select(r => repository.LibraryVariableSets.ResolveResourceId(r)).ToList();
+            if (model.VersioningStrategy != null)
+                resource.VersioningStrategy = (resource.VersioningStrategy ?? new VersioningStrategyResource()).UpdateWith(model.VersioningStrategy);
             return resource;
         }
 
@@ -73,7 +75,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 repository.VariableSets.Get(resource.VariableSetId).ToModel(deploymentProcessResource, repository),
                 resource.IncludedLibraryVariableSetIds.Select(id => new ElementReference(repository.LibraryVariableSets.Get(id).Name)),
                 new ElementReference(repository.Lifecycles.Get(resource.LifecycleId).Name),
-                new ElementReference(repository.ProjectGroups.Get(resource.ProjectGroupId).Name));
+                new ElementReference(repository.ProjectGroups.Get(resource.ProjectGroupId).Name),
+                resource.VersioningStrategy?.ToModel());
         }
     }
 }

@@ -6,7 +6,7 @@ namespace OctopusProjectBuilder.Model
 {
     public class Project : IVariableSet
     {
-        public Project(ElementIdentifier identifier, string description, bool isDisabled, bool autoCreateRelease, bool defaultToSkipIfAlreadyInstalled, DeploymentProcess deploymentProcess, IEnumerable<Variable> variables, IEnumerable<ElementReference> libraryVariableSetRefs, ElementReference lifecycleRef, ElementReference projectGroupRef)
+        public Project(ElementIdentifier identifier, string description, bool isDisabled, bool autoCreateRelease, bool defaultToSkipIfAlreadyInstalled, DeploymentProcess deploymentProcess, IEnumerable<Variable> variables, IEnumerable<ElementReference> libraryVariableSetRefs, ElementReference lifecycleRef, ElementReference projectGroupRef, VersioningStrategy versioningStrategy)
         {
             if (identifier == null)
                 throw new ArgumentNullException(nameof(identifier));
@@ -24,6 +24,7 @@ namespace OctopusProjectBuilder.Model
             Variables = variables.ToArray();
             LifecycleRef = lifecycleRef;
             ProjectGroupRef = projectGroupRef;
+            VersioningStrategy = versioningStrategy;
         }
 
         public ElementIdentifier Identifier { get; }
@@ -36,6 +37,7 @@ namespace OctopusProjectBuilder.Model
         public ElementReference LifecycleRef { get; }
         public ElementReference ProjectGroupRef { get; }
         public IEnumerable<Variable> Variables { get; }
+        public VersioningStrategy VersioningStrategy { get; }
 
         public override string ToString()
         {

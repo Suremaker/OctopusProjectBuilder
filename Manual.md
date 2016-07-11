@@ -21,6 +21,7 @@
 19. [YamlVariable](#YamlVariable)
 20. [YamlVariablePrompt](#YamlVariablePrompt)
 21. [YamlVariableScope](#YamlVariableScope)
+22. [YamlVersioningStrategy](#YamlVersioningStrategy)
 
 To start with model root type, please see: [YamlOctopusModel](#YamlOctopusModel)
 ## Model description
@@ -72,6 +73,7 @@ Project Template model definition.
 |**IsDisabled**|Boolean|Disable a project to prevent releases or deployments from being created. Default value: **False**. |
 |**AutoCreateRelease**|Boolean| Default value: **False**. |
 |**DefaultToSkipIfAlreadyInstalled**|Boolean|Skips package deployment and installation if it is already installed. Default value: **False**. |
+|**VersioningStrategy**|[YamlVersioningStrategy](#YamlVersioningStrategy)|Versioning strategy. Default value: **null**. |
 |**DeploymentProcess**|[YamlDeploymentProcess](#YamlDeploymentProcess)|Deployment process definition. Default value: **null**. |
 |**Variables**|[YamlVariable](#YamlVariable)\[\]|Project variables. Default value: **null**. |
 
@@ -240,6 +242,7 @@ Octopus Project model.
 |**IsDisabled**|Boolean|Disable a project to prevent releases or deployments from being created. Default value: **False**. |
 |**AutoCreateRelease**|Boolean| Default value: **False**. |
 |**DefaultToSkipIfAlreadyInstalled**|Boolean|Skips package deployment and installation if it is already installed. Default value: **False**. |
+|**VersioningStrategy**|[YamlVersioningStrategy](#YamlVersioningStrategy)|Versioning strategy. Default value: **null**. |
 |**DeploymentProcess**|[YamlDeploymentProcess](#YamlDeploymentProcess)|Deployment process definition. Default value: **null**. |
 |**Variables**|[YamlVariable](#YamlVariable)\[\]|Project variables. Default value: **null**. |
 
@@ -305,5 +308,13 @@ The variable scope should be understand as `(role1 OR ...roleN) AND (machine1 OR
 |**EnvironmentRefs**|String\[\]|List of Environment references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them. Default value: **null**. |
 |**ChannelRefs**|String\[\]|List of Channel references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them. Default value: **null**. |
 |**ActionRefs**|String\[\]|List of Action references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them. The Action references can be only specified in Project variables (LibraryVariableSets does not support them). Default value: **null**. |
+
+### <a name="YamlVersioningStrategy"></a>22. YamlVersioningStrategy
+
+Project versioning strategy.
+
+|Property|Type|Description|
+|--------|----|:----------|
+|**Template**|String|Versioning template Default value: **null**. |
 
 

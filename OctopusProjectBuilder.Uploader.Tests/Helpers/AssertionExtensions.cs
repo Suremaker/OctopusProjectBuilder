@@ -77,9 +77,15 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             AssertPropertyEqualsTo(actual, expected, x => x.DefaultToSkipIfAlreadyInstalled, nameof(Project.DefaultToSkipIfAlreadyInstalled));
             AssertPropertyEqualsTo(actual, expected, x => x.Description, nameof(Project.Description));
             AssertPropertyEqualsTo(actual, expected, x => x.IsDisabled, nameof(Project.IsDisabled));
+            AssertPropertyEqualsTo(actual, expected, x => x.VersioningStrategy, AssertEqualsTo, nameof(Project.VersioningStrategy));
             AssertEqualsTo(actual.DeploymentProcess, expected.DeploymentProcess);
             ArrayAssert(actual.Variables, expected.Variables, AssertEqualsTo, nameof(Project.Variables));
             ArrayAssert(actual.IncludedLibraryVariableSetRefs, expected.IncludedLibraryVariableSetRefs, AssertEqualsTo, nameof(Project.IncludedLibraryVariableSetRefs));
+        }
+
+        private static void AssertEqualsTo(VersioningStrategy actual, VersioningStrategy expected)
+        {
+            AssertPropertyEqualsTo(actual, expected, x => x.Template, nameof(VersioningStrategy.Template));
         }
 
         private static void AssertEqualsTo(Variable actual, Variable expected)
@@ -173,7 +179,12 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         {
             try
             {
-                valueAssertion(propertyOf(actual), propertyOf(expected));
+                var actualProp = propertyOf(actual);
+                var expectedProp = propertyOf(expected);
+                if (expectedProp == null)
+                    Assert.That(actualProp, Is.Null, "Expected null");
+                else
+                    valueAssertion(actualProp, expectedProp);
             }
             catch (AssertionException e)
             {
