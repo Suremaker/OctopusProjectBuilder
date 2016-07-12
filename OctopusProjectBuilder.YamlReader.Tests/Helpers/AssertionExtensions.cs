@@ -122,6 +122,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Helpers
             AssertPropertyEqualsTo(actual, expected, x => x.Name, nameof(YamlDeploymentAction.Name));
             AssertPropertyEqualsTo(actual, expected, x => x.ActionType, nameof(YamlDeploymentAction.ActionType));
             ArrayAssert(actual.Properties, expected.Properties, AssertEqualsTo, nameof(YamlDeploymentAction.Properties));
+            ArrayAssert(actual.EnvironmentRefs, expected.EnvironmentRefs, nameof(YamlDeploymentAction.EnvironmentRefs));
         }
 
         private static void AssertEqualsTo(YamlPropertyValue actual, YamlPropertyValue expected)

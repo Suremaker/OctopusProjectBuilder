@@ -3,12 +3,13 @@ using System.Collections.Generic;
 
 namespace OctopusProjectBuilder.Model
 {
-    public enum VariableScopeType {
-        Environment=1,
-        Machine=2,
-        Role=3,
-        Action=5,
-        Channel=8
+    public enum VariableScopeType
+    {
+        Environment = 1,
+        Machine = 2,
+        Role = 3,
+        Action = 5,
+        Channel = 8
     }
     public class Variable
     {
@@ -21,7 +22,7 @@ namespace OctopusProjectBuilder.Model
 
         public Variable(string name, bool isEditable, bool isSensitive, string value, IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>> scope, VariablePrompt prompt)
         {
-            if(scope==null)
+            if (scope == null)
                 throw new ArgumentNullException(nameof(scope));
             Name = name;
             IsEditable = isEditable;

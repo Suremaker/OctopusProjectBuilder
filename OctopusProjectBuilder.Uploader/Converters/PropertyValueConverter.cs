@@ -19,5 +19,12 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 .Select(kv => Tuple.Create(kv.Key, ToModel(kv.Value)))
                 .ToDictionary(kv => kv.Item1, kv => kv.Item2);
         }
+
+        public static void UpdateWith(this IDictionary<string, PropertyValueResource> resource, IReadOnlyDictionary<string, PropertyValue> model)
+        {
+            resource.Clear();
+            foreach (var keyValuePair in model)
+                resource.Add(keyValuePair.Key, new PropertyValueResource(keyValuePair.Value.Value, keyValuePair.Value.IsSensitive));
+        }
     }
 }

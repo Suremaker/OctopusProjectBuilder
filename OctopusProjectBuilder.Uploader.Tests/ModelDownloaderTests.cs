@@ -205,6 +205,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddLibraryVariableSet(libraryVariableSet)
                 .Build();
 
+            foreach (var envRef in expected.Projects.SelectMany(p => p.DeploymentProcess.DeploymentSteps).SelectMany(s => s.Actions).SelectMany(a => a.EnvironmentRefs).Select(a => a.Name).Distinct())
+                _repository.Environments.Create(new EnvironmentResource { Name = envRef });
+
             _repository.Environments.Create(new EnvironmentResource { Name = "env1" });
             _repository.Environments.Create(new EnvironmentResource { Name = "env2" });
             _repository.Machines.Create(new MachineResource { Name = "m1" });

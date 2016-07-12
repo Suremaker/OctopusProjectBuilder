@@ -150,6 +150,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             AssertPropertyEqualsTo(actual, expected, x => x.Name, nameof(DeploymentAction.Name));
             AssertPropertyEqualsTo(actual, expected, x => x.ActionType, nameof(DeploymentAction.ActionType));
             DictionaryAssert(actual.Properties, expected.Properties, AssertEqualsTo, nameof(DeploymentAction.Properties));
+            ArrayAssert(actual.EnvironmentRefs, expected.EnvironmentRefs, AssertEqualsTo, nameof(DeploymentAction.EnvironmentRefs));
         }
 
         private static void AssertEqualsTo(PropertyValue actual, PropertyValue expected)

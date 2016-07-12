@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Helpers;
 using OctopusProjectBuilder.YamlReader.Model.Templates;
@@ -24,8 +25,12 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
         [YamlMember(Order = 3)]
         public string ActionType { get; set; }
 
-        [Description("Action properties.")]
+        [Description("List of Environment references (based on the name) where action would be performed on. If none are specified, then action would be performed on all environments.")]
         [YamlMember(Order = 4)]
+        public string[] EnvironmentRefs { get; set; }
+
+        [Description("Action properties.")]
+        [YamlMember(Order = 5)]
         public YamlPropertyValue[] Properties { get; set; }
 
         public void ApplyTemplate(YamlTemplates templates)
@@ -39,13 +44,14 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
             {
                 Name = model.Name,
                 ActionType = model.ActionType,
-                Properties = YamlPropertyValue.FromModel(model.Properties)
+                Properties = YamlPropertyValue.FromModel(model.Properties),
+                EnvironmentRefs = model.EnvironmentRefs.Select(r => r.Name).ToArray().NullIfEmpty()
             };
         }
 
         public DeploymentAction ToModel()
         {
-            return new DeploymentAction(Name, ActionType, YamlPropertyValue.ToModel(Properties));
+            return new DeploymentAction(Name, ActionType, YamlPropertyValue.ToModel(Properties), EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)));
         }
     }
 

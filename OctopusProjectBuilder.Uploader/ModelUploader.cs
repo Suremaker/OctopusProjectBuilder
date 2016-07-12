@@ -59,7 +59,7 @@ namespace OctopusProjectBuilder.Uploader
 
             var deploymentProcess = Update(
                  _repository.DeploymentProcesses,
-                 _repository.DeploymentProcesses.Get(projectResource.DeploymentProcessId).UpdateWith(project.DeploymentProcess),
+                 _repository.DeploymentProcesses.Get(projectResource.DeploymentProcessId).UpdateWith(project.DeploymentProcess, _repository),
                  projectResource.Name);
 
             Update(
