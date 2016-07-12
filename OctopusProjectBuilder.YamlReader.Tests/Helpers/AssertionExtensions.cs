@@ -169,7 +169,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Helpers
                 return;
             }
             Assert.That(actual.Length, Is.EqualTo(expected.Length), "Count");
-            for (int i = 0; i < expected.Length; ++i)
+            for (var i = 0; i < expected.Length; ++i)
             {
                 try
                 {

@@ -198,7 +198,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             var actual = actualEnumerable.ToArray();
             var expected = expectedEnumerable.ToArray();
             Assert.That(actual.Length, Is.EqualTo(expected.Length), $"{propertyName}.Count");
-            for (int i = 0; i < expected.Length; ++i)
+            for (var i = 0; i < expected.Length; ++i)
             {
                 try
                 {

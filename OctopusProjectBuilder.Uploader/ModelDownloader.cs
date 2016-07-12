@@ -33,26 +33,26 @@ namespace OctopusProjectBuilder.Uploader
 
         private LibraryVariableSet ReadLibraryVariableSet(LibraryVariableSetResource resource)
         {
-            Logger.Info($"Reading {nameof(LibraryVariableSetResource)}: {resource.Name}");
+            Logger.Info($"Downloading {nameof(LibraryVariableSetResource)}: {resource.Name}");
             return resource.ToModel(_repository);
         }
 
         private Lifecycle ReadLifecycle(LifecycleResource resource)
         {
-            Logger.Info($"Reading {nameof(LifecycleResource)}: {resource.Name}");
+            Logger.Info($"Downloading {nameof(LifecycleResource)}: {resource.Name}");
             return resource.ToModel(_repository);
         }
 
         private Project ReadProject(ProjectResource resource)
         {
-            Logger.Info($"Reading {nameof(ProjectResource)}: {resource.Name}");
+            Logger.Info($"Downloading {nameof(ProjectResource)}: {resource.Name}");
             
             return resource.ToModel(_repository);
         }
 
         private static ProjectGroup ReadProjectGroup(ProjectGroupResource resource)
         {
-            Logger.Info($"Reading {nameof(ProjectGroupResource)}: {resource.Name}");
+            Logger.Info($"Downloading {nameof(ProjectGroupResource)}: {resource.Name}");
             return resource.ToModel();
         }
     }

@@ -14,10 +14,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 resource.ReleaseRetentionPolicy?.ToModel(),
                 resource.TentacleRetentionPolicy?.ToModel(),
                 resource.MinimumEnvironmentsBeforePromotion,
-                resource.AutomaticDeploymentTargets.Select(
-                    id => new ElementReference(repository.Environments.Get(id).Name)),
-                resource.OptionalDeploymentTargets.Select(
-                    id => new ElementReference(repository.Environments.Get(id).Name)));
+                resource.AutomaticDeploymentTargets.Select(id => new ElementReference(repository.Environments.Get(id).Name)),
+                resource.OptionalDeploymentTargets.Select(id => new ElementReference(repository.Environments.Get(id).Name)));
         }
 
         public static PhaseResource UpdateWith(this PhaseResource resource, Phase model, IOctopusRepository repository)

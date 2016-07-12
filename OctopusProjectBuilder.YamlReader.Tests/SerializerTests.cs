@@ -60,7 +60,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         [Test]
         public void It_should_not_serialize_defaults()
         {
-            string expected = "Text: abc\r\n";
+            var expected = "Text: abc\r\n";
             Assert.That(Serialize(new Model { Number = 4, Text = "abc" }), Is.EqualTo(expected));
         }
 
@@ -74,7 +74,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         [Test]
         public void It_should_serialize_data_in_order()
         {
-            string expected = "Text: abc\r\nArray:\r\n- 1\r\n- 2\r\n- 3\r\nNumber: 0\r\n";
+            var expected = "Text: abc\r\nArray:\r\n- 1\r\n- 2\r\n- 3\r\nNumber: 0\r\n";
             Assert.That(Serialize(new Model { Text = "abc", Array = new[] { 1, 2, 3 }, Number = 0 }), Is.EqualTo(expected));
         }
 

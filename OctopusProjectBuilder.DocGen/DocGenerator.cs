@@ -20,7 +20,7 @@ namespace OctopusProjectBuilder.DocGen
             _modelRootType = modelRootType;
             _modelTypes = modelRootType.Assembly.GetTypes()
                 .Where(t => !t.IsAbstract && !t.IsInterface && !t.GetCustomAttributes<CompilerGeneratedAttribute>().Any() && t.Namespace.Contains("Model"))
-                .ToDictionary(t => t.FullName);
+                .ToDictionary(t => t.Name);
             _indexedTypes = _modelTypes.OrderBy(p => p.Key).Select(p => p.Value).ToArray();
         }
 
@@ -35,7 +35,7 @@ namespace OctopusProjectBuilder.DocGen
         private void GenerateModelContent(StringBuilder builder)
         {
             GenerateHeader(builder, "Model description");
-            for (int i = 0; i < _indexedTypes.Length; ++i)
+            for (var i = 0; i < _indexedTypes.Length; ++i)
             {
                 builder.AppendLine($"### <a name=\"{_indexedTypes[i].Name}\"></a>{i + 1}. {_indexedTypes[i].Name}").AppendLine();
                 GenerateClassDescription(builder, _indexedTypes[i]);
@@ -97,7 +97,7 @@ namespace OctopusProjectBuilder.DocGen
                 return GetPropertyTypeText(propertyType.GetElementType()) + "\\[\\]";
             if (propertyType.IsGenericType)
                 return propertyType.GetGenericTypeDefinition().Name.Split('`')[0] + "<" + string.Join(", ", propertyType.GetGenericArguments().Select(GetPropertyTypeText)) + ">";
-            if (_modelTypes.ContainsKey(propertyType.FullName))
+            if (_modelTypes.ContainsKey(propertyType.Name))
                 return $"[{propertyType.Name}](#{propertyType.Name})";
             return propertyType.Name;
         }
@@ -113,7 +113,7 @@ namespace OctopusProjectBuilder.DocGen
         {
             GenerateHeader(builder, "Table of contents");
 
-            for (int i = 0; i < _indexedTypes.Length; ++i)
+            for (var i = 0; i < _indexedTypes.Length; ++i)
                 builder.AppendLine($"{i + 1}. [{_indexedTypes[i].Name}](#{_indexedTypes[i].Name})");
             builder.AppendLine();
 

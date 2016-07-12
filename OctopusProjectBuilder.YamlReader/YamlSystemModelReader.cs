@@ -13,7 +13,7 @@ namespace OctopusProjectBuilder.YamlReader
 
         public YamlOctopusModel[] Read(Stream stream)
         {
-            List<YamlOctopusModel> models = new List<YamlOctopusModel>();
+            var models = new List<YamlOctopusModel>();
             using (var reader = new StreamReader(stream))
             {
                 var eventReader = new EventReader(new Parser(reader));

@@ -133,12 +133,12 @@ namespace OctopusProjectBuilder.YamlReader.Helpers
 
         private static void Unescape(StringBuilder sb, string value)
         {
-            int last = 0;
-            int pos = 0;
+            var last = 0;
+            var pos = 0;
             while ((pos = value.IndexOf("\\$", last, StringComparison.Ordinal)) >= 0)
             {
-                int count = 0;
-                int i = pos;
+                var count = 0;
+                var i = pos;
                 while (i >= last && value[i--] == '\\')
                     ++count;
                 sb.Append(value.Substring(last, pos - last + 1 - (count % 2)).Replace("\\\\", "\\"));

@@ -22,7 +22,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         [Test]
         public void It_should_read_project_groups()
         {
-            string content = @"---
+            var content = @"---
 ProjectGroups:
     - Name: name1
       RenamedFrom: oldName1
@@ -47,7 +47,7 @@ ProjectGroups:
         [Test]
         public void It_should_read_projects()
         {
-            string content = @"Projects:
+            var content = @"Projects:
     - Name: name1
       RenamedFrom: oldName1
       Description: some description 1
