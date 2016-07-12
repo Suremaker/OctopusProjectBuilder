@@ -35,7 +35,7 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
 
         public void ApplyTemplate(YamlTemplates templates)
         {
-            this.ApplyTemplate(templates.DeploymentActions);
+            this.ApplyTemplate(templates?.DeploymentActions);
         }
 
         public static YamlDeploymentAction FromModel(DeploymentAction model)

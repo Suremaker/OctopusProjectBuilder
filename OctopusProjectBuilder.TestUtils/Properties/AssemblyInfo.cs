@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OctopusProjectBuilder.Uploader.Tests")]
+[assembly: AssemblyTitle("OctopusProjectBuilder.TestUtils")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OctopusProjectBuilder.Uploader.Tests")]
+[assembly: AssemblyProduct("OctopusProjectBuilder.TestUtils")]
 [assembly: AssemblyCopyright("Copyright © Wojciech Kotlarski 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("48690002-c1ad-4ac1-9b46-de7bb5eca45e")]
+[assembly: Guid("23c93299-1f26-4582-8d89-5a074b403771")]
 
 // Version information for an assembly consists of the following four values:
 //

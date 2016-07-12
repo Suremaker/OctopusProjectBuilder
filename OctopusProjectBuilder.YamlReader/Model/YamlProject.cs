@@ -57,7 +57,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
 
         public void ApplyTemplate(YamlTemplates templates)
         {
-            this.ApplyTemplate(templates.Projects);
+            this.ApplyTemplate(templates?.Projects);
             foreach (var step in (DeploymentProcess?.Steps).EnsureNotNull())
                 step.ApplyTemplate(templates);
         }

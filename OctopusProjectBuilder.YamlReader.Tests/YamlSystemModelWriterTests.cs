@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using OctopusProjectBuilder.TestUtils;
 using OctopusProjectBuilder.YamlReader.Model;
-using OctopusProjectBuilder.YamlReader.Tests.Helpers;
 using Ploeh.AutoFixture;
 
 namespace OctopusProjectBuilder.YamlReader.Tests
@@ -26,7 +26,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
             var content = Write(expected);
 
             var actual = new YamlSystemModelReader().Read(new MemoryStream(Encoding.UTF8.GetBytes(content))).Single();
-            actual.AssertEqualsTo(expected);
+            AssertExt.AssertDeepEqualsTo(actual, expected);
         }
 
         [Test]
@@ -37,8 +37,8 @@ namespace OctopusProjectBuilder.YamlReader.Tests
             var content = Write(expected1, expected2);
             var actual = new YamlSystemModelReader().Read(new MemoryStream(Encoding.UTF8.GetBytes(content)));
             Assert.That(actual.Length, Is.EqualTo(2));
-            actual[0].AssertEqualsTo(expected1);
-            actual[1].AssertEqualsTo(expected2);
+            AssertExt.AssertDeepEqualsTo(actual[0], expected1);
+            AssertExt.AssertDeepEqualsTo(actual[1], expected2);
         }
 
         private string Write(params YamlOctopusModel[] models)

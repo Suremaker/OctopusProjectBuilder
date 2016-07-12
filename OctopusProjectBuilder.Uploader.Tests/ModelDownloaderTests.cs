@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
+using OctopusProjectBuilder.TestUtils;
 using OctopusProjectBuilder.Uploader.Tests.Helpers;
 using Ploeh.AutoFixture;
 
@@ -33,7 +34,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
             _uploader.UploadModel(expected);
             var actual = _downloader.DownloadModel();
 
-            actual.AssertEqualsTo(expected);
+            actual.AssertDeepEqualsTo(expected);
         }
 
         [Test]
@@ -218,7 +219,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
             _uploader.UploadModel(expected);
             var actual = _downloader.DownloadModel();
 
-            actual.AssertEqualsTo(expected);
+            actual.AssertDeepEqualsTo(expected);
         }
 
         [Test]
@@ -236,7 +237,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
             _uploader.UploadModel(expected);
             var actual = _downloader.DownloadModel();
 
-            actual.AssertEqualsTo(expected);
+            actual.AssertDeepEqualsTo(expected);
         }
 
         [Test]
@@ -268,7 +269,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
             _uploader.UploadModel(expected);
             var actual = _downloader.DownloadModel();
 
-            actual.AssertEqualsTo(expected);
+            actual.AssertDeepEqualsTo(expected);
         }
 
         private T CreateItem<T>()

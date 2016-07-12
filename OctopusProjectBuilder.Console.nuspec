@@ -10,11 +10,13 @@
     <projectUrl>https://github.com/Suremaker/OctopusProjectBuilder</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Console application allowing to configure Octopus resources from YAML files.</description>
-    <summary>Console application allowing to configure Octopus resources from YAML files.</summary>
-    <releaseNotes>
-      Initial release supporting:
+    <summary>Console application allowing to configure Octopus resources from YAML files, supporting:
       * configuration of: Project Groups, Lifecycles, Projects, Library Variable Sets,
       * templating.
+    </summary>
+    <releaseNotes>
+      + Added EnvironmentRefs to DeploymentAction,
+      + Extended logging to include file operations.
     </releaseNotes>
     <copyright>Copyright © Wojciech Kotlarski 2016</copyright>
     <tags>octopus yaml configuration</tags>

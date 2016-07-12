@@ -42,7 +42,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
 
         public void ApplyTemplate(YamlTemplates templates)
         {
-            this.ApplyTemplate(templates.DeploymentSteps);
+            this.ApplyTemplate(templates?.DeploymentSteps);
             foreach (var action in Actions.EnsureNotNull())
                 action.ApplyTemplate(templates);
         }

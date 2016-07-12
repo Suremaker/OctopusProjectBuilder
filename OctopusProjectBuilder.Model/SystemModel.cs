@@ -12,10 +12,10 @@ namespace OctopusProjectBuilder.Model
 
         public SystemModel(IEnumerable<Lifecycle> lifecycles, IEnumerable<ProjectGroup> projectGroups, IEnumerable<LibraryVariableSet> libraryVariableSets, IEnumerable<Project> projects)
         {
-            LibraryVariableSets = libraryVariableSets.ToArray();
-            Lifecycles = lifecycles.ToArray();
-            ProjectGroups = projectGroups.ToArray();
-            Projects = projects.ToArray();
+            LibraryVariableSets = libraryVariableSets.OrderBy(s => s.Identifier.Name).ToArray();
+            Lifecycles = lifecycles.OrderBy(s => s.Identifier.Name).ToArray();
+            ProjectGroups = projectGroups.OrderBy(s => s.Identifier.Name).ToArray();
+            Projects = projects.OrderBy(s => s.Identifier.Name).ToArray();
         }
 
         public IEnumerable<SystemModel> SplitModel()

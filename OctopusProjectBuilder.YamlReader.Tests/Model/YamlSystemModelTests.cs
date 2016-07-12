@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using OctopusProjectBuilder.Model;
+using OctopusProjectBuilder.TestUtils;
 using OctopusProjectBuilder.YamlReader.Model;
 using OctopusProjectBuilder.YamlReader.Model.Templates;
 using OctopusProjectBuilder.YamlReader.Tests.Helpers;
@@ -15,11 +16,10 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
         [Test]
         public void It_should_convert_to_and_from_domain_model()
         {
-            var yamlModel = new Fixture().Create<YamlOctopusModel>();
-            var model = yamlModel.BuildWith(new SystemModelBuilder()).Build();
-            var restoredModel = YamlOctopusModel.FromModel(model);
-
-            restoredModel.AssertEqualsTo(yamlModel);
+            var expected = FixtureBuilder.CreateFixture().Create<SystemModel>();
+            var yamlModel = YamlOctopusModel.FromModel(expected);
+            var actual = yamlModel.BuildWith(new SystemModelBuilder()).Build();
+            AssertExt.AssertDeepEqualsTo(actual, expected);
         }
 
         [Test]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,6 +19,8 @@ namespace OctopusProjectBuilder.Model
 
         public LibraryVariableSet(ElementIdentifier identifier, string description, VariableSetContentType contentType, IEnumerable<Variable> variables)
         {
+            if (identifier == null)
+                throw new ArgumentNullException(nameof(identifier));
             Identifier = identifier;
             Description = description;
             ContentType = contentType;

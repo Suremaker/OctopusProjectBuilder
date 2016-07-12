@@ -3,8 +3,8 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OctopusProjectBuilder.Model;
+using OctopusProjectBuilder.TestUtils;
 using OctopusProjectBuilder.YamlReader.Model;
-using OctopusProjectBuilder.YamlReader.Tests.Helpers;
 
 namespace OctopusProjectBuilder.YamlReader.Tests
 {
@@ -41,7 +41,7 @@ ProjectGroups:
 
             var model = Read(content);
 
-            model.ProjectGroups.AssertEqualsTo(expectedGroups);
+            AssertExt.AssertDeepEqualsTo(model.ProjectGroups, expectedGroups);
         }
 
         [Test]
@@ -163,7 +163,7 @@ ProjectGroups:
 
             var model = Read(content);
 
-            model.Projects.AssertEqualsTo(expected);
+            AssertExt.AssertDeepEqualsTo(model.Projects, expected);
         }
 
         private YamlOctopusModel Read(string content)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OctopusProjectBuilder.Model
 {
@@ -28,7 +29,7 @@ namespace OctopusProjectBuilder.Model
             IsEditable = isEditable;
             IsSensitive = isSensitive;
             Value = value;
-            Scope = scope;
+            Scope = scope.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray().AsEnumerable());
             Prompt = prompt;
         }
 

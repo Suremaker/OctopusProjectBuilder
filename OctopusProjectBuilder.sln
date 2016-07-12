@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctopusProjectBuilder.TestUtils", "OctopusProjectBuilder.TestUtils\OctopusProjectBuilder.TestUtils.csproj", "{23C93299-1F26-4582-8D89-5A074B403771}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{6FB4D15E-3A96-40F6-B5D4-743B2AA79114}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FB4D15E-3A96-40F6-B5D4-743B2AA79114}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FB4D15E-3A96-40F6-B5D4-743B2AA79114}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23C93299-1F26-4582-8D89-5A074B403771}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23C93299-1F26-4582-8D89-5A074B403771}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23C93299-1F26-4582-8D89-5A074B403771}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23C93299-1F26-4582-8D89-5A074B403771}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,5 +77,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4EB41E33-3D3D-4FE5-B76D-D223E0076438} = {3C77B126-425E-4A79-B6A5-392AD39A483F}
 		{48690002-C1AD-4AC1-9B46-DE7BB5ECA45E} = {3C77B126-425E-4A79-B6A5-392AD39A483F}
+		{23C93299-1F26-4582-8D89-5A074B403771} = {3C77B126-425E-4A79-B6A5-392AD39A483F}
 	EndGlobalSection
 EndGlobal
