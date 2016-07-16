@@ -65,3 +65,7 @@ Projects:
 ### Channels
 
 The channel configuration is not covered in Yaml config at the moment. So far I did not managed to findout how to find Channel by name in **IOctopusRepository**.
+
+## Examples
+
+To see the example configuration, please browse the [examples](https://github.com/Suremaker/OctopusProjectBuilder/tree/master/example) project directory.
