@@ -1,0 +1,9 @@
+---
+Projects:
+- Name: OpenCover
+  UseTemplate:
+    Name: InstallTool
+    Arguments:
+      PackageName: OpenCover
+      TargetRoles: build_agent
+...

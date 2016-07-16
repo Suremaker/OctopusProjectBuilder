@@ -1,0 +1,9 @@
+---
+Projects:
+- Name: NUnit.Console
+  UseTemplate:
+    Name: InstallTool
+    Arguments:
+      PackageName: NUnit.Console
+      TargetRoles: build_agent
+...

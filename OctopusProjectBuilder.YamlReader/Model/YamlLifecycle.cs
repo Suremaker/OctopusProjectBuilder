@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using OctopusProjectBuilder.Model;
+using OctopusProjectBuilder.YamlReader.Helpers;
 using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
@@ -33,7 +34,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 Description,
                 ReleaseRetentionPolicy?.ToModel(),
                 TentacleRetentionPolicy?.ToModel(),
-                Phases.Select(p => p.ToModel()));
+                Phases.EnsureNotNull().Select(p => p.ToModel()));
         }
 
         public static YamlLifecycle FromModel(Lifecycle model)
@@ -45,7 +46,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 Description = model.Description,
                 ReleaseRetentionPolicy = YamlRetentionPolicy.FromModel(model.ReleaseRetentionPolicy),
                 TentacleRetentionPolicy = YamlRetentionPolicy.FromModel(model.TentacleRetentionPolicy),
-                Phases = model.Phases.Select(YamlPhase.FromModel).ToArray()
+                Phases = model.Phases.Select(YamlPhase.FromModel).ToArray().NullIfEmpty()
             };
         }
     }

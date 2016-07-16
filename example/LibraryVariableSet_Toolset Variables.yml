@@ -1,0 +1,8 @@
+---
+LibraryVariableSets:
+- Name: Toolset Variables
+  Description: Generated. Please do not update manually.
+  Variables:
+  - Name: Toolset_installation_directory
+    Value: c:\tools\
+...

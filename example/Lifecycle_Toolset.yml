@@ -1,0 +1,9 @@
+---
+Lifecycles:
+- Name: Toolset
+  Description: Generated. Please do not update manually
+  TentacleRetentionPolicy:
+    QuantityToKeep: 1
+    Unit: Items
+  ReleaseRetentionPolicy: {}
+...

@@ -1,0 +1,50 @@
+---
+Templates:
+
+  DeploymentActions:
+
+  - TemplateName: InstallNugetPackage
+    TemplateParameters:
+    - PackageName
+    - InstallationDirectory
+    ActionType: Octopus.TentaclePackage
+    Properties:
+    - Key: Octopus.Action.EnabledFeatures
+      Value: Octopus.Features.CustomDirectory
+    - Key: Octopus.Action.Package.DownloadOnTentacle
+      Value: False
+    - Key: Octopus.Action.Package.NuGetFeedId
+      Value: feeds-nuget
+    - Key: Octopus.Action.Package.NuGetPackageId
+      Value: ${PackageName}
+    - Key: Octopus.Action.Package.CustomInstallationDirectory
+      Value: ${InstallationDirectory}\\${PackageName}
+    - Key: Octopus.Action.Package.CustomInstallationDirectoryShouldBePurgedBeforeDeployment
+      Value: True
+  
+
+  Projects:
+
+  - TemplateName: InstallTool
+    TemplateParameters:
+    - PackageName
+    - TargetRoles
+    Description: Generated. Please do not update manually.
+    LifecycleRef: Toolset
+    ProjectGroupRef: Toolset
+    IncludedLibraryVariableSetRefs:
+    - Toolset Variables
+    DeploymentProcess:
+      Steps:
+      - Name: ${PackageName}
+        Actions:
+        - Name: Install ${PackageName}
+          UseTemplate:
+            Name: InstallNugetPackage
+            Arguments:
+              PackageName: ${PackageName}
+              InstallationDirectory: '#{Toolset_installation_directory}'
+        Properties:
+        - Key: Octopus.Action.TargetRoles
+          Value: ${TargetRoles}
+...
