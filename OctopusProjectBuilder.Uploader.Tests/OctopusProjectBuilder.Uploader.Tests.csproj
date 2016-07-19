@@ -80,6 +80,7 @@
     <Compile Include="Helpers\FakeVariableSetRepository.cs" />
     <Compile Include="Helpers\PropertyValueResourceJsonConverter.cs" />
     <Compile Include="ModelDownloaderTests.cs" />
+    <Compile Include="ModelUploaderValidationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@
       * templating.
     </summary>
     <releaseNotes>
-      + Allowed Lifecycle to have null Phases array in yaml.
+      + Added meaningful exception description if variable scope reference cannot be resolved on upload.
     </releaseNotes>
     <copyright>Copyright © Wojciech Kotlarski 2016</copyright>
     <tags>octopus yaml configuration</tags>

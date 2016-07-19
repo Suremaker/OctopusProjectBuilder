@@ -34,7 +34,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 case VariableScopeType.Role:
                     return reference.Name;
                 case VariableScopeType.Action:
-                    return GetDeploymentAction(deploymentProcess, a => a.Name == reference.Name).Id;
+                    return GetDeploymentAction(deploymentProcess, a => a.Name, reference.Name, nameof(DeploymentActionResource.Name)).Id;
 
                 case VariableScopeType.Channel:
                 default:
@@ -47,7 +47,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             switch (key)
             {
                 case ScopeField.Action:
-                    return new ElementReference(GetDeploymentAction(deploymentProcessResource, a => a.Id == id).Name);
+                    return new ElementReference(GetDeploymentAction(deploymentProcessResource, a => a.Id, id, nameof(DeploymentActionResource.Id)).Name);
                 case ScopeField.Environment:
                     return new ElementReference(repository.Environments.Get(id).Name);
                 case ScopeField.Machine:
@@ -62,11 +62,14 @@ namespace OctopusProjectBuilder.Uploader.Converters
             }
         }
 
-        private static DeploymentActionResource GetDeploymentAction(DeploymentProcessResource deploymentProcess, Func<DeploymentActionResource, bool> predicate)
+        private static DeploymentActionResource GetDeploymentAction(DeploymentProcessResource deploymentProcess, Func<DeploymentActionResource, string> identifierExtractor, string identifier, string identifierType)
         {
             if (deploymentProcess == null)
                 throw new InvalidOperationException("Unable to retrieve deployment action if no deployment process is specified");
-            return deploymentProcess.Steps.SelectMany(s => s.Actions).Single(predicate);
+            var result = deploymentProcess.Steps.SelectMany(s => s.Actions).SingleOrDefault(a => identifierExtractor(a) == identifier);
+            if (result == null)
+                throw new KeyNotFoundException($"{nameof(DeploymentActionResource)} with {identifierType.ToLowerInvariant()} '{identifier}' not found.");
+            return result;
         }
     }
 }
