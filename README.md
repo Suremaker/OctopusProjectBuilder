@@ -1,5 +1,13 @@
-# OctopusProjectBuilder
-A project to provide an ability to configure Octopus projects from text, source controlled files (like yaml).
+# Octopus Project Builder
+A project providing an ability to configure Octopus projects from source controlled text files (like yaml).
+
+It is conceptually based on [Jenkins Job Builder](http://docs.openstack.org/infra/jenkins-job-builder/) which I have found to be a great utility tool to work with [Jenkins](https://jenkins.io/).
+
+Using the Octopus Project Builder, together with source control system like git, gives the following benefits:
+* change history,
+* ability to use the previous version of configuration,
+* ability to create a review process before applying changes,
+* configuration editing, like extracting variables to library variable sets, or applying bulk changes to many projects.
 
 ## Build
 To build project, execute a following command from Powershell:
