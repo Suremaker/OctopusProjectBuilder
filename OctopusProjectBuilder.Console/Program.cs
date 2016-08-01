@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using Common.Logging;
 using Common.Logging.Simple;
 using Fclp;
@@ -12,6 +13,8 @@ namespace OctopusProjectBuilder.Console
     {
         static int Main(string[] args)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls | SecurityProtocolType.Ssl3;
+
             LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(LogLevel.All, false, false, true, "", true);
             var logger = LogManager.GetLogger<Program>();
 

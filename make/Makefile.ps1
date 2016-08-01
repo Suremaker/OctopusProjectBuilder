@@ -1,6 +1,6 @@
 Define-Step -Name 'Build' -Target 'build' -Body {
 	. (require 'psmake.mod.update-version-info')
-	Update-VersionInAssemblyInfo $VERSION
+	Update-VersionInFile AssemblyVersion.cs $VERSION 'Version("%")'
 }
 
 Define-Step -Name 'Build' -Target 'build' -Body {

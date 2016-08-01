@@ -15,7 +15,7 @@
       * templating.
     </summary>
     <releaseNotes>
-      + Added meaningful exception description if variable scope reference cannot be resolved on upload.
+      + Added support for TLS 1.2
     </releaseNotes>
     <copyright>Copyright © Wojciech Kotlarski 2016</copyright>
     <tags>octopus yaml configuration</tags>
