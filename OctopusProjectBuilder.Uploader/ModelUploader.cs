@@ -3,11 +3,13 @@ using Common.Logging;
 using Octopus.Client;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories;
-using OctopusProjectBuilder.Model;
+
 using OctopusProjectBuilder.Uploader.Converters;
 
 namespace OctopusProjectBuilder.Uploader
 {
+    using Model;
+
     public class ModelUploader
     {
         private static readonly ILog Logger = LogManager.GetLogger<ModelUploader>();
@@ -24,6 +26,9 @@ namespace OctopusProjectBuilder.Uploader
 
         public void UploadModel(SystemModel model)
         {
+            foreach (var environment in model.Environments)
+                UploadEnvironment(environment);
+
             foreach (var lifecycle in model.Lifecycles)
                 UploadLifecycle(lifecycle);
 
@@ -72,6 +77,12 @@ namespace OctopusProjectBuilder.Uploader
         {
             var resource = LoadResource(_repository.ProjectGroups, projectGroup.Identifier).UpdateWith(projectGroup);
             Upsert(_repository.ProjectGroups, resource);
+        }
+
+        private void UploadEnvironment(Environment environment)
+        {
+            var resource = LoadResource(_repository.Environments, environment.Identifier).UpdateWith(environment);
+            Upsert(_repository.Environments, resource);
         }
 
         private TResource Upsert<TRepository, TResource>(TRepository repository, TResource resource) where TResource : IResource, INamedResource where TRepository : ICreate<TResource>, IModify<TResource>

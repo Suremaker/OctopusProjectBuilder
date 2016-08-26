@@ -28,7 +28,8 @@ namespace OctopusProjectBuilder.Uploader
                 _repository.Lifecycles.FindAll().Select(ReadLifecycle),
                 _repository.ProjectGroups.FindAll().Select(ReadProjectGroup),
                 _repository.LibraryVariableSets.FindAll().Select(ReadLibraryVariableSet),
-                _repository.Projects.FindAll().Select(ReadProject));
+                _repository.Projects.FindAll().Select(ReadProject),
+                _repository.Environments.FindAll().Select(ReadEnvironment));
         }
 
         private LibraryVariableSet ReadLibraryVariableSet(LibraryVariableSetResource resource)
@@ -53,6 +54,12 @@ namespace OctopusProjectBuilder.Uploader
         private static ProjectGroup ReadProjectGroup(ProjectGroupResource resource)
         {
             Logger.Info($"Downloading {nameof(ProjectGroupResource)}: {resource.Name}");
+            return resource.ToModel();
+        }
+
+        private static Environment ReadEnvironment(EnvironmentResource resource)
+        {
+            Logger.Info($"Downloading {nameof(EnvironmentResource)}: {resource.Name}");
             return resource.ToModel();
         }
     }
