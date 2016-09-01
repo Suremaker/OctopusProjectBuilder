@@ -22,6 +22,7 @@ To see the yaml configuration manual, please take a look at [Manual.md](Manual.m
 * [Projects](Manual.md#YamlProject)
 * [Lifecycles](Manual.md#YamlLifecycle)
 * [Library Variable Sets](Manual.md#YamlLibraryVariableSet) \(including script modules\)
+* [Environments](Manual.md#YamlEnvironment)
 
 ## Octopus resource configuration templating
 

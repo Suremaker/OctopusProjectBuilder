@@ -11,11 +11,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Console application allowing to configure Octopus resources from YAML files.</description>
     <summary>Console application allowing to configure Octopus resources from YAML files, supporting:
-      * configuration of: Project Groups, Lifecycles, Projects, Library Variable Sets,
+      * configuration of: Project Groups, Lifecycles, Projects, Library Variable Sets, Environments,
       * templating.
     </summary>
     <releaseNotes>
-      + Added support for TLS 1.2
+      + Added support for Environment configuration
     </releaseNotes>
     <copyright>Copyright © Wojciech Kotlarski 2016</copyright>
     <tags>octopus yaml configuration</tags>

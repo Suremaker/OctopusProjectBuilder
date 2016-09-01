@@ -5,22 +5,23 @@
 3. [YamlDeploymentProcess](#YamlDeploymentProcess)
 4. [YamlDeploymentStep](#YamlDeploymentStep)
 5. [YamlDeploymentStepTemplate](#YamlDeploymentStepTemplate)
-6. [YamlLibraryVariableSet](#YamlLibraryVariableSet)
-7. [YamlLifecycle](#YamlLifecycle)
-8. [YamlNamedElement](#YamlNamedElement)
-9. [YamlOctopusModel](#YamlOctopusModel)
-10. [YamlPhase](#YamlPhase)
-11. [YamlProject](#YamlProject)
-12. [YamlProjectGroup](#YamlProjectGroup)
-13. [YamlProjectTemplate](#YamlProjectTemplate)
-14. [YamlPropertyValue](#YamlPropertyValue)
-15. [YamlRetentionPolicy](#YamlRetentionPolicy)
-16. [YamlTemplateReference](#YamlTemplateReference)
-17. [YamlTemplates](#YamlTemplates)
-18. [YamlVariable](#YamlVariable)
-19. [YamlVariablePrompt](#YamlVariablePrompt)
-20. [YamlVariableScope](#YamlVariableScope)
-21. [YamlVersioningStrategy](#YamlVersioningStrategy)
+6. [YamlEnvironment](#YamlEnvironment)
+7. [YamlLibraryVariableSet](#YamlLibraryVariableSet)
+8. [YamlLifecycle](#YamlLifecycle)
+9. [YamlNamedElement](#YamlNamedElement)
+10. [YamlOctopusModel](#YamlOctopusModel)
+11. [YamlPhase](#YamlPhase)
+12. [YamlProject](#YamlProject)
+13. [YamlProjectGroup](#YamlProjectGroup)
+14. [YamlProjectTemplate](#YamlProjectTemplate)
+15. [YamlPropertyValue](#YamlPropertyValue)
+16. [YamlRetentionPolicy](#YamlRetentionPolicy)
+17. [YamlTemplateReference](#YamlTemplateReference)
+18. [YamlTemplates](#YamlTemplates)
+19. [YamlVariable](#YamlVariable)
+20. [YamlVariablePrompt](#YamlVariablePrompt)
+21. [YamlVariableScope](#YamlVariableScope)
+22. [YamlVersioningStrategy](#YamlVersioningStrategy)
 
 To start with model root type, please see: [YamlOctopusModel](#YamlOctopusModel)
 ## Model description
@@ -90,7 +91,17 @@ Deployment Step Template model definition.
 |**Actions**|[YamlDeploymentAction](#YamlDeploymentAction)\[\]|List of actions that are executed with this step. Default value: **null**. |
 |**Properties**|[YamlPropertyValue](#YamlPropertyValue)\[\]|List of step additional properties. Default value: **null**. |
 
-### <a name="YamlLibraryVariableSet"></a>6. YamlLibraryVariableSet
+### <a name="YamlEnvironment"></a>6. YamlEnvironment
+
+Environment model.
+
+|Property|Type|Description|
+|--------|----|:----------|
+|**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
+|**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
+|**Description**|String|Resource description. Default value: **null**. |
+
+### <a name="YamlLibraryVariableSet"></a>7. YamlLibraryVariableSet
 
 Library Variable Set model definition allowing to define library variable sets and script modules.
 
@@ -102,7 +113,7 @@ Library Variable Set model definition allowing to define library variable sets a
 |**ContentType**|VariableSetContentType|Variable set type. Possible values: **Variables**, **ScriptModule**. Default value: **Variables**. |
 |**Variables**|[YamlVariable](#YamlVariable)\[\]|List of variables. Default value: **null**. |
 
-### <a name="YamlLifecycle"></a>7. YamlLifecycle
+### <a name="YamlLifecycle"></a>8. YamlLifecycle
 
 Lifecycle model definition.
 
@@ -115,26 +126,27 @@ Lifecycle model definition.
 |**ReleaseRetentionPolicy**|[YamlRetentionPolicy](#YamlRetentionPolicy)|Release retention policy, defining how long releases are being kept in Octopus. Default value: **null**. |
 |**Phases**|[YamlPhase](#YamlPhase)\[\]|List of deployment phases. Default value: **null**. |
 
-### <a name="YamlNamedElement"></a>8. YamlNamedElement
+### <a name="YamlNamedElement"></a>9. YamlNamedElement
 
 |Property|Type|Description|
 |--------|----|:----------|
 |**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
 |**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
 
-### <a name="YamlOctopusModel"></a>9. YamlOctopusModel
+### <a name="YamlOctopusModel"></a>10. YamlOctopusModel
 
 Octopus model root type.
 
 |Property|Type|Description|
 |--------|----|:----------|
+|**Environments**|[YamlEnvironment](#YamlEnvironment)\[\]|List of Project Groups. Default value: **null**. |
 |**ProjectGroups**|[YamlProjectGroup](#YamlProjectGroup)\[\]|List of Project Groups. Default value: **null**. |
 |**Projects**|[YamlProject](#YamlProject)\[\]|List of Projects. Default value: **null**. |
 |**Lifecycles**|[YamlLifecycle](#YamlLifecycle)\[\]|List of Lifecycles. Default value: **null**. |
 |**LibraryVariableSets**|[YamlLibraryVariableSet](#YamlLibraryVariableSet)\[\]|List of Library Variable Sets (including Script modules). Default value: **null**. |
 |**Templates**|[YamlTemplates](#YamlTemplates)|Templates node allowing to define templates for other octopus model elements. Default value: **null**. |
 
-### <a name="YamlPhase"></a>10. YamlPhase
+### <a name="YamlPhase"></a>11. YamlPhase
 
 Lifecycle deployment Phase definition.
 
@@ -148,7 +160,7 @@ Lifecycle deployment Phase definition.
 |**AutomaticDeploymentTargetRefs**|String\[\]|List of environment references (based on name) where release is automatically deployed to. Default value: **null**. |
 |**OptionalDeploymentTargetRefs**|String\[\]|List of environment references (based on name) where release is manually deployed to. Default value: **null**. |
 
-### <a name="YamlProject"></a>11. YamlProject
+### <a name="YamlProject"></a>12. YamlProject
 
 Octopus Project model.
 
@@ -168,7 +180,7 @@ Octopus Project model.
 |**DeploymentProcess**|[YamlDeploymentProcess](#YamlDeploymentProcess)|Deployment process definition. Default value: **null**. |
 |**Variables**|[YamlVariable](#YamlVariable)\[\]|Project variables. Default value: **null**. |
 
-### <a name="YamlProjectGroup"></a>12. YamlProjectGroup
+### <a name="YamlProjectGroup"></a>13. YamlProjectGroup
 
 Project Group model.
 
@@ -178,7 +190,7 @@ Project Group model.
 |**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
 |**Description**|String|Resource description. Default value: **null**. |
 
-### <a name="YamlProjectTemplate"></a>13. YamlProjectTemplate
+### <a name="YamlProjectTemplate"></a>14. YamlProjectTemplate
 
 Project Template model definition.
 
@@ -200,7 +212,7 @@ Project Template model definition.
 |**DeploymentProcess**|[YamlDeploymentProcess](#YamlDeploymentProcess)|Deployment process definition. Default value: **null**. |
 |**Variables**|[YamlVariable](#YamlVariable)\[\]|Project variables. Default value: **null**. |
 
-### <a name="YamlPropertyValue"></a>14. YamlPropertyValue
+### <a name="YamlPropertyValue"></a>15. YamlPropertyValue
 
 Property Value definition.
 
@@ -210,7 +222,7 @@ Property Value definition.
 |**Value**|String|Property value. Default value: **null**. |
 |**IsSensitive**|Boolean|Should Octopus store this property value in encrypted format? \(Please note that at this moment the sensitive values have to be stored in plain text in yaml definition.\) Default value: **False**. |
 
-### <a name="YamlRetentionPolicy"></a>15. YamlRetentionPolicy
+### <a name="YamlRetentionPolicy"></a>16. YamlRetentionPolicy
 
 Retention policy definition.
 
@@ -219,7 +231,7 @@ Retention policy definition.
 |**QuantityToKeep**|Int32|Quantity to keep, where 0 means **all**. Default value: **0**. |
 |**Unit**|RetentionUnit|Retention unit type. Possible values: **Days**, **Items**. Default value: **Days**. |
 
-### <a name="YamlTemplateReference"></a>16. YamlTemplateReference
+### <a name="YamlTemplateReference"></a>17. YamlTemplateReference
 
 Template reference definition.
 
@@ -228,7 +240,7 @@ Template reference definition.
 |**Name**|String|The template name that given resource bases on. Default value: **null**. |
 |**Arguments**|Dictionary<String, String>|The dictionary of template parameters-values. The specified arguments have to correspond to the parameter list in template definition. Default value: **null**. |
 
-### <a name="YamlTemplates"></a>17. YamlTemplates
+### <a name="YamlTemplates"></a>18. YamlTemplates
 
 Templates model definition.
 
@@ -267,7 +279,7 @@ the property value `"${packageId} ver ${packageVersion}"` would be updated to `"
 |**DeploymentSteps**|[YamlDeploymentStepTemplate](#YamlDeploymentStepTemplate)\[\]|List of Deployment Step templates Default value: **null**. |
 |**Projects**|[YamlProjectTemplate](#YamlProjectTemplate)\[\]|List of Project templates Default value: **null**. |
 
-### <a name="YamlVariable"></a>18. YamlVariable
+### <a name="YamlVariable"></a>19. YamlVariable
 
 Variable definition.
 
@@ -280,7 +292,7 @@ Variable definition.
 |**Scope**|[YamlVariableScope](#YamlVariableScope)|Variable scope, including roles, machines, environments, channels and actions. If none specified, variable will be always available in given context. Default value: **null**. |
 |**Prompt**|[YamlVariablePrompt](#YamlVariablePrompt)| Default value: **null**. |
 
-### <a name="YamlVariablePrompt"></a>19. YamlVariablePrompt
+### <a name="YamlVariablePrompt"></a>20. YamlVariablePrompt
 
 |Property|Type|Description|
 |--------|----|:----------|
@@ -288,7 +300,7 @@ Variable definition.
 |**Description**|String| Default value: **null**. |
 |**Required**|Boolean| Default value: **False**. |
 
-### <a name="YamlVariableScope"></a>20. YamlVariableScope
+### <a name="YamlVariableScope"></a>21. YamlVariableScope
 
 Variable scope definition. It can limit variable visibility to specific context. 
 The variable scope should be understand as `(role1 OR ...roleN) AND (machine1 OR ...machineN) AND (env1 OR envN) AND...` where if none resource references are defined of specific type \(like role or machine etc.\) then variable is available to all the resources of that type.
@@ -301,7 +313,7 @@ The variable scope should be understand as `(role1 OR ...roleN) AND (machine1 OR
 |**ChannelRefs**|String\[\]|List of Channel references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them. Default value: **null**. |
 |**ActionRefs**|String\[\]|List of Action references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them. The Action references can be only specified in Project variables (LibraryVariableSets does not support them). Default value: **null**. |
 
-### <a name="YamlVersioningStrategy"></a>21. YamlVersioningStrategy
+### <a name="YamlVersioningStrategy"></a>22. YamlVersioningStrategy
 
 Project versioning strategy.
 
