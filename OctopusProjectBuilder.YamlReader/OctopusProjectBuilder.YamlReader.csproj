@@ -66,6 +66,7 @@
     <Compile Include="Model\YamlDeploymentAction.cs" />
     <Compile Include="Model\YamlDeploymentProcess.cs" />
     <Compile Include="Model\YamlDeploymentStep.cs" />
+    <Compile Include="Model\YamlEnvironment.cs" />
     <Compile Include="Model\YamlLibraryVariableSet.cs" />
     <Compile Include="Model\YamlLifecycle.cs" />
     <Compile Include="Model\YamlPhase.cs" />

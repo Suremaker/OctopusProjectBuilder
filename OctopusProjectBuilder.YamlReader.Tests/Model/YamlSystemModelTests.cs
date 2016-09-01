@@ -105,6 +105,74 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
         }
 
         [Test]
+        public void It_should_not_attempt_to_apply_templates_when_no_projects()
+        {
+            var yamlModel = new YamlOctopusModel
+            {
+                Templates = new YamlTemplates
+                {
+                    DeploymentActions = new[]
+                    {
+                        new YamlDeploymentActionTemplate
+                        {
+                            TemplateName = "templateAction",
+                            TemplateParameters = new[] {"name"},
+                            Name = "${name}"
+                        }
+                    },
+
+                    DeploymentSteps = new[]
+                    {
+                        new YamlDeploymentStepTemplate
+                        {
+                            TemplateName = "templateStep",
+                            TemplateParameters = new[] {"name"},
+                            Name = "${name}",
+                            Actions = new[]
+                            {
+                                new YamlDeploymentAction
+                                {
+                                    UseTemplate = new YamlTemplateReference
+                                    {
+                                        Name = "templateAction",
+                                        Arguments = new Dictionary<string, string>{{"name", "${name}_action"}}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    Projects = new[]
+                    {
+                        new YamlProjectTemplate
+                        {
+                            TemplateName = "templateProject",
+                            TemplateParameters = new[] {"name"},
+                            Name = "${name}",
+                            DeploymentProcess = new YamlDeploymentProcess
+                            {
+                                Steps = new[]
+                                {
+                                    new YamlDeploymentStep
+                                    {
+                                        UseTemplate = new YamlTemplateReference
+                                        {
+                                            Name = "templateStep",
+                                            Arguments = new Dictionary<string, string>{{"name", "${name}_step"}}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var model = yamlModel.ApplyTemplates().BuildWith(new SystemModelBuilder()).Build();
+
+            Assert.That(model.Projects, Has.Length.EqualTo(0));
+        }
+
+        [Test]
         public void It_should_merge_models()
         {
             var model1 = new YamlOctopusModel

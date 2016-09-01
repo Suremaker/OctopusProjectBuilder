@@ -4,6 +4,7 @@ namespace OctopusProjectBuilder.Model
 {
     public class SystemModelBuilder
     {
+        private readonly List<Environment> _environments = new List<Environment>();
         private readonly List<ProjectGroup> _projectGroups = new List<ProjectGroup>();
         private readonly List<Project> _projects = new List<Project>();
         private readonly List<Lifecycle> _lifecycles = new List<Lifecycle>();
@@ -12,6 +13,12 @@ namespace OctopusProjectBuilder.Model
         public SystemModelBuilder AddProjectGroup(ProjectGroup group)
         {
             _projectGroups.Add(group);
+            return this;
+        }
+
+        public SystemModelBuilder AddEnvironment(Environment environment)
+        {
+            _environments.Add(environment);
             return this;
         }
 
@@ -32,6 +39,10 @@ namespace OctopusProjectBuilder.Model
             _libraryVariableSets.Add(libraryVariableSet);
             return this;
         }
-        public SystemModel Build() { return new SystemModel(_lifecycles, _projectGroups, _libraryVariableSets, _projects); }
+
+        public SystemModel Build()
+        {
+            return new SystemModel(_lifecycles, _projectGroups, _libraryVariableSets, _projects, _environments);
+        }
     }
 }

@@ -47,6 +47,7 @@
     <Compile Include="DeploymentProcess.cs" />
     <Compile Include="DeploymentStep.cs" />
     <Compile Include="ElementReference.cs" />
+    <Compile Include="Environment.cs" />
     <Compile Include="ISystemModelRepository.cs" />
     <Compile Include="IVariableSet.cs" />
     <Compile Include="LibraryVariableSet.cs" />

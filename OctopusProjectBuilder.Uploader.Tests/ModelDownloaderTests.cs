@@ -172,6 +172,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
         [Test]
         public void It_should_upload_and_download_projects()
         {
+            var environment1 = new Environment(new ElementIdentifier("env1"), CreateItem<string>());
+            var environment2 = new Environment(new ElementIdentifier("env2"), CreateItem<string>());
+
             var projectGroup = new ProjectGroup(CreateItemWithRename<ElementIdentifier>(false), string.Empty);
             var libraryVariableSet = new LibraryVariableSet(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), LibraryVariableSet.VariableSetContentType.Variables, Enumerable.Empty<Variable>());
             var lifecycle = new Lifecycle(
@@ -181,7 +184,18 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
                 Enumerable.Empty<Phase>());
 
-            var deploymentProcess = CreateItem<DeploymentProcess>();
+            var deploymentProcess = new DeploymentProcess(new List<DeploymentStep>
+            {
+                new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(), CreateItem<DeploymentStep.StepStartTrigger>(), CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new []
+                {
+                    new DeploymentAction(CreateItem<string>(), CreateItem<string>(), CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new []{new ElementReference("env1")}),
+                    new DeploymentAction(CreateItem<string>(), CreateItem<string>(), CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new []{new ElementReference("env2")})
+                }),
+                new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(), CreateItem<DeploymentStep.StepStartTrigger>(), CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new []
+                {
+                    new DeploymentAction(CreateItem<string>(), CreateItem<string>(), CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new []{new ElementReference("env1")})
+                })
+            });
             var scope = new Dictionary<VariableScopeType, IEnumerable<ElementReference>>
             {
                 {VariableScopeType.Environment, new[] {new ElementReference("env1"), new ElementReference("env2")}},
@@ -204,13 +218,10 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddProjectGroup(projectGroup)
                 .AddLifecycle(lifecycle)
                 .AddLibraryVariableSet(libraryVariableSet)
+                .AddEnvironment(environment1)
+                .AddEnvironment(environment2)
                 .Build();
-
-            foreach (var envRef in expected.Projects.SelectMany(p => p.DeploymentProcess.DeploymentSteps).SelectMany(s => s.Actions).SelectMany(a => a.EnvironmentRefs).Select(a => a.Name).Distinct())
-                _repository.Environments.Create(new EnvironmentResource { Name = envRef });
-
-            _repository.Environments.Create(new EnvironmentResource { Name = "env1" });
-            _repository.Environments.Create(new EnvironmentResource { Name = "env2" });
+            
             _repository.Machines.Create(new MachineResource { Name = "m1" });
             _repository.Machines.Create(new MachineResource { Name = "m2" });
             _repository.FakeMachineRoles.Add("r1");
@@ -225,14 +236,27 @@ namespace OctopusProjectBuilder.Uploader.Tests
         [Test]
         public void It_should_upload_and_download_lifecycles()
         {
-            var expected = new SystemModelBuilder()
-                .AddLifecycle(CreateItemWithRename<Lifecycle>(false))
-                .AddLifecycle(CreateItemWithRename<Lifecycle>(false))
-                .Build();
+            var environment1 = new Environment(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>());
+            var environment2 = new Environment(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>());
+            var environment3 = new Environment(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>());
 
-            // Register environments
-            foreach (var environmentReference in expected.Lifecycles.SelectMany(l => l.Phases.SelectMany(p => p.AutomaticDeploymentTargetRefs.Concat(p.OptionalDeploymentTargetRefs))))
-                _repository.Environments.Create(new EnvironmentResource { Name = environmentReference.Name });
+            var lifecycle = new Lifecycle(
+                CreateItemWithRename<ElementIdentifier>(false),
+                string.Empty,
+                new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
+                new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
+                new []
+                {
+                    new Phase( CreateItemWithRename<ElementIdentifier>(false), CreateItem<RetentionPolicy>(), CreateItem<RetentionPolicy>(), CreateItem<int>(), new [] { new ElementReference(environment1.Identifier.Name), new ElementReference(environment2.Identifier.Name) }, new [] { new ElementReference(environment3.Identifier.Name) }),
+                    new Phase( CreateItemWithRename<ElementIdentifier>(false), CreateItem<RetentionPolicy>(), CreateItem<RetentionPolicy>(), CreateItem<int>(), new [] { new ElementReference(environment2.Identifier.Name), new ElementReference(environment3.Identifier.Name) }, new [] { new ElementReference(environment1.Identifier.Name) })
+                });
+
+            var expected = new SystemModelBuilder()
+                .AddEnvironment(environment1)
+                .AddEnvironment(environment2)
+                .AddEnvironment(environment3)
+                .AddLifecycle(lifecycle)
+                .Build();
 
             _uploader.UploadModel(expected);
             var actual = _downloader.DownloadModel();
@@ -243,12 +267,17 @@ namespace OctopusProjectBuilder.Uploader.Tests
         [Test]
         public void It_should_upload_and_download_libraryVariableSets()
         {
+            var environment1 = new Environment(new ElementIdentifier("env1"), CreateItem<string>());
+            var environment2 = new Environment(new ElementIdentifier("env2"), CreateItem<string>());
+
             var scope = new Dictionary<VariableScopeType, IEnumerable<ElementReference>> {
                 {VariableScopeType.Environment, new []{new ElementReference("env1"), new ElementReference("env2") }},
                 {VariableScopeType.Machine, new []{new ElementReference("m1"), new ElementReference("m2") }},
                 {VariableScopeType.Role, new []{new ElementReference("r1"), new ElementReference("r2") }},
             };
             var expected = new SystemModelBuilder()
+                .AddEnvironment(environment1)
+                .AddEnvironment(environment2)
                 .AddLibraryVariableSet(CreateItemWithRename<LibraryVariableSet>(false))
                 .AddLibraryVariableSet(new LibraryVariableSet(CreateItemWithRename<ElementIdentifier>(false),
                     CreateItem<string>(), CreateItem<LibraryVariableSet.VariableSetContentType>(), new[]
@@ -259,8 +288,6 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     }))
                 .Build();
 
-            _repository.Environments.Create(new EnvironmentResource { Name = "env1" });
-            _repository.Environments.Create(new EnvironmentResource { Name = "env2" });
             _repository.Machines.Create(new MachineResource { Name = "m1" });
             _repository.Machines.Create(new MachineResource { Name = "m2" });
             _repository.FakeMachineRoles.Add("r1");
@@ -270,6 +297,44 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var actual = _downloader.DownloadModel();
 
             actual.AssertDeepEqualsTo(expected);
+        }
+
+        [Test]
+        public void It_should_upload_and_download_environments()
+        {
+            var expected = new SystemModelBuilder()
+                .AddEnvironment(CreateItemWithRename<Environment>(false))
+                .AddEnvironment(CreateItemWithRename<Environment>(false))
+                .Build();
+            _uploader.UploadModel(expected);
+            var actual = _downloader.DownloadModel();
+
+            actual.AssertDeepEqualsTo(expected);
+        }
+
+        [Test]
+        public void It_should_rename_environment()
+        {
+            var name1 = CreateItem<string>();
+            var name2 = CreateItem<string>();
+            var description1 = CreateItem<string>();
+            var description2 = CreateItem<string>();
+
+            var model1 = new SystemModelBuilder()
+                .AddEnvironment(new Environment(new ElementIdentifier(name1), description1))
+                .Build();
+            _uploader.UploadModel(model1);
+
+            var originalId = _repository.Environments.FindByName(model1.Environments.Single().Identifier.Name).Id;
+
+            var model2 = new SystemModelBuilder()
+                .AddEnvironment(new Environment(new ElementIdentifier(name2, name1), description2))
+                .Build();
+            _uploader.UploadModel(model2);
+
+            var actual = _repository.Environments.Get(originalId);
+            Assert.That(actual.Name, Is.EqualTo(name2));
+            Assert.That(actual.Description, Is.EqualTo(description2));
         }
 
         private T CreateItem<T>()

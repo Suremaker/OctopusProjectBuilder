@@ -12,6 +12,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
     public class YamlOctopusModel
     {
         [Description("List of Project Groups.")]
+        public YamlEnvironment[] Environments { get; set; }
+        [Description("List of Project Groups.")]
         public YamlProjectGroup[] ProjectGroups { get; set; }
         [Description("List of Projects.")]
         public YamlProject[] Projects { get; set; }
@@ -24,13 +26,16 @@ namespace OctopusProjectBuilder.YamlReader.Model
 
         public YamlOctopusModel ApplyTemplates()
         {
-            foreach (var project in Projects)
+            foreach (var project in Projects.EnsureNotNull())
                 project.ApplyTemplate(Templates);
             return this;
         }
 
         public SystemModelBuilder BuildWith(SystemModelBuilder builder)
         {
+            foreach (var environment in Environments.EnsureNotNull())
+                builder.AddEnvironment(environment.ToModel());
+
             foreach (var projectGroup in ProjectGroups.EnsureNotNull())
                 builder.AddProjectGroup(projectGroup.ToModel());
 
@@ -50,6 +55,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         {
             return new YamlOctopusModel
             {
+                Environments = model.Environments.Select(YamlEnvironment.FromModel).ToArray().NullIfEmpty(),
                 ProjectGroups = model.ProjectGroups.Select(YamlProjectGroup.FromModel).ToArray().NullIfEmpty(),
                 Projects = model.Projects.Select(YamlProject.FromModel).ToArray().NullIfEmpty(),
                 Lifecycles = model.Lifecycles.Select(YamlLifecycle.FromModel).ToArray().NullIfEmpty(),
@@ -59,6 +65,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
 
         public YamlOctopusModel MergeIn(YamlOctopusModel model)
         {
+            Environments = this.MergeItemsIn(model, x => x.Environments);
             ProjectGroups = this.MergeItemsIn(model, x => x.ProjectGroups);
             LibraryVariableSets = this.MergeItemsIn(model, x => x.LibraryVariableSets);
             Lifecycles = this.MergeItemsIn(model, x => x.Lifecycles);
