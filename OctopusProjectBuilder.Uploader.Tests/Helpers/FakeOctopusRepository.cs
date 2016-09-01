@@ -3,7 +3,7 @@ using Octopus.Client.Repositories;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
-    class FakeOctopusRepository : IOctopusRepository
+    internal class FakeOctopusRepository : IOctopusRepository
     {
         public FakeOctopusRepository()
         {
@@ -32,22 +32,29 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public IDeploymentRepository Deployments { get; }
         public IEnvironmentRepository Environments { get; }
         public IEventRepository Events { get; }
+        public IFeaturesConfigurationRepository FeaturesConfiguration { get; }
         public IFeedRepository Feeds { get; }
         public IInterruptionRepository Interruptions { get; }
         public ILibraryVariableSetRepository LibraryVariableSets { get; }
         public ILifecyclesRepository Lifecycles { get; }
         public IMachineRepository Machines { get; }
         public IMachineRoleRepository MachineRoles { get; }
+        public IMachinePolicyRepository MachinePolicies { get; }
         public IProjectGroupRepository ProjectGroups { get; }
         public IProjectRepository Projects { get; }
         public IReleaseRepository Releases { get; }
+        public IProxyRepository Proxies { get; }
         public IServerStatusRepository ServerStatus { get; }
+        public ISchedulerRepository Schedulers { get; }
         public ITaskRepository Tasks { get; }
         public ITeamsRepository Teams { get; }
+        public ITagSetRepository TagSets { get; }
+        public ITenantRepository Tenants { get; }
         public IUserRepository Users { get; }
         public IUserRolesRepository UserRoles { get; }
         public IVariableSetRepository VariableSets { get; }
         public IChannelRepository Channels { get; }
+        public IProjectTriggerRepository ProjectTriggers { get; }
         public IAccountRepository Accounts { get; }
         public IRetentionPolicyRepository RetentionPolicies { get; }
         public IDefectsRepository Defects { get; }

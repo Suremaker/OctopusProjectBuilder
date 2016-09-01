@@ -49,8 +49,8 @@
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Octopus.Client, Version=3.3.20.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Octopus.Client.3.3.20\lib\net40\Octopus.Client.dll</HintPath>
+    <Reference Include="Octopus.Client, Version=3.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Octopus.Client.3.4.3\lib\net40\Octopus.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ploeh.AutoFixture, Version=3.47.5.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
