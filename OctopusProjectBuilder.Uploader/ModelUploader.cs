@@ -114,19 +114,7 @@ namespace OctopusProjectBuilder.Uploader
             return result;
         }
 
-        private static TResource LoadResource<TResource>(IFindByName<TResource> finder, ElementIdentifier identifier) where TResource : new()
-        {
-            return LoadResource(finder.FindByName, identifier);
-        }
-
-        // Some classes like ILifecyclesRepository does not implement IFindByName<T> so the more generic equivalent has to be used
-        private static TResource LoadResource<TResource>(IPaginate<TResource> finder, ElementIdentifier identifier) where TResource : INamedResource, new()
-        {
-            return LoadResource(name => finder.FindOne(x => x.Name == name), identifier);
-        }
-
-        // LibraryVariableSetResource does not implement INamedResource so the method cannot be generalized
-        private static LibraryVariableSetResource LoadResource(IPaginate<LibraryVariableSetResource> finder, ElementIdentifier identifier)
+        private static TResource LoadResource<TResource>(IFindByName<TResource> finder, ElementIdentifier identifier) where TResource : INamedResource, new()
         {
             return LoadResource(name => finder.FindOne(x => x.Name == name), identifier);
         }

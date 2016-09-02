@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using Octopus.Client.Editors;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
-    internal class FakeProjectRepository : FakeNamedRepository<ProjectResource>,IProjectRepository
+    internal class FakeProjectRepository : FakeNamedRepository<ProjectResource>, IProjectRepository
     {
         private readonly FakeVariableSetRepository _variableSetRepository;
         private readonly FakeDeploymentProcessRepository _deploymentProcessRepository;
@@ -30,10 +33,36 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new NotImplementedException();
         }
 
+        public ResourceCollection<ProjectTriggerResource> GetTriggers(ProjectResource project)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetLogo(ProjectResource project, string fileName, Stream contents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ProjectEditor CreateOrModify(string name, ProjectGroupResource projectGroup, LifecycleResource lifecycle)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ProjectEditor CreateOrModify(string name, ProjectGroupResource projectGroup, LifecycleResource lifecycle,
+            string description)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void OnCreate(ProjectResource resource)
         {
             resource.VariableSetId = _variableSetRepository.Create(new VariableSetResource()).Id;
             resource.DeploymentProcessId = _deploymentProcessRepository.Create(new DeploymentProcessResource()).Id;
+        }
+
+        public List<ProjectResource> GetAll()
+        {
+            throw new NotImplementedException();
         }
     }
 }

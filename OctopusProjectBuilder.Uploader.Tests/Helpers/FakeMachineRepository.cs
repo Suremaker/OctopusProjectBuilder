@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Octopus.Client.Editors;
 using Octopus.Client.Model;
+using Octopus.Client.Model.Endpoints;
 using Octopus.Client.Repositories;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
@@ -17,6 +19,17 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         }
 
         public List<MachineResource> FindByThumbprint(string thumbprint)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public MachineEditor CreateOrModify(string name, EndpointResource endpoint, EnvironmentResource[] environments, string[] roles,
+            TenantResource[] tenants, TagResource[] tenantTags)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public MachineEditor CreateOrModify(string name, EndpointResource endpoint, EnvironmentResource[] environments, string[] roles)
         {
             throw new System.NotImplementedException();
         }
