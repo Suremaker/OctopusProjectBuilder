@@ -56,6 +56,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Helpers\PathExtensions.cs" />
     <Compile Include="Helpers\TemplateProcessor.cs" />
     <Compile Include="Helpers\YamlModelExtensions.cs" />
     <Compile Include="Model\Templates\IYamlTemplate.cs" />
@@ -75,6 +76,8 @@
     <Compile Include="Model\YamlPropertyValue.cs" />
     <Compile Include="Model\YamlRetentionPolicy.cs" />
     <Compile Include="Model\Templates\YamlTemplateReference.cs" />
+    <Compile Include="Model\YamlTeam.cs" />
+    <Compile Include="Model\YamlUserRole.cs" />
     <Compile Include="Model\YamlVariable.cs" />
     <Compile Include="Model\YamlVariablePrompt.cs" />
     <Compile Include="Model\YamlVariableScope.cs" />

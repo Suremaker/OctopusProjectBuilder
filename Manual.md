@@ -16,12 +16,14 @@
 14. [YamlProjectTemplate](#YamlProjectTemplate)
 15. [YamlPropertyValue](#YamlPropertyValue)
 16. [YamlRetentionPolicy](#YamlRetentionPolicy)
-17. [YamlTemplateReference](#YamlTemplateReference)
-18. [YamlTemplates](#YamlTemplates)
-19. [YamlVariable](#YamlVariable)
-20. [YamlVariablePrompt](#YamlVariablePrompt)
-21. [YamlVariableScope](#YamlVariableScope)
-22. [YamlVersioningStrategy](#YamlVersioningStrategy)
+17. [YamlTeam](#YamlTeam)
+18. [YamlTemplateReference](#YamlTemplateReference)
+19. [YamlTemplates](#YamlTemplates)
+20. [YamlUserRole](#YamlUserRole)
+21. [YamlVariable](#YamlVariable)
+22. [YamlVariablePrompt](#YamlVariablePrompt)
+23. [YamlVariableScope](#YamlVariableScope)
+24. [YamlVersioningStrategy](#YamlVersioningStrategy)
 
 To start with model root type, please see: [YamlOctopusModel](#YamlOctopusModel)
 ## Model description
@@ -144,6 +146,8 @@ Octopus model root type.
 |**Projects**|[YamlProject](#YamlProject)\[\]|List of Projects. Default value: **null**. |
 |**Lifecycles**|[YamlLifecycle](#YamlLifecycle)\[\]|List of Lifecycles. Default value: **null**. |
 |**LibraryVariableSets**|[YamlLibraryVariableSet](#YamlLibraryVariableSet)\[\]|List of Library Variable Sets (including Script modules). Default value: **null**. |
+|**UserRoles**|[YamlUserRole](#YamlUserRole)\[\]|List of User Roles. Default value: **null**. |
+|**Teams**|[YamlTeam](#YamlTeam)\[\]|List of Teams. Default value: **null**. |
 |**Templates**|[YamlTemplates](#YamlTemplates)|Templates node allowing to define templates for other octopus model elements. Default value: **null**. |
 
 ### <a name="YamlPhase"></a>11. YamlPhase
@@ -231,7 +235,21 @@ Retention policy definition.
 |**QuantityToKeep**|Int32|Quantity to keep, where 0 means **all**. Default value: **0**. |
 |**Unit**|RetentionUnit|Retention unit type. Possible values: **Days**, **Items**. Default value: **Days**. |
 
-### <a name="YamlTemplateReference"></a>17. YamlTemplateReference
+### <a name="YamlTeam"></a>17. YamlTeam
+
+Team definition.
+
+|Property|Type|Description|
+|--------|----|:----------|
+|**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
+|**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
+|**UserRefs**|String\[\]|List of user references. Default value: **null**. |
+|**ExternalSecurityGroupIds**|String\[\]|List of external security group ids. Default value: **null**. |
+|**UserRoleRefs**|String\[\]|List of user role references. Default value: **null**. |
+|**ProjectRefs**|String\[\]|List of project references. Default value: **null**. |
+|**EnvironmentRefs**|String\[\]|List of environment references. Default value: **null**. |
+
+### <a name="YamlTemplateReference"></a>18. YamlTemplateReference
 
 Template reference definition.
 
@@ -240,7 +258,7 @@ Template reference definition.
 |**Name**|String|The template name that given resource bases on. Default value: **null**. |
 |**Arguments**|Dictionary<String, String>|The dictionary of template parameters-values. The specified arguments have to correspond to the parameter list in template definition. Default value: **null**. |
 
-### <a name="YamlTemplates"></a>18. YamlTemplates
+### <a name="YamlTemplates"></a>19. YamlTemplates
 
 Templates model definition.
 
@@ -279,7 +297,18 @@ the property value `"${packageId} ver ${packageVersion}"` would be updated to `"
 |**DeploymentSteps**|[YamlDeploymentStepTemplate](#YamlDeploymentStepTemplate)\[\]|List of Deployment Step templates Default value: **null**. |
 |**Projects**|[YamlProjectTemplate](#YamlProjectTemplate)\[\]|List of Project templates Default value: **null**. |
 
-### <a name="YamlVariable"></a>19. YamlVariable
+### <a name="YamlUserRole"></a>20. YamlUserRole
+
+User Role model definition allowing to define user role and permissions.
+
+|Property|Type|Description|
+|--------|----|:----------|
+|**Name**|String|Unique name. It can be used in other models to refer to this item. Default value: **null**. |
+|**RenamedFrom**|String|Indicates that resource should be renamed. If specified, the upload process will try first to find resource with actual **Name** and update it. If not found it would try to find one with **RenamedFrom** name and update it, including rename to actual name. Only if none of the resources are found, a new one will be created. Default value: **null**. |
+|**Description**|String|Resource description. Default value: **null**. |
+|**Permissions**|Permission\[\]|List of Permissions. Possible values: **None**, **AdministerSystem**, **ProjectEdit**, **ProjectView**, **ProjectCreate**, **ProjectDelete**, **ProcessView**, **ProcessEdit**, **VariableEdit**, **VariableEditUnscoped**, **VariableView**, **VariableViewUnscoped**, **ReleaseCreate**, **ReleaseView**, **ReleaseEdit**, **ReleaseDelete**, **DefectReport**, **DefectResolve**, **DeploymentCreate**, **DeploymentDelete**, **DeploymentView**, **EnvironmentView**, **EnvironmentCreate**, **EnvironmentEdit**, **EnvironmentDelete**, **MachineCreate**, **MachineEdit**, **MachineView**, **MachineDelete**, **ArtifactView**, **ArtifactCreate**, **ArtifactEdit**, **ArtifactDelete**, **FeedView**, **EventView**, **LibraryVariableSetView**, **LibraryVariableSetCreate**, **LibraryVariableSetEdit**, **LibraryVariableSetDelete**, **ProjectGroupView**, **ProjectGroupCreate**, **ProjectGroupEdit**, **ProjectGroupDelete**, **TeamCreate**, **TeamView**, **TeamEdit**, **TeamDelete**, **UserView**, **UserInvite**, **UserRoleView**, **UserRoleEdit**, **TaskView**, **TaskViewLog**, **TaskCreate**, **TaskCancel**, **InterruptionView**, **InterruptionSubmit**, **InterruptionViewSubmitResponsible**, **BuiltInFeedPush**, **BuiltInFeedAdminister**, **BuiltInFeedDownload**, **ActionTemplateView**, **ActionTemplateCreate**, **ActionTemplateEdit**, **ActionTemplateDelete**, **LifecycleCreate**, **LifecycleView**, **LifecycleEdit**, **LifecycleDelete**, **AccountView**, **AccountEdit**, **AccountCreate**, **AccountDelete**, **AuditView**, **TenantCreate**, **TenantEdit**, **TenantView**, **TenantDelete**, **TagSetCreate**, **TagSetEdit**, **TagSetDelete**, **MachinePolicyCreate**, **MachinePolicyView**, **MachinePolicyEdit**, **MachinePolicyDelete**, **ProxyCreate**, **ProxyView**, **ProxyEdit**, **ProxyDelete**. Default value: **null**. |
+
+### <a name="YamlVariable"></a>21. YamlVariable
 
 Variable definition.
 
@@ -292,7 +321,7 @@ Variable definition.
 |**Scope**|[YamlVariableScope](#YamlVariableScope)|Variable scope, including roles, machines, environments, channels and actions. If none specified, variable will be always available in given context. Default value: **null**. |
 |**Prompt**|[YamlVariablePrompt](#YamlVariablePrompt)| Default value: **null**. |
 
-### <a name="YamlVariablePrompt"></a>20. YamlVariablePrompt
+### <a name="YamlVariablePrompt"></a>22. YamlVariablePrompt
 
 |Property|Type|Description|
 |--------|----|:----------|
@@ -300,10 +329,10 @@ Variable definition.
 |**Description**|String| Default value: **null**. |
 |**Required**|Boolean| Default value: **False**. |
 
-### <a name="YamlVariableScope"></a>21. YamlVariableScope
+### <a name="YamlVariableScope"></a>23. YamlVariableScope
 
 Variable scope definition. It can limit variable visibility to specific context. 
-The variable scope should be understand as `(role1 OR ...roleN) AND (machine1 OR ...machineN) AND (env1 OR envN) AND...` where if none resource references are defined of specific type \(like role or machine etc.\) then variable is available to all the resources of that type.
+The variable scope should be understood as `(role1 OR ...roleN) AND (machine1 OR ...machineN) AND (env1 OR envN) AND...` where if none resource references are defined of specific type \(like role or machine etc.\) then variable is available to all the resources of that type.
 
 |Property|Type|Description|
 |--------|----|:----------|
@@ -313,7 +342,7 @@ The variable scope should be understand as `(role1 OR ...roleN) AND (machine1 OR
 |**ChannelRefs**|String\[\]|List of Channel references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them. Default value: **null**. |
 |**ActionRefs**|String\[\]|List of Action references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them. The Action references can be only specified in Project variables (LibraryVariableSets does not support them). Default value: **null**. |
 
-### <a name="YamlVersioningStrategy"></a>22. YamlVersioningStrategy
+### <a name="YamlVersioningStrategy"></a>24. YamlVersioningStrategy
 
 Project versioning strategy.
 

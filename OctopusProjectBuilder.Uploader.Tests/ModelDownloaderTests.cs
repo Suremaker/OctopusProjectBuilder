@@ -6,6 +6,7 @@ using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.TestUtils;
 using OctopusProjectBuilder.Uploader.Tests.Helpers;
 using Ploeh.AutoFixture;
+using Permission = OctopusProjectBuilder.Model.Permission;
 
 namespace OctopusProjectBuilder.Uploader.Tests
 {
@@ -21,7 +22,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
         {
             _repository = new FakeOctopusRepository();
             _downloader = new ModelDownloader(_repository);
-            _uploader = new ModelUploader(_repository);
+            _uploader = new ModelUploader(_repository, (IUserRolesRepositoryDecorator)_repository.UserRoles);
         }
 
         [Test]
@@ -221,7 +222,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddEnvironment(environment1)
                 .AddEnvironment(environment2)
                 .Build();
-            
+
             _repository.Machines.Create(new MachineResource { Name = "m1" });
             _repository.Machines.Create(new MachineResource { Name = "m2" });
             _repository.FakeMachineRoles.Add("r1");
@@ -245,7 +246,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 string.Empty,
                 new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
                 new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
-                new []
+                new[]
                 {
                     new Phase( CreateItemWithRename<ElementIdentifier>(false), CreateItem<RetentionPolicy>(), CreateItem<RetentionPolicy>(), CreateItem<int>(), new [] { new ElementReference(environment1.Identifier.Name), new ElementReference(environment2.Identifier.Name) }, new [] { new ElementReference(environment3.Identifier.Name) }),
                     new Phase( CreateItemWithRename<ElementIdentifier>(false), CreateItem<RetentionPolicy>(), CreateItem<RetentionPolicy>(), CreateItem<int>(), new [] { new ElementReference(environment2.Identifier.Name), new ElementReference(environment3.Identifier.Name) }, new [] { new ElementReference(environment1.Identifier.Name) })
@@ -265,7 +266,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
         }
 
         [Test]
-        public void It_should_upload_and_download_libraryVariableSets()
+        public void It_should_upload_and_download_library_variable_sets()
         {
             var environment1 = new Environment(new ElementIdentifier("env1"), CreateItem<string>());
             var environment2 = new Environment(new ElementIdentifier("env2"), CreateItem<string>());
@@ -337,10 +338,130 @@ namespace OctopusProjectBuilder.Uploader.Tests
             Assert.That(actual.Description, Is.EqualTo(description2));
         }
 
+        [Test]
+        public void It_should_upload_and_download_user_roles()
+        {
+            var expected = new SystemModelBuilder()
+                .AddUserRole(CreateItemWithRename<UserRole>(false))
+                .AddUserRole(CreateItemWithRename<UserRole>(false))
+                .Build();
+            _uploader.UploadModel(expected);
+            var actual = _downloader.DownloadModel();
+
+            actual.AssertDeepEqualsTo(expected);
+        }
+
+        [Test]
+        public void It_should_rename_user_roles()
+        {
+            var name1 = CreateItem<string>();
+            var name2 = CreateItem<string>();
+            var description1 = CreateItem<string>();
+            var description2 = CreateItem<string>();
+
+            var model1 = new SystemModelBuilder()
+                .AddUserRole(new UserRole(new ElementIdentifier(name1), description1, CreateItem<IEnumerable<OctopusProjectBuilder.Model.Permission>>()))
+                .Build();
+            _uploader.UploadModel(model1);
+
+            var originalId = _repository.UserRoles.FindByName(model1.UserRoles.Single().Identifier.Name).Id;
+
+            var model2 = new SystemModelBuilder()
+                .AddUserRole(new UserRole(new ElementIdentifier(name2, name1), description2, CreateItem<IEnumerable<OctopusProjectBuilder.Model.Permission>>()))
+                .Build();
+            _uploader.UploadModel(model2);
+
+            var actual = _repository.UserRoles.Get(originalId);
+            Assert.That(actual.Name, Is.EqualTo(name2));
+            Assert.That(actual.Description, Is.EqualTo(description2));
+        }
+
+        [Test]
+        public void It_should_upload_and_download_teams()
+        {
+            var userRole1 = new UserRole(new ElementIdentifier("userRole1"), CreateItem<string>(), CreateItem<IEnumerable<Permission>>());
+            var userRole2 = new UserRole(new ElementIdentifier("userRole2"), CreateItem<string>(), CreateItem<IEnumerable<Permission>>());
+            var lifecycle = new Lifecycle(
+                new ElementIdentifier("lifecycle1"),
+                "",
+                new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
+                new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
+                Enumerable.Empty<Phase>());
+            var projectGroup1 = new ProjectGroup(new ElementIdentifier("group1"), "");
+
+            var project1 = new Project(new ElementIdentifier("project1"), "", false, false, false,
+                new DeploymentProcess(Enumerable.Empty<DeploymentStep>()),
+                Enumerable.Empty<Variable>(),
+                Enumerable.Empty<ElementReference>(),
+                new ElementReference("lifecycle1"),
+                new ElementReference("group1"), null);
+            var environment1 = new Environment(new ElementIdentifier("env1"), CreateItem<string>());
+
+            var team = new Team(
+                CreateItemWithRename<ElementIdentifier>(false),
+                new List<ElementReference> { new ElementReference("username1") },
+                new List<string> { "externalSecurityGroup1" },
+                new List<ElementReference> { new ElementReference(userRole1.Identifier.Name), new ElementReference(userRole2.Identifier.Name) },
+                new List<ElementReference> { new ElementReference(project1.Identifier.Name) },
+                new List<ElementReference> { new ElementReference(environment1.Identifier.Name) });
+            
+            var expected = new SystemModelBuilder()
+                .AddLifecycle(lifecycle)
+                .AddProjectGroup(projectGroup1)
+                .AddProject(project1)
+                .AddEnvironment(environment1)
+                .AddUserRole(userRole1)
+                .AddUserRole(userRole2)
+                .AddTeam(team)
+                .Build();
+
+            _repository.Users.Register(new RegisterCommand { Username = "username1"});
+
+            _uploader.UploadModel(expected);
+            var actual = _downloader.DownloadModel();
+
+            actual.AssertDeepEqualsTo(expected);
+        }
+
+        [Test]
+        public void It_should_rename_team()
+        {
+            var name1 = CreateItem<string>();
+            var name2 = CreateItem<string>();
+
+            var model1 = new SystemModelBuilder()
+                .AddTeam(new Team(
+                    new ElementIdentifier(name1), 
+                    Enumerable.Empty<ElementReference>(),
+                    Enumerable.Empty<string>(),
+                    Enumerable.Empty<ElementReference>(),
+                    Enumerable.Empty<ElementReference>(),
+                    Enumerable.Empty<ElementReference>()))
+                .Build();
+            _uploader.UploadModel(model1);
+
+            var originalId = _repository.Teams.FindByName(model1.Teams.Single().Identifier.Name).Id;
+
+            var model2 = new SystemModelBuilder()
+                .AddTeam(new Team(
+                    new ElementIdentifier(name2, name1),
+                    Enumerable.Empty<ElementReference>(),
+                    Enumerable.Empty<string>(),
+                    Enumerable.Empty<ElementReference>(),
+                    Enumerable.Empty<ElementReference>(),
+                    Enumerable.Empty<ElementReference>()))
+                .Build();
+            _uploader.UploadModel(model2);
+
+            var actual = _repository.Teams.Get(originalId);
+            Assert.That(actual.Name, Is.EqualTo(name2));
+        }
+
         private T CreateItem<T>()
         {
             return CreateItemWithRename<T>(true);
         }
+
         private T CreateItemWithRename<T>(bool withRename)
         {
             var fixture = new Fixture();

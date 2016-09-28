@@ -8,7 +8,7 @@ using OctopusProjectBuilder.YamlReader.Helpers;
 namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Description(@"Variable scope definition. It can limit variable visibility to specific context. 
-The variable scope should be understand as `(role1 OR ...roleN) AND (machine1 OR ...machineN) AND (env1 OR envN) AND...` where if none resource references are defined of specific type \(like role or machine etc.\) then variable is available to all the resources of that type.")]
+The variable scope should be understood as `(role1 OR ...roleN) AND (machine1 OR ...machineN) AND (env1 OR envN) AND...` where if none resource references are defined of specific type \(like role or machine etc.\) then variable is available to all the resources of that type.")]
     [Serializable]
     public class YamlVariableScope
     {

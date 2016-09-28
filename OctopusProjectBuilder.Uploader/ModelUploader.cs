@@ -14,14 +14,16 @@ namespace OctopusProjectBuilder.Uploader
     {
         private static readonly ILog Logger = LogManager.GetLogger<ModelUploader>();
         private readonly IOctopusRepository _repository;
+        private readonly IUserRolesRepositoryDecorator _userRolesRepository;
 
-        public ModelUploader(string octopusUrl, string octopusApiKey) : this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
+        public ModelUploader(IOctopusClient octopusClient, IOctopusRepository octopusRepository) : this(octopusRepository, new UserRolesRepositoryDecorator(octopusRepository.UserRoles, octopusClient))
         {
         }
 
-        public ModelUploader(IOctopusRepository repository)
+        public ModelUploader(IOctopusRepository repository, IUserRolesRepositoryDecorator userRolesRepository)
         {
             _repository = repository;
+            _userRolesRepository = userRolesRepository;
         }
 
         public void UploadModel(SystemModel model)
@@ -40,6 +42,12 @@ namespace OctopusProjectBuilder.Uploader
 
             foreach (var project in model.Projects)
                 UploadProject(project);
+
+            foreach (var userRole in model.UserRoles)
+                UploadUserRole(userRole);
+
+            foreach (var team in model.Teams)
+                UploadTeam(team);
         }
 
         private void UploadLibraryVariableSet(LibraryVariableSet libraryVariableSet)
@@ -85,6 +93,18 @@ namespace OctopusProjectBuilder.Uploader
             Upsert(_repository.Environments, resource);
         }
 
+        private void UploadUserRole(UserRole userRole)
+        {
+            var resource = LoadResource(_repository.UserRoles, userRole.Identifier).UpdateWith(userRole);
+            Upsert(_userRolesRepository, resource);
+        }
+
+        private void UploadTeam(Team team)
+        {
+            var resource = LoadResource(_repository.Teams, team.Identifier).UpdateWith(team, _repository);
+            Upsert(_repository.Teams, resource);
+        }
+
         private TResource Upsert<TRepository, TResource>(TRepository repository, TResource resource) where TResource : IResource, INamedResource where TRepository : ICreate<TResource>, IModify<TResource>
         {
             var result = string.IsNullOrWhiteSpace(resource.Id)
@@ -92,17 +112,6 @@ namespace OctopusProjectBuilder.Uploader
                 : repository.Modify(resource);
 
             Logger.Debug($"Upserted {typeof(TResource).Name}: {resource.Name}");
-            return result;
-        }
-
-        // LibraryVariableSetResource does not implement INamedResource so the method cannot be generalized
-        private LibraryVariableSetResource Upsert(ILibraryVariableSetRepository repository, LibraryVariableSetResource resource)
-        {
-            var result = string.IsNullOrWhiteSpace(resource.Id)
-                ? repository.Create(resource)
-                : repository.Modify(resource);
-
-            Logger.Debug($"Upserted {nameof(LibraryVariableSetResource)}: {resource.Name}");
             return result;
         }
 

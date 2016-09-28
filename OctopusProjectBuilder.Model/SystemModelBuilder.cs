@@ -9,6 +9,8 @@ namespace OctopusProjectBuilder.Model
         private readonly List<Project> _projects = new List<Project>();
         private readonly List<Lifecycle> _lifecycles = new List<Lifecycle>();
         private readonly List<LibraryVariableSet> _libraryVariableSets = new List<LibraryVariableSet>();
+        private readonly List<UserRole> _userRoles = new List<UserRole>();
+        private readonly List<Team> _teams = new List<Team>();
 
         public SystemModelBuilder AddProjectGroup(ProjectGroup group)
         {
@@ -40,9 +42,27 @@ namespace OctopusProjectBuilder.Model
             return this;
         }
 
+        public SystemModelBuilder AddUserRole(UserRole userRole)
+        {
+            _userRoles.Add(userRole);
+            return this;
+        }
+        public SystemModelBuilder AddTeam(Team team)
+        {
+            _teams.Add(team);
+            return this;
+        }
+
         public SystemModel Build()
         {
-            return new SystemModel(_lifecycles, _projectGroups, _libraryVariableSets, _projects, _environments);
+            return new SystemModel(
+                _lifecycles, 
+                _projectGroups, 
+                _libraryVariableSets, 
+                _projects, 
+                _environments,
+                _userRoles,
+                _teams);
         }
     }
 }

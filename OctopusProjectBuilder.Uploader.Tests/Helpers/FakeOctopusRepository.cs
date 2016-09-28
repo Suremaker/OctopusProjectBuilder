@@ -19,6 +19,9 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             Environments = new FakeEnvironmentRepository();
             MachineRoles = FakeMachineRoles = new FakeMachineRoleRepository();
             Machines = new FakeMachineRepository();
+            UserRoles = new FakeUserRolesRepository();
+            Teams = new FakeTeamsRepository();
+            Users = new FakeUsersRepository();
         }
 
         public IOctopusClient Client { get; }

@@ -2,6 +2,7 @@
 using Common.Logging;
 using Octopus.Client;
 using Octopus.Client.Model;
+using Octopus.Client.Repositories;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.Uploader.Converters;
 
@@ -29,7 +30,9 @@ namespace OctopusProjectBuilder.Uploader
                 _repository.ProjectGroups.FindAll().Select(ReadProjectGroup),
                 _repository.LibraryVariableSets.FindAll().Select(ReadLibraryVariableSet),
                 _repository.Projects.FindAll().Select(ReadProject),
-                _repository.Environments.FindAll().Select(ReadEnvironment));
+                _repository.Environments.FindAll().Select(ReadEnvironment),
+                _repository.UserRoles.FindAll().Select(ReadUserRole),
+                _repository.Teams.FindAll().Select(ReadTeam));
         }
 
         private LibraryVariableSet ReadLibraryVariableSet(LibraryVariableSetResource resource)
@@ -47,7 +50,6 @@ namespace OctopusProjectBuilder.Uploader
         private Project ReadProject(ProjectResource resource)
         {
             Logger.Info($"Downloading {nameof(ProjectResource)}: {resource.Name}");
-            
             return resource.ToModel(_repository);
         }
 
@@ -61,6 +63,18 @@ namespace OctopusProjectBuilder.Uploader
         {
             Logger.Info($"Downloading {nameof(EnvironmentResource)}: {resource.Name}");
             return resource.ToModel();
+        }
+
+        private static UserRole ReadUserRole(UserRoleResource resource)
+        {
+            Logger.Info($"Downloading {nameof(UserRoleResource)}: {resource.Name}");
+            return resource.ToModel();
+        }
+
+        private Team ReadTeam(TeamResource resource)
+        {
+            Logger.Info($"Downloading {nameof(TeamResource)}: {resource.Name}");
+            return resource.ToModel(_repository);
         }
     }
 }

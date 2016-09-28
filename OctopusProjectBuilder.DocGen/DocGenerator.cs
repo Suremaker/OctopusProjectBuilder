@@ -64,14 +64,25 @@ namespace OctopusProjectBuilder.DocGen
             sb.Append(GetDescription(propertyInfo)).Append(" ");
 
             if (propertyInfo.PropertyType.IsEnum)
-                sb.Append("Possible values: **")
-                    .AppendFormat(string.Join("**, **", Enum.GetNames(propertyInfo.PropertyType)))
-                    .Append("**. ");
+            {
+                AppendEnum(sb, propertyInfo.PropertyType);
+            }
+            else if (GetEnumerableTypes(propertyInfo.PropertyType).Any(t => t.IsEnum))
+            {
+                AppendEnum(sb, GetEnumerableTypes(propertyInfo.PropertyType).First(t => t.IsEnum));
+            }
 
             sb.Append("Default value: **").Append(GetPropertyDefaultValueText(propertyInfo)).Append("**. ");
 
             return sb.ToString();
         }
+
+        private static void AppendEnum(StringBuilder sb, Type @enum)
+        {
+            sb.Append("Possible values: **")
+                    .AppendFormat(string.Join("**, **", Enum.GetNames(@enum)))
+                    .Append("**. ");
+    }
 
         private static string GetPropertyDefaultValueText(PropertyInfo propertyInfo)
         {
@@ -123,6 +134,26 @@ namespace OctopusProjectBuilder.DocGen
         private void GenerateHeader(StringBuilder builder, string header)
         {
             builder.Append("## ").AppendLine(header).AppendLine();
+        }
+
+        public static IEnumerable<Type> GetEnumerableTypes(Type type)
+        {
+            if (type.IsInterface)
+            {
+                if (type.IsGenericType
+                    && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                {
+                    yield return type.GetGenericArguments()[0];
+                }
+            }
+            foreach (Type intType in type.GetInterfaces())
+            {
+                if (intType.IsGenericType
+                    && intType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                {
+                    yield return intType.GetGenericArguments()[0];
+                }
+            }
         }
     }
 }

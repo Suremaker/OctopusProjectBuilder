@@ -45,6 +45,68 @@ Environments:
         }
 
         [Test]
+        public void It_should_read_lifecycles()
+        {
+            var content = @"---
+Lifecycles:
+- Name: name1
+  RenamedFrom: oldName1
+  Description: some description 1
+  TentacleRetentionPolicy:
+    QuantityToKeep: 1
+    Unit: Items
+  ReleaseRetentionPolicy:
+    QuantityToKeep: 1
+    Unit: Items
+  Phases:
+  - Name: phase1
+    RenamedFrom: oldPhase1
+    OptionalDeploymentTargetRefs:
+    - optionalDeploymentTarget1
+    - optionalDeploymentTarget2
+    AutomaticDeploymentTargetRefs:
+    - automaticDeploymentTargetRefs1
+    - automaticDeploymentTargetRefs2
+    ReleaseRetentionPolicy:
+      QuantityToKeep: 1
+      Unit: Items
+    MinimumEnvironmentsBeforePromotion: 2
+    TentacleRetentionPolicy:
+      QuantityToKeep: 1
+      Unit: Items
+...
+";
+            var expectedLifecycles = new[]
+            {
+                new YamlLifecycle
+                {
+                    Name = "name1",
+                    RenamedFrom = "oldName1",
+                    Description = "some description 1",
+                    TentacleRetentionPolicy = new YamlRetentionPolicy { QuantityToKeep = 1, Unit = RetentionPolicy.RetentionUnit.Items},
+                    ReleaseRetentionPolicy = new YamlRetentionPolicy { QuantityToKeep = 1, Unit = RetentionPolicy.RetentionUnit.Items},
+                    Phases = new []
+                    {
+                        new YamlPhase
+                        {
+                            Name = "phase1",
+                            RenamedFrom = "oldPhase1",
+                            OptionalDeploymentTargetRefs = new [] { "optionalDeploymentTarget1", "optionalDeploymentTarget2" },
+                            AutomaticDeploymentTargetRefs = new [] { "automaticDeploymentTargetRefs1", "automaticDeploymentTargetRefs2" },
+                            ReleaseRetentionPolicy = new YamlRetentionPolicy { QuantityToKeep = 1, Unit = RetentionPolicy.RetentionUnit.Items},
+                            MinimumEnvironmentsBeforePromotion = 2,
+                            TentacleRetentionPolicy = new YamlRetentionPolicy { QuantityToKeep = 1, Unit = RetentionPolicy.RetentionUnit.Items},
+                        }
+                    }
+                },
+            };
+
+            var model = Read(content);
+
+            AssertExt.AssertDeepEqualsTo(model.Lifecycles, expectedLifecycles);
+        }
+
+        [Test]
         public void It_should_read_project_groups()
         {
             var content = @"---
@@ -189,6 +251,78 @@ ProjectGroups:
             var model = Read(content);
 
             AssertExt.AssertDeepEqualsTo(model.Projects, expected);
+        }
+
+        [Test]
+        public void It_should_read_user_roles()
+        {
+            var content = @"---
+UserRoles:
+- Name: name1
+  RenamedFrom: oldName1
+  Description: some description 1
+  Permissions:
+  - LifecycleDelete
+...";
+            var expected = new[]
+            {
+                new YamlUserRole()
+                {
+                    Name = "name1",
+                    Description = "some description 1",
+                    RenamedFrom = "oldName1",
+                    Permissions = new[]
+                    {
+                        Permission.LifecycleDelete
+                    }
+                }
+            };
+
+            var model = Read(content);
+
+            AssertExt.AssertDeepEqualsTo(model.UserRoles, expected);
+        }
+
+        [Test]
+        public void It_should_read_teams()
+        {
+            var content = @"---
+Teams:
+- Name: name1
+  RenamedFrom: oldName1
+  UserRefs:
+  - user1
+  ExternalSecurityGroupIds:
+  - externalSecurityGroup1
+  UserRoleRefs:
+  - userRole1
+  - userRole2
+  EnvironmentRefs:
+  - environment1
+  - environment2
+  ProjectRefs:
+  - project1
+  - project2
+  - project3
+...
+";
+            var expected = new[]
+            {
+                new YamlTeam()
+                {
+                    Name = "name1",
+                    RenamedFrom = "oldName1",
+                    UserRefs = new [] { "user1" },
+                    ExternalSecurityGroupIds = new [] { "externalSecurityGroup1" },
+                    UserRoleRefs = new [] { "userRole1", "userRole2" },
+                    EnvironmentRefs = new [] { "environment1", "environment2" },
+                    ProjectRefs = new [] { "project1", "project2", "project3" }
+                }
+            };
+
+            var model = Read(content);
+
+            AssertExt.AssertDeepEqualsTo(model.Teams, expected);
         }
 
         private YamlOctopusModel Read(string content)

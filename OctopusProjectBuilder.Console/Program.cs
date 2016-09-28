@@ -4,6 +4,7 @@ using System.Net;
 using Common.Logging;
 using Common.Logging.Simple;
 using Fclp;
+using Octopus.Client;
 using OctopusProjectBuilder.Uploader;
 using OctopusProjectBuilder.YamlReader;
 
@@ -47,7 +48,8 @@ namespace OctopusProjectBuilder.Console
         private static void UploadDefinitions(Options options)
         {
             var model = new YamlSystemModelRepository().Load(options.DefinitionsDir);
-            new ModelUploader(options.OctopusUrl, options.OctopusApiKey).UploadModel(model);
+            IOctopusClient octopusClient = new OctopusClient(new OctopusServerEndpoint(options.OctopusUrl, options.OctopusApiKey));
+            new ModelUploader(octopusClient, new OctopusRepository(octopusClient)).UploadModel(model);
         }
 
         private static void DownloadDefinitions(Options options)

@@ -186,7 +186,9 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
                     Projects = new[] { new YamlProjectTemplate { Name = "PT1" } },
                     DeploymentSteps = new[] { new YamlDeploymentStepTemplate { Name = "PS1" } },
                     DeploymentActions = new[] { new YamlDeploymentActionTemplate { Name = "PA1" } }
-                }
+                },
+                UserRoles = new[] { new YamlUserRole { Name = "N1" } },
+                Teams = new[] { new YamlTeam { Name = "N1" } }
             };
             var model2 = new YamlOctopusModel
             {
@@ -199,7 +201,9 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
                     Projects = new[] { new YamlProjectTemplate { Name = "PT2" } },
                     DeploymentSteps = new[] { new YamlDeploymentStepTemplate { Name = "PS2" } },
                     DeploymentActions = new[] { new YamlDeploymentActionTemplate { Name = "PA2" } }
-                }
+                },
+                UserRoles = new[] { new YamlUserRole { Name = "N2" } },
+                Teams = new[] { new YamlTeam { Name = "N2" } }
             };
 
             model1.MergeIn(model2);
@@ -210,6 +214,8 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
             Assert.That(model1.Templates.Projects.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "PT1", "PT2" }));
             Assert.That(model1.Templates.DeploymentActions.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "PA1", "PA2" }));
             Assert.That(model1.Templates.DeploymentSteps.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "PS1", "PS2" }));
+            Assert.That(model1.UserRoles.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "N1", "N2" }));
+            Assert.That(model1.Teams.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "N1", "N2" }));
         }
 
         [Test]
@@ -222,7 +228,8 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
                 Templates = new YamlTemplates
                 {
                     DeploymentActions = new[] { new YamlDeploymentActionTemplate { Name = "PA1" } }
-                }
+                },
+                UserRoles = new [] { new YamlUserRole { Name = "N1" } }
             };
             var model2 = new YamlOctopusModel
             {
@@ -230,7 +237,8 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
                 Templates = new YamlTemplates
                 {
                     Projects = new[] { new YamlProjectTemplate { Name = "PT2" } },
-                }
+                },
+                Teams = new[] { new YamlTeam { Name = "N2" } }
             };
 
             model1.MergeIn(model2);
@@ -241,6 +249,8 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
             Assert.That(model1.Templates.Projects.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "PT2" }));
             Assert.That(model1.Templates.DeploymentActions.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "PA1" }));
             Assert.That(model1.Templates.DeploymentSteps, Is.Null);
+            Assert.That(model1.UserRoles.Select(s => s.Name), Is.EqualTo(new[] { "N1" }));
+            Assert.That(model1.Teams.Select(s => s.Name), Is.EqualTo(new[] { "N2" }));
         }
     }
 }
