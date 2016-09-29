@@ -26,6 +26,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 
         public IOctopusClient Client { get; }
         public IArtifactRepository Artifacts { get; }
+        public IActionTemplateRepository ActionTemplates { get; }
         public ICertificateRepository Certificates { get; }
         public IBackupRepository Backups { get; }
         public IBuiltInPackageRepositoryRepository BuiltInPackageRepository { get; }
@@ -49,6 +50,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public IProxyRepository Proxies { get; }
         public IServerStatusRepository ServerStatus { get; }
         public ISchedulerRepository Schedulers { get; }
+        public ISubscriptionRepository Subscriptions { get; }
         public ITaskRepository Tasks { get; }
         public ITeamsRepository Teams { get; }
         public ITagSetRepository TagSets { get; }
