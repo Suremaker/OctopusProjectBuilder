@@ -21,6 +21,10 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public YamlLifecycle[] Lifecycles { get; set; }
         [Description("List of Library Variable Sets (including Script modules).")]
         public YamlLibraryVariableSet[] LibraryVariableSets { get; set; }
+        [Description("List of User Roles.")]
+        public YamlUserRole[] UserRoles { get; set; }
+        [Description("List of Teams.")]
+        public YamlTeam[] Teams { get; set; }
         [Description("Templates node allowing to define templates for other octopus model elements.")]
         public YamlTemplates Templates { get; set; }
 
@@ -48,6 +52,12 @@ namespace OctopusProjectBuilder.YamlReader.Model
             foreach (var libraryVariableSet in LibraryVariableSets.EnsureNotNull())
                 builder.AddLibraryVariableSet(libraryVariableSet.ToModel());
 
+            foreach (var userRoles in UserRoles.EnsureNotNull())
+                builder.AddUserRole(userRoles.ToModel());
+
+            foreach (var team in Teams.EnsureNotNull())
+                builder.AddTeam(team.ToModel());
+
             return builder;
         }
 
@@ -59,7 +69,9 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 ProjectGroups = model.ProjectGroups.Select(YamlProjectGroup.FromModel).ToArray().NullIfEmpty(),
                 Projects = model.Projects.Select(YamlProject.FromModel).ToArray().NullIfEmpty(),
                 Lifecycles = model.Lifecycles.Select(YamlLifecycle.FromModel).ToArray().NullIfEmpty(),
-                LibraryVariableSets = model.LibraryVariableSets.Select(YamlLibraryVariableSet.FromModel).ToArray().NullIfEmpty()
+                LibraryVariableSets = model.LibraryVariableSets.Select(YamlLibraryVariableSet.FromModel).ToArray().NullIfEmpty(),
+                UserRoles = model.UserRoles.Select(YamlUserRole.FromModel).ToArray().NullIfEmpty(),
+                Teams = model.Teams.Select(YamlTeam.FromModel).ToArray().NullIfEmpty()
             };
         }
 
@@ -70,6 +82,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
             LibraryVariableSets = this.MergeItemsIn(model, x => x.LibraryVariableSets);
             Lifecycles = this.MergeItemsIn(model, x => x.Lifecycles);
             Projects = this.MergeItemsIn(model, x => x.Projects);
+            UserRoles = this.MergeItemsIn(model, x => x.UserRoles);
+            Teams = this.MergeItemsIn(model, x => x.Teams);
             Templates = YamlTemplates.MergeIn(Templates, model.Templates);
             return this;
         }

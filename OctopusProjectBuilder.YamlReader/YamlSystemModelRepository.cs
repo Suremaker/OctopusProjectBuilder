@@ -66,11 +66,13 @@ namespace OctopusProjectBuilder.YamlReader
 
         private string GetModelPath(YamlOctopusModel splitModel, string modelDirectory)
         {
-            var name = splitModel.Environments.EnsureNotNull().Select(x => $"Environment_{x.Name}.yml")
-                .Concat(splitModel.ProjectGroups.EnsureNotNull().Select(x => $"ProjectGroup_{x.Name}.yml"))
-                .Concat(splitModel.Projects.EnsureNotNull().Select(x => $"Project_{x.Name}.yml"))
-                .Concat(splitModel.Lifecycles.EnsureNotNull().Select(x => $"Lifecycle_{x.Name}.yml"))
-                .Concat(splitModel.LibraryVariableSets.EnsureNotNull().Select(x => $"LibraryVariableSet_{x.Name}.yml"))
+            var name = splitModel.Environments.EnsureNotNull().Select(x => $"Environment_{x.Name.SanitiseNameIfNeeded()}.yml")
+                .Concat(splitModel.ProjectGroups.EnsureNotNull().Select(x => $"ProjectGroup_{x.Name.SanitiseNameIfNeeded()}.yml"))
+                .Concat(splitModel.Projects.EnsureNotNull().Select(x => $"Project_{x.Name.SanitiseNameIfNeeded()}.yml"))
+                .Concat(splitModel.Lifecycles.EnsureNotNull().Select(x => $"Lifecycle_{x.Name.SanitiseNameIfNeeded()}.yml"))
+                .Concat(splitModel.LibraryVariableSets.EnsureNotNull().Select(x => $"LibraryVariableSet_{x.Name.SanitiseNameIfNeeded()}.yml"))
+                .Concat(splitModel.UserRoles.EnsureNotNull().Select(x => $"UserRole_{x.Name.SanitiseNameIfNeeded()}.yml"))
+                .Concat(splitModel.Teams.EnsureNotNull().Select(x => $"Team_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Single();
             return modelDirectory + "\\" + name;
         }

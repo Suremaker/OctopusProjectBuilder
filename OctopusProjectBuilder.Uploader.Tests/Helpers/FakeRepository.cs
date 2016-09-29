@@ -40,6 +40,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         protected virtual void OnModify(T currentItem, T newItem)
         {
         }
+
         public T Create(T resource)
         {
             resource.Id = Guid.NewGuid().ToString();

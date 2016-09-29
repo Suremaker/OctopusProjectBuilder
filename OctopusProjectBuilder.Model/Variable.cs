@@ -12,6 +12,7 @@ namespace OctopusProjectBuilder.Model
         Action = 5,
         Channel = 8
     }
+
     public class Variable
     {
         public bool IsEditable { get; }

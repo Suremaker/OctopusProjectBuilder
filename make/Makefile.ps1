@@ -14,7 +14,10 @@ Define-Step -Name 'Tests' -Target 'build' -Body {
 	$tests = @()
 	$tests += Define-NUnitTests -GroupName 'Unit Tests' -TestAssembly "*.Tests\bin\Release\*.Tests.dll"
 
-	$tests | Run-Tests -EraseReportDirectory -Cover -CodeFilter '+[OctopusProjectBuilder*]* -[*.Tests*]*' -TestFilter '*.Tests.dll' | Generate-CoverageSummary | Check-AcceptableCoverage -AcceptableCoverage 90
+	$tests `
+        | Run-Tests -EraseReportDirectory -Cover -CodeFilter '+[OctopusProjectBuilder*]* -[*.Tests*]*' -TestFilter '*.Tests.dll' `
+        | Generate-CoverageSummary `
+        | Check-AcceptableCoverage -AcceptableCoverage 89
 }
 
 Define-Step -Name 'Documentation generation' -Target 'build' -Body {

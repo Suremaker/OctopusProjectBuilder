@@ -18,7 +18,7 @@ namespace OctopusProjectBuilder.TestUtils
                 return;
             }
             Assert.That(actual, Is.Not.Null);
-            Assert.That(expected.GetType(), Is.EqualTo(actual.GetType()));
+            Assert.That(actual.GetType(), Is.EqualTo(expected.GetType()));
             if (expected.GetType().IsArray)
                 AssertArray((Array)expected, (Array)actual);
             else if (expected is IDictionary)

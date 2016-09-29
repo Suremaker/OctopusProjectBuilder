@@ -24,12 +24,11 @@ namespace OctopusProjectBuilder.Uploader
             return resource.Id;
         }
 
-        // LibraryVariableSetResource does not implement INamedResource so it cannot be generalized :(
-        public static string ResolveResourceId(this ILibraryVariableSetRepository repository, ElementReference reference)
+        public static string ResolveResourceId(this IUserRepository repository, ElementReference reference)
         {
-            var resource = repository.FindOne(r => string.Equals(Trim(r.Name), Trim(reference.Name), StringComparison.OrdinalIgnoreCase));
+            var resource = repository.FindOne(r => string.Equals(Trim(r.Username), Trim(reference.Name), StringComparison.OrdinalIgnoreCase));
             if (resource == null)
-                throw new KeyNotFoundException($"{typeof(LibraryVariableSetResource).Name} with name '{reference.Name}' not found.");
+                throw new KeyNotFoundException($"{typeof(UserResource).Name} with name '{reference.Name}' not found.");
             return resource.Id;
         }
 
