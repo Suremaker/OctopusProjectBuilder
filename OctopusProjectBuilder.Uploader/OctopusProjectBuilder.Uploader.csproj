@@ -84,7 +84,6 @@
     <Compile Include="Converters\VariableSetConverter.cs" />
     <Compile Include="Converters\VersioningStrategyResourceConverter.cs" />
     <Compile Include="ElementReferenceExtensions.cs" />
-    <Compile Include="IUserRolesRepositoryDecorator.cs" />
     <Compile Include="ModelDownloader.cs" />
     <Compile Include="ModelUploader.cs" />
     <Compile Include="Converters\ProjectConverter.cs" />

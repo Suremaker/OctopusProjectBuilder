@@ -48,8 +48,7 @@ namespace OctopusProjectBuilder.Console
         private static void UploadDefinitions(Options options)
         {
             var model = new YamlSystemModelRepository().Load(options.DefinitionsDir);
-            IOctopusClient octopusClient = new OctopusClient(new OctopusServerEndpoint(options.OctopusUrl, options.OctopusApiKey));
-            new ModelUploader(octopusClient, new OctopusRepository(octopusClient)).UploadModel(model);
+            new ModelUploader(options.OctopusUrl, options.OctopusApiKey).UploadModel(model);
         }
 
         private static void DownloadDefinitions(Options options)

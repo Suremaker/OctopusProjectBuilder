@@ -16,7 +16,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
         public void Uploader_should_throw_meaningful_exception_if_cannot_find_references_from_variable_scope(VariableScopeType scopeType, string resourceTypeName)
         {
             var octopusRepository = new FakeOctopusRepository();
-            var uploader = new ModelUploader(octopusRepository, null);
+            var uploader = new ModelUploader(octopusRepository);
 
             var referenceName = "ref1";
 
@@ -34,7 +34,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
         public void Uploader_should_throw_meaningful_exception_if_cannot_find_lifecycle()
         {
             var octopusRepository = new FakeOctopusRepository();
-            var uploader = new ModelUploader(octopusRepository, null);
+            var uploader = new ModelUploader(octopusRepository);
 
             var model = CreateProjectModel("lifecycle", "group");
             octopusRepository.ProjectGroups.Create(new ProjectGroupResource { Name = "group" });
@@ -47,7 +47,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
         public void Uploader_should_throw_meaningful_exception_if_cannot_find_project_group_reference()
         {
             var octopusRepository = new FakeOctopusRepository();
-            var uploader = new ModelUploader(octopusRepository, null);
+            var uploader = new ModelUploader(octopusRepository);
 
             var model = CreateProjectModel("lifecycle", "group");
             octopusRepository.Lifecycles.Create(new LifecycleResource { Name = "lifecycle" });
