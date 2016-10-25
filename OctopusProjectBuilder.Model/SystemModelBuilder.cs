@@ -47,6 +47,7 @@ namespace OctopusProjectBuilder.Model
             _userRoles.Add(userRole);
             return this;
         }
+
         public SystemModelBuilder AddTeam(Team team)
         {
             _teams.Add(team);

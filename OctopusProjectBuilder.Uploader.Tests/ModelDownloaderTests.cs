@@ -22,7 +22,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
         {
             _repository = new FakeOctopusRepository();
             _downloader = new ModelDownloader(_repository);
-            _uploader = new ModelUploader(_repository, (IUserRolesRepositoryDecorator)_repository.UserRoles);
+            _uploader = new ModelUploader(_repository);
         }
 
         [Test]

@@ -2,7 +2,6 @@
 using Common.Logging;
 using Octopus.Client;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.Uploader.Converters;
 
@@ -14,7 +13,7 @@ namespace OctopusProjectBuilder.Uploader
         private readonly IOctopusRepository _repository;
 
         public ModelDownloader(string octopusUrl, string octopusApiKey)
-            :this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
+            : this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
         {
         }
 

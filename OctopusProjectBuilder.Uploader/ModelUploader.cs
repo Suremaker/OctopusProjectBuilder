@@ -14,16 +14,14 @@ namespace OctopusProjectBuilder.Uploader
     {
         private static readonly ILog Logger = LogManager.GetLogger<ModelUploader>();
         private readonly IOctopusRepository _repository;
-        private readonly IUserRolesRepositoryDecorator _userRolesRepository;
 
-        public ModelUploader(IOctopusClient octopusClient, IOctopusRepository octopusRepository) : this(octopusRepository, new UserRolesRepositoryDecorator(octopusRepository.UserRoles, octopusClient))
+        public ModelUploader(string octopusUrl, string octopusApiKey) : this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
         {
         }
 
-        public ModelUploader(IOctopusRepository repository, IUserRolesRepositoryDecorator userRolesRepository)
+        public ModelUploader(IOctopusRepository repository)
         {
             _repository = repository;
-            _userRolesRepository = userRolesRepository;
         }
 
         public void UploadModel(SystemModel model)
@@ -96,7 +94,7 @@ namespace OctopusProjectBuilder.Uploader
         private void UploadUserRole(UserRole userRole)
         {
             var resource = LoadResource(_repository.UserRoles, userRole.Identifier).UpdateWith(userRole);
-            Upsert(_userRolesRepository, resource);
+            Upsert(_repository.UserRoles, resource);
         }
 
         private void UploadTeam(Team team)

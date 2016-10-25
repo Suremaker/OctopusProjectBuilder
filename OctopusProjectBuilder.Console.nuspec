@@ -15,7 +15,7 @@
       * templating.
     </summary>
     <releaseNotes>
-      + Updated Octopus.Client package to 4.0.0
+      + Use IUserRolesRepository from Octopus.Client
     </releaseNotes>
     <copyright>Copyright © Wojciech Kotlarski 2016</copyright>
     <tags>octopus yaml configuration</tags>
