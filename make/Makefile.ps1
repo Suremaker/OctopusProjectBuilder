@@ -12,7 +12,7 @@ Define-Step -Name 'Tests' -Target 'build' -Body {
 	. (require 'psmake.mod.testing')
 
 	$tests = @()
-	$tests += Define-NUnitTests -GroupName 'Unit Tests' -TestAssembly "*.Tests\bin\Release\*.Tests.dll"
+	$tests += Define-NUnit3Tests -GroupName 'Unit Tests' -TestAssembly "*.Tests\bin\Release\*.Tests.dll"
 
 	$tests `
         | Run-Tests -EraseReportDirectory -Cover -CodeFilter '+[OctopusProjectBuilder*]* -[*.Tests*]*' -TestFilter '*.Tests.dll' `

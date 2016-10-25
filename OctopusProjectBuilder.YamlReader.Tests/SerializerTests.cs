@@ -68,7 +68,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         public void It_should_throw_on_unknown_properties()
         {
             var ex = Assert.Throws<YamlException>(() => Deserialize<Model>("Text: abc\r\nUnknown: def\r\n"));
-            Assert.That(ex.InnerException.Message, Is.StringContaining($"Property 'Unknown' not found on type '{typeof(Model)}'"));
+            Assert.That(ex.InnerException.Message, Does.Contain($"Property 'Unknown' not found on type '{typeof(Model)}'"));
         }
 
         [Test]
