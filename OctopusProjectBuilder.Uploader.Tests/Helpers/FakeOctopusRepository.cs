@@ -22,6 +22,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             UserRoles = new FakeUserRolesRepository();
             Teams = new FakeTeamsRepository();
             Users = new FakeUsersRepository();
+            Client = new FakeOctopusClient();
         }
 
         public IOctopusClient Client { get; }

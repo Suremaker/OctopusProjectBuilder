@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Common.Logging;
 using Octopus.Client;
 using Octopus.Client.Model;
@@ -77,6 +78,17 @@ namespace OctopusProjectBuilder.Uploader
                 _repository.VariableSets,
                 _repository.VariableSets.Get(projectResource.VariableSetId).UpdateWith(project, _repository, deploymentProcess),
                 projectResource.Name);
+
+            UpdateProjectTriggers(projectResource, project.Triggers.ToArray());
+        }
+
+        private void UpdateProjectTriggers(ProjectResource projectResource, ProjectTrigger[] triggers)
+        {
+            foreach (var res in _repository.Client.FindAllProjectTriggers(projectResource))
+                Delete(_repository.ProjectTriggers, res, projectResource.Name);
+
+            foreach (var trigger in triggers)
+                Upsert(_repository.ProjectTriggers, new ProjectTriggerResource().UpdateWith(trigger, projectResource.Id, _repository));
         }
 
         private void UploadProjectGroup(ProjectGroup projectGroup)
@@ -119,6 +131,12 @@ namespace OctopusProjectBuilder.Uploader
 
             Logger.Debug($"Updated {parentName} -> {typeof(TResource).Name}: {resource.Id}");
             return result;
+        }
+
+        private void Delete<TRepository, TResource>(TRepository repository, TResource resource, string parentName) where TRepository : IDelete<TResource> where TResource : IResource
+        {
+            repository.Delete(resource);
+            Logger.Debug($"Deleted {parentName} -> {typeof(TResource).Name}: {resource.Id}");
         }
 
         private static TResource LoadResource<TResource>(IFindByName<TResource> finder, ElementIdentifier identifier) where TResource : INamedResource, new()

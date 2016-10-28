@@ -55,6 +55,10 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [YamlMember(Order = 13)]
         public YamlVariable[] Variables { get; set; }
 
+        [Description("Project triggers.")]
+        [YamlMember(Order = 14)]
+        public YamlProjectTrigger[] Triggers { get; set; }
+
         public void ApplyTemplate(YamlTemplates templates)
         {
             this.ApplyTemplate(templates?.Projects);
@@ -75,7 +79,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 IncludedLibraryVariableSetRefs.EnsureNotNull().Select(reference => new ElementReference(reference)),
                 new ElementReference(LifecycleRef),
                 new ElementReference(ProjectGroupRef),
-                VersioningStrategy?.ToModel());
+                VersioningStrategy?.ToModel(),
+                Triggers.EnsureNotNull().Select(t => t.ToModel()));
         }
 
         public static YamlProject FromModel(Project model)
@@ -93,7 +98,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 ProjectGroupRef = model.ProjectGroupRef.Name,
                 Variables = model.Variables.Select(YamlVariable.FromModel).ToArray().NullIfEmpty(),
                 IncludedLibraryVariableSetRefs = model.IncludedLibraryVariableSetRefs.Select(r => r.Name).ToArray().NullIfEmpty(),
-                VersioningStrategy = YamlVersioningStrategy.FromModel(model.VersioningStrategy)
+                VersioningStrategy = YamlVersioningStrategy.FromModel(model.VersioningStrategy),
+                Triggers = model.Triggers.Select(YamlProjectTrigger.FromModel).ToArray().NullIfEmpty()
             };
         }
     }

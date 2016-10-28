@@ -6,7 +6,7 @@ namespace OctopusProjectBuilder.Model
 {
     public class Project : IVariableSet
     {
-        public Project(ElementIdentifier identifier, string description, bool isDisabled, bool autoCreateRelease, bool defaultToSkipIfAlreadyInstalled, DeploymentProcess deploymentProcess, IEnumerable<Variable> variables, IEnumerable<ElementReference> libraryVariableSetRefs, ElementReference lifecycleRef, ElementReference projectGroupRef, VersioningStrategy versioningStrategy)
+        public Project(ElementIdentifier identifier, string description, bool isDisabled, bool autoCreateRelease, bool defaultToSkipIfAlreadyInstalled, DeploymentProcess deploymentProcess, IEnumerable<Variable> variables, IEnumerable<ElementReference> libraryVariableSetRefs, ElementReference lifecycleRef, ElementReference projectGroupRef, VersioningStrategy versioningStrategy, IEnumerable<ProjectTrigger> triggers)
         {
             if (identifier == null)
                 throw new ArgumentNullException(nameof(identifier));
@@ -14,6 +14,8 @@ namespace OctopusProjectBuilder.Model
                 throw new ArgumentNullException(nameof(deploymentProcess));
             if (libraryVariableSetRefs == null)
                 throw new ArgumentNullException(nameof(libraryVariableSetRefs));
+            if (triggers == null)
+                throw new ArgumentNullException(nameof(triggers));
             Identifier = identifier;
             Description = description;
             IsDisabled = isDisabled;
@@ -25,6 +27,7 @@ namespace OctopusProjectBuilder.Model
             LifecycleRef = lifecycleRef;
             ProjectGroupRef = projectGroupRef;
             VersioningStrategy = versioningStrategy;
+            Triggers = triggers.ToArray();
         }
 
         public ElementIdentifier Identifier { get; }
@@ -38,6 +41,7 @@ namespace OctopusProjectBuilder.Model
         public ElementReference ProjectGroupRef { get; }
         public IEnumerable<Variable> Variables { get; }
         public VersioningStrategy VersioningStrategy { get; }
+        public IEnumerable<ProjectTrigger> Triggers { get; }
 
         public override string ToString()
         {

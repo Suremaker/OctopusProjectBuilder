@@ -55,6 +55,8 @@
     <Compile Include="Permission.cs" />
     <Compile Include="Phase.cs" />
     <Compile Include="Project.cs" />
+    <Compile Include="ProjectTrigger.cs" />
+    <Compile Include="ProjectTriggerProperties.cs" />
     <Compile Include="PropertyValue.cs" />
     <Compile Include="RetentionPolicy.cs" />
     <Compile Include="SystemModel.cs" />

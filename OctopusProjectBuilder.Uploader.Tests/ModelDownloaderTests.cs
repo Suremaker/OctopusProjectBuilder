@@ -145,7 +145,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<Variable>(),
                     Enumerable.Empty<ElementReference>(),
                     new ElementReference("lifecycle1"),
-                    new ElementReference("group1"), null))
+                    new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>()))
                 .Build();
 
             _repository.Lifecycles.Create(new LifecycleResource { Name = "lifecycle1" });
@@ -161,7 +161,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<Variable>(),
                     Enumerable.Empty<ElementReference>(),
                     new ElementReference("lifecycle1"),
-                    new ElementReference("group1"), null))
+                    new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>()))
                 .Build();
             _uploader.UploadModel(model2);
 
@@ -210,8 +210,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(), scope, CreateItem<VariablePrompt>())
             };
 
-            var project1 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), CreateItem<VersioningStrategy>());
-            var project2 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), null);
+            var project1 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), CreateItem<VersioningStrategy>(), Enumerable.Empty<ProjectTrigger>());
+            var project2 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), null, Enumerable.Empty<ProjectTrigger>());
 
             var expected = new SystemModelBuilder()
                 .AddProject(project1)
@@ -394,7 +394,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 Enumerable.Empty<Variable>(),
                 Enumerable.Empty<ElementReference>(),
                 new ElementReference("lifecycle1"),
-                new ElementReference("group1"), null);
+                new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>());
             var environment1 = new Environment(new ElementIdentifier("env1"), CreateItem<string>());
 
             var team = new Team(
@@ -404,7 +404,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 new List<ElementReference> { new ElementReference(userRole1.Identifier.Name), new ElementReference(userRole2.Identifier.Name) },
                 new List<ElementReference> { new ElementReference(project1.Identifier.Name) },
                 new List<ElementReference> { new ElementReference(environment1.Identifier.Name) });
-            
+
             var expected = new SystemModelBuilder()
                 .AddLifecycle(lifecycle)
                 .AddProjectGroup(projectGroup1)
@@ -415,7 +415,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddTeam(team)
                 .Build();
 
-            _repository.Users.Register(new RegisterCommand { Username = "username1"});
+            _repository.Users.Register(new RegisterCommand { Username = "username1" });
 
             _uploader.UploadModel(expected);
             var actual = _downloader.DownloadModel();
@@ -431,7 +431,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
 
             var model1 = new SystemModelBuilder()
                 .AddTeam(new Team(
-                    new ElementIdentifier(name1), 
+                    new ElementIdentifier(name1),
                     Enumerable.Empty<ElementReference>(),
                     Enumerable.Empty<string>(),
                     Enumerable.Empty<ElementReference>(),

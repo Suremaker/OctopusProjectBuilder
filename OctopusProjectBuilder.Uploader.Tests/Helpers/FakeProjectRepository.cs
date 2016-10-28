@@ -48,8 +48,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new NotImplementedException();
         }
 
-        public ProjectEditor CreateOrModify(string name, ProjectGroupResource projectGroup, LifecycleResource lifecycle,
-            string description)
+        public ProjectEditor CreateOrModify(string name, ProjectGroupResource projectGroup, LifecycleResource lifecycle, string description)
         {
             throw new NotImplementedException();
         }
@@ -58,6 +57,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         {
             resource.VariableSetId = _variableSetRepository.Create(new VariableSetResource()).Id;
             resource.DeploymentProcessId = _deploymentProcessRepository.Create(new DeploymentProcessResource()).Id;
+            resource.Links["Triggers"] = $"/projects/{resource.Id}/triggers";
         }
 
         public List<ProjectResource> GetAll()

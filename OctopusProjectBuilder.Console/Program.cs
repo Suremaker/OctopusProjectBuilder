@@ -4,7 +4,6 @@ using System.Net;
 using Common.Logging;
 using Common.Logging.Simple;
 using Fclp;
-using Octopus.Client;
 using OctopusProjectBuilder.Uploader;
 using OctopusProjectBuilder.YamlReader;
 

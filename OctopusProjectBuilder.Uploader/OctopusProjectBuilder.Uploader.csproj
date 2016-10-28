@@ -73,6 +73,7 @@
     <Compile Include="Converters\LifecycleConverter.cs" />
     <Compile Include="Converters\PermissionConverter.cs" />
     <Compile Include="Converters\PhaseConverter.cs" />
+    <Compile Include="Converters\ProjectTriggerConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\ReferenceCollectionConverter.cs" />
     <Compile Include="Converters\RetentionPeriodConverter.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="ModelUploader.cs" />
     <Compile Include="Converters\ProjectConverter.cs" />
     <Compile Include="Converters\ProjectGroupConverter.cs" />
+    <Compile Include="ProjectTriggerRepositoryExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

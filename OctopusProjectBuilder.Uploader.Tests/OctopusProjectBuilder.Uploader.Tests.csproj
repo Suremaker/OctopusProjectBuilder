@@ -79,6 +79,7 @@
     <Compile Include="Helpers\FakeLifecycleRepository.cs" />
     <Compile Include="Helpers\FakeMachineRepository.cs" />
     <Compile Include="Helpers\FakeMachineRoleRepository.cs" />
+    <Compile Include="Helpers\FakeOctopusClient.cs" />
     <Compile Include="Helpers\FakeProjectGroupRepository.cs" />
     <Compile Include="Helpers\FakeOctopusRepository.cs" />
     <Compile Include="Helpers\FakeProjectRepository.cs" />

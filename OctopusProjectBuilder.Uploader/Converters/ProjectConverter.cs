@@ -39,7 +39,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 resource.IncludedLibraryVariableSetIds.Select(id => new ElementReference(repository.LibraryVariableSets.Get(id).Name)),
                 new ElementReference(repository.Lifecycles.Get(resource.LifecycleId).Name),
                 new ElementReference(repository.ProjectGroups.Get(resource.ProjectGroupId).Name),
-                resource.VersioningStrategy?.ToModel());
+                resource.VersioningStrategy?.ToModel(),
+                repository.Client.FindAllProjectTriggers(resource).Select(t => t.ToModel(repository)));
         }
     }
 }

@@ -73,6 +73,8 @@
     <Compile Include="Model\YamlPhase.cs" />
     <Compile Include="Model\YamlProject.cs" />
     <Compile Include="Model\Templates\YamlProjectTemplate.cs" />
+    <Compile Include="Model\YamlProjectTrigger.cs" />
+    <Compile Include="Model\YamlProjectTriggerProperties.cs" />
     <Compile Include="Model\YamlPropertyValue.cs" />
     <Compile Include="Model\YamlRetentionPolicy.cs" />
     <Compile Include="Model\Templates\YamlTemplateReference.cs" />
