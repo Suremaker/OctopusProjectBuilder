@@ -29,7 +29,7 @@ deploy:
   draft: true
   prerelease: false
   on:
-    branch: master
+    branch: appveyor
     appveyor_repo_tag: false
 
 after_deploy:
