@@ -40,14 +40,14 @@ namespace OctopusProjectBuilder.Uploader.Converters
 
         private static ProjectTriggerProperties ToProjectTriggerProperties(IDictionary<string, PropertyValueResource> properties, IOctopusRepository repository)
         {
-            var events = Enumerable.Empty<string>();
+            var events = Enumerable.Empty<ProjectTriggerProperties.TriggerEventType>();
             var environments = Enumerable.Empty<ElementReference>();
             var roles = Enumerable.Empty<ElementReference>();
 
             foreach (var pair in properties)
             {
                 if (pair.Key == EventTriggerConditionName)
-                    events = ParseValues(pair.Value);
+                    events = ParseValues(pair.Value).Select(x => (ProjectTriggerProperties.TriggerEventType)Enum.Parse(typeof(ProjectTriggerProperties.TriggerEventType), x, true));
                 else if (pair.Key == EnvironmentsTriggerConditionName)
                     environments = ParseValues(pair.Value).Select(v => new ElementReference(repository.Environments.Get(v).Name));
                 else if (pair.Key == RolesTriggerConditionName)

@@ -6,11 +6,17 @@ namespace OctopusProjectBuilder.Model
 {
     public class ProjectTriggerProperties
     {
+        public enum TriggerEventType
+        {
+            NewDeploymentTargetBecomesAvailable,
+            ExistingDeploymentTargetChangesState
+        }
+
         public IEnumerable<ElementReference> MachineRoles { get; }
         public IEnumerable<ElementReference> Environments { get; }
-        public IEnumerable<string> Events { get; }
+        public IEnumerable<TriggerEventType> Events { get; }
 
-        public ProjectTriggerProperties(IEnumerable<string> events, IEnumerable<ElementReference> machineRoles, IEnumerable<ElementReference> environments)
+        public ProjectTriggerProperties(IEnumerable<TriggerEventType> events, IEnumerable<ElementReference> machineRoles, IEnumerable<ElementReference> environments)
         {
             if (environments == null)
                 throw new ArgumentNullException(nameof(environments));

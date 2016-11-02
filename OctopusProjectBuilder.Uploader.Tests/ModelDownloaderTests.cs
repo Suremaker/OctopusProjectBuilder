@@ -236,7 +236,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
 
         private ProjectTrigger CreateProjectTrigger(string machineRef, string envRef)
         {
-            var triggerProperties = new ProjectTriggerProperties(new[] { "NewDeploymentTargetBecomesAvailable" }, new[] { new ElementReference(machineRef) }, new[] { new ElementReference(envRef) });
+            var triggerProperties = new ProjectTriggerProperties(new[] { ProjectTriggerProperties.TriggerEventType.NewDeploymentTargetBecomesAvailable }, new[] { new ElementReference(machineRef) }, new[] { new ElementReference(envRef) });
             return new ProjectTrigger(CreateItem<string>(), CreateItem<ProjectTrigger.ProjectTriggerType>(), triggerProperties);
         }
 

@@ -15,7 +15,8 @@
       * templating.
     </summary>
     <releaseNotes>
-      + Use IUserRolesRepository from Octopus.Client
+      + Updated Octopus.Client to 4.0.1
+      + Added support to ProjectTriggers
     </releaseNotes>
     <copyright>Copyright © Wojciech Kotlarski 2016</copyright>
     <tags>octopus yaml configuration</tags>

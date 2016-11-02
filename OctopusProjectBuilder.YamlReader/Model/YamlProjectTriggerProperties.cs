@@ -11,9 +11,9 @@ namespace OctopusProjectBuilder.YamlReader.Model
     [Serializable]
     public class YamlProjectTriggerProperties
     {
-        [Description("List of trigger events. Usually it would be one of NewDeploymentTargetBecomesAvailable,ExistingDeploymentTargetChangesState")]
+        [Description("List of trigger events.")]
         [YamlMember(Order = 1)]
-        public string[] Events { get; set; }
+        public ProjectTriggerProperties.TriggerEventType[] Events { get; set; }
         [YamlMember(Order = 2)]
         [Description("List of environment references.")]
         public string[] EnvironmentRefs { get; set; }

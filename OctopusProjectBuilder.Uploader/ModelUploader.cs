@@ -79,10 +79,10 @@ namespace OctopusProjectBuilder.Uploader
                 _repository.VariableSets.Get(projectResource.VariableSetId).UpdateWith(project, _repository, deploymentProcess),
                 projectResource.Name);
 
-            UpdateProjectTriggers(projectResource, project.Triggers.ToArray());
+            UploadProjectTriggers(projectResource, project.Triggers.ToArray());
         }
 
-        private void UpdateProjectTriggers(ProjectResource projectResource, ProjectTrigger[] triggers)
+        private void UploadProjectTriggers(ProjectResource projectResource, ProjectTrigger[] triggers)
         {
             foreach (var res in _repository.Client.FindAllProjectTriggers(projectResource))
                 Delete(_repository.ProjectTriggers, res, projectResource.Name);

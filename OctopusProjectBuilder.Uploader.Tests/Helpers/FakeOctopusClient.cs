@@ -106,8 +106,10 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 
         public RootResource RootDocument { get; }
 
+#pragma warning disable CS0067
         public event Action<OctopusRequest> SendingOctopusRequest;
 
         public event Action<OctopusResponse> ReceivedOctopusResponse;
+#pragma warning restore CS0067
     }
 }
