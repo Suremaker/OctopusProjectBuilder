@@ -7,3 +7,4 @@ packages
 make/psmake.*
 *.nupkg
 reports/
+wiki/

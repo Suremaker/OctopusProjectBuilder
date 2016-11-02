@@ -32,8 +32,17 @@ Define-Step -Name 'Packaging' -Target 'build' -Body {
 }
 
 Define-Step -Name 'Update Wiki' -Target 'update-wiki' -Body {
-	call git clone https://github.com/Suremaker/OctopusProjectBuilder.wiki.git wiki
+	$wikiUrl = & git config --get remote.origin.url
+	$wikiUrl = $wikiUrl -replace '\.git$','.wiki.git'
+	call git clone $wikiUrl wiki
+
 	cp .\Manual.md wiki\Manual.md -Force
-	call git commit '-am' "build commit"
-	call git push origin master
+	try {
+		pushd wiki
+		call git commit '-am' "wiki commit $VERSION"
+		call git push origin master
+	}
+	finally {
+		popd
+	}
 }

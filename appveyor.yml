@@ -18,3 +18,15 @@ artifacts:
     name: Reports
   - path: '*.nupkg'
     name: Packages
+
+after_deploy:
+  - ps: |
+    & git config --global credential.helper store
+    Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+    & git config --global user.email "Appveyor Deploy"
+    & git config --global user.name "Appveyor Deploy"
+    make\make.ps1 -t update-wiki
+
+environment:
+  access_token:
+    secure: Xu3+xPTTII2UDM8Bc6DH0H82IlTLOdJ3+ROJBOP84PvWvuYotiNk/OHRw+eMVuur
