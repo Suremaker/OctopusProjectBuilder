@@ -19,6 +19,19 @@ artifacts:
   - path: '*.nupkg'
     name: Packages
 
+deploy:
+  release: OctopusProjectBuilder-v$(appveyor_build_version)
+  description: 'test'
+  provider: GitHub
+  auth_token:
+    secure: Xu3+xPTTII2UDM8Bc6DH0H82IlTLOdJ3+ROJBOP84PvWvuYotiNk/OHRw+eMVuur
+  artifact: /.*\.nupkg/
+  draft: true
+  prerelease: false
+  on:
+    branch: master
+    appveyor_repo_tag: false
+
 after_deploy:
   - ps: |
       & git config --global credential.helper store
