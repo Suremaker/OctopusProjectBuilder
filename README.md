@@ -1,4 +1,7 @@
 # Octopus Project Builder
+
+[![Build status](https://ci.appveyor.com/api/projects/status/vgt4b26gcxywurb6?svg=true)](https://ci.appveyor.com/project/Suremaker/octopusprojectbuilder)
+
 A project providing an ability to configure Octopus projects from source controlled text files (like yaml).
 
 It is conceptually based on [Jenkins Job Builder](http://docs.openstack.org/infra/jenkins-job-builder/) which I have found to be a great utility tool to work with [Jenkins](https://jenkins.io/).
@@ -14,28 +17,28 @@ To build project, execute a following command from Powershell:
 `PS> .\build.ps1` 
 
 ## Yaml configuration manual
-To see the yaml configuration manual, please take a look at [Manual.md](Manual.md)
+To see the yaml configuration manual, please take a look at [Configuration Manual](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual)
 
 ## Supported Octopus resource configuration
 
-* [Project Groups](Manual.md#YamlProjectGroup)
-* [Projects](Manual.md#YamlProject)
-* [Lifecycles](Manual.md#YamlLifecycle)
-* [Library Variable Sets](Manual.md#YamlLibraryVariableSet) \(including script modules\)
-* [Environments](Manual.md#YamlEnvironment)
+* [Project Groups](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlProjectGroup)
+* [Projects](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlProject)
+* [Lifecycles](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlLifecycle)
+* [Library Variable Sets](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlLibraryVariableSet) \(including script modules\)
+* [Environments](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlEnvironment)
 
 ## Octopus resource configuration templating
 
 OctopusProjectBuilder allows template definition for most repetative configuration sections like:
 
-* Projects - see [Project Templates](Manual.md#YamlProjectTemplate)
-* Project Steps - see [Deployment Step Templates](Manual.md#YamlDeploymentStepTemplate)
-* Project Step Actions - see [Deployment Action Templates](Manual.md#YamlDeploymentActionTemplate)
+* Projects - see [Project Templates](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlProjectTemplate)
+* Project Steps - see [Deployment Step Templates](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlDeploymentStepTemplate)
+* Project Step Actions - see [Deployment Action Templates](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlDeploymentActionTemplate)
 
 It is possible to create parameterized templates with ability to parameterize any properties of string type.
 It is also possible to use templates for lower configuration sections in template of higher configuration sections. For example The Project template can use Step templates that can be composed from Action templates.
 
-For more information, please take a look at [Template manual](Manual.md#YamlTemplates).
+For more information, please take a look at [Template manual](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlTemplates).
 
 ## OctopusProjectBuilder.Console.exe usage
 The OctopusProjectBuilder.Console.exe requires following paramters:

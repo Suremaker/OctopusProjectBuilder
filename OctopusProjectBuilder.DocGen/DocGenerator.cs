@@ -82,7 +82,7 @@ namespace OctopusProjectBuilder.DocGen
             sb.Append("Possible values: **")
                     .AppendFormat(string.Join("**, **", Enum.GetNames(@enum)))
                     .Append("**. ");
-    }
+        }
 
         private static string GetPropertyDefaultValueText(PropertyInfo propertyInfo)
         {
@@ -122,6 +122,7 @@ namespace OctopusProjectBuilder.DocGen
 
         private void GenerateTableOfContents(StringBuilder builder)
         {
+            builder.AppendLine("# Configuration Manual v" + GetType().Assembly.GetName().Version.ToString(4));
             GenerateHeader(builder, "Table of contents");
 
             for (var i = 0; i < _indexedTypes.Length; ++i)

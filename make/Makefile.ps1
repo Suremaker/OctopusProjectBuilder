@@ -1,4 +1,4 @@
-Define-Step -Name 'Build' -Target 'build' -Body {
+Define-Step -Name 'Update Assembly Info' -Target 'build' -Body {
 	. (require 'psmake.mod.update-version-info')
 	Update-VersionInFile AssemblyVersion.cs $VERSION 'Version("%")'
 }
@@ -39,7 +39,7 @@ Define-Step -Name 'Update Wiki' -Target 'update-wiki' -Body {
 	cp .\Manual.md wiki\Manual.md -Force
 	try {
 		pushd wiki
-		call git commit '-am' "wiki commit $VERSION"
+		call git commit '-a' '--allow-empty' '-m' "wiki commit $VERSION"
 		call git push origin master
 	}
 	finally {
