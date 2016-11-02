@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Octopus.Client;
 using Octopus.Client.Model;
 
@@ -7,6 +9,26 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeOctopusClient : IOctopusClient
     {
+        private readonly Dictionary<string, List<object>> _resources = new Dictionary<string, List<object>>();
+
+        public void AddResource(string path, object resource)
+        {
+            List<object> list;
+
+            if (!_resources.TryGetValue(path, out list))
+                _resources.Add(path, list = new List<object>());
+
+            list.Add(resource);
+        }
+
+        public void Paginate<TResource>(string path, Func<ResourceCollection<TResource>, bool> getNextPage)
+        {
+            List<object> resources;
+            _resources.TryGetValue(path, out resources);
+
+            getNextPage(new ResourceCollection<TResource>(resources?.Cast<TResource>() ?? Enumerable.Empty<TResource>(), new LinkCollection()));
+        }
+
         public void Dispose()
         {
             throw new NotImplementedException();
@@ -15,11 +37,6 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public ResourceCollection<TResource> List<TResource>(string path, object pathParameters = null)
         {
             throw new NotImplementedException();
-        }
-
-        public void Paginate<TResource>(string path, Func<ResourceCollection<TResource>, bool> getNextPage)
-        {
-            getNextPage(new ResourceCollection<TResource>(new TResource[0], new LinkCollection()));
         }
 
         public void Paginate<TResource>(string path, object pathParameters, Func<ResourceCollection<TResource>, bool> getNextPage)
@@ -88,7 +105,9 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         }
 
         public RootResource RootDocument { get; }
+
         public event Action<OctopusRequest> SendingOctopusRequest;
+
         public event Action<OctopusResponse> ReceivedOctopusResponse;
     }
 }

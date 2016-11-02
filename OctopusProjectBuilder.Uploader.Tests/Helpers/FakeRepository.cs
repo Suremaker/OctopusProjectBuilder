@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories;
+using Octopus.Client.Serialization;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
@@ -80,11 +81,8 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 
         private T Clone(T resource)
         {
-            var serializer = new JsonSerializer();
-            serializer.Converters.Add(new PropertyValueResourceJsonConverter());
-            var writer = new StringWriter();
-            serializer.Serialize(writer, resource);
-            return serializer.Deserialize<T>(new JsonTextReader(new StringReader(writer.ToString())));
+            var serialized = JsonConvert.SerializeObject(resource, JsonSerialization.GetDefaultSerializerSettings());
+            return JsonConvert.DeserializeObject<T>(serialized, JsonSerialization.GetDefaultSerializerSettings());
         }
     }
 }

@@ -57,7 +57,12 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         {
             resource.VariableSetId = _variableSetRepository.Create(new VariableSetResource()).Id;
             resource.DeploymentProcessId = _deploymentProcessRepository.Create(new DeploymentProcessResource()).Id;
-            resource.Links["Triggers"] = $"/projects/{resource.Id}/triggers";
+            resource.Links["Triggers"] = GetProjectTriggersLink(resource.Id);
+        }
+
+        public static string GetProjectTriggersLink(string projectId)
+        {
+            return $"/projects/{projectId}/triggers";
         }
 
         public List<ProjectResource> GetAll()

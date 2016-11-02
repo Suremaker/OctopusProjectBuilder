@@ -9,6 +9,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         {
             var fakeVariableSetRepository = new FakeVariableSetRepository();
             var fakeDeploymentProcessRepository = new FakeDeploymentProcessRepository();
+            var fakeOctopusClient = new FakeOctopusClient();
 
             DeploymentProcesses = fakeDeploymentProcessRepository;
             ProjectGroups = new FakeProjectGroupRepository();
@@ -22,7 +23,8 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             UserRoles = new FakeUserRolesRepository();
             Teams = new FakeTeamsRepository();
             Users = new FakeUsersRepository();
-            Client = new FakeOctopusClient();
+            ProjectTriggers = new FakeProjectTriggersRepository(fakeOctopusClient);
+            Client = fakeOctopusClient;
         }
 
         public IOctopusClient Client { get; }

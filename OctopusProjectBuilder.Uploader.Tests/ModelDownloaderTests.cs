@@ -211,7 +211,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
             };
 
             var project1 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), CreateItem<VersioningStrategy>(), Enumerable.Empty<ProjectTrigger>());
-            var project2 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), null, Enumerable.Empty<ProjectTrigger>());
+            var project2 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), null, new[] { CreateProjectTrigger("m1", "env1"), CreateProjectTrigger("m2", "env2") });
 
             var expected = new SystemModelBuilder()
                 .AddProject(project1)
@@ -232,6 +232,12 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var actual = _downloader.DownloadModel();
 
             actual.AssertDeepEqualsTo(expected);
+        }
+
+        private ProjectTrigger CreateProjectTrigger(string machineRef, string envRef)
+        {
+            var triggerProperties = new ProjectTriggerProperties(new[] { "NewDeploymentTargetBecomesAvailable" }, new[] { new ElementReference(machineRef) }, new[] { new ElementReference(envRef) });
+            return new ProjectTrigger(CreateItem<string>(), CreateItem<ProjectTrigger.ProjectTriggerType>(), triggerProperties);
         }
 
         [Test]
@@ -360,14 +366,14 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var description2 = CreateItem<string>();
 
             var model1 = new SystemModelBuilder()
-                .AddUserRole(new UserRole(new ElementIdentifier(name1), description1, CreateItem<IEnumerable<OctopusProjectBuilder.Model.Permission>>()))
+                .AddUserRole(new UserRole(new ElementIdentifier(name1), description1, CreateItem<IEnumerable<Permission>>()))
                 .Build();
             _uploader.UploadModel(model1);
 
             var originalId = _repository.UserRoles.FindByName(model1.UserRoles.Single().Identifier.Name).Id;
 
             var model2 = new SystemModelBuilder()
-                .AddUserRole(new UserRole(new ElementIdentifier(name2, name1), description2, CreateItem<IEnumerable<OctopusProjectBuilder.Model.Permission>>()))
+                .AddUserRole(new UserRole(new ElementIdentifier(name2, name1), description2, CreateItem<IEnumerable<Permission>>()))
                 .Build();
             _uploader.UploadModel(model2);
 
