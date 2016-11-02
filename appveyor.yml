@@ -9,7 +9,7 @@ cache:
   - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
 build_script:
-  - ps: .\build.ps1
+  - ps: make\make.ps1 -t build -ap Version:$($env:APPVEYOR_REPO_TAG_NAME)
 
 test: off
 
@@ -20,7 +20,7 @@ artifacts:
     name: Packages
 
 deploy:
-  release: OctopusProjectBuilder-v$(appveyor_build_version)
+  release: OctopusProjectBuilder-v$(APPVEYOR_REPO_TAG_NAME)
   description: 'test'
   provider: GitHub
   auth_token:
@@ -30,7 +30,7 @@ deploy:
   prerelease: false
   on:
     branch: appveyor
-    appveyor_repo_tag: false
+    appveyor_repo_tag: true
 
 after_deploy:
   - ps: |
@@ -38,7 +38,7 @@ after_deploy:
       Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
       & git config --global user.email "Appveyor Deploy"
       & git config --global user.name "Appveyor Deploy"
-      make\make.ps1 -t update-wiki
+      make\make.ps1 -t update-wiki -ap Version:$($env:APPVEYOR_REPO_TAG_NAME)
 
 environment:
   access_token:

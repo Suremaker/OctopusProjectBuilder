@@ -1,1 +1,1 @@
-$VERSION = (Get-Content -Path 'current_version' | Out-String).Trim()
+$VERSION = if ($Context.Version) { $Context.Version } else { '1.0.0.0' }
