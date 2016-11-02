@@ -35,5 +35,5 @@ Define-Step -Name 'Update Wiki' -Target 'update-wiki' -Body {
 	call git clone https://github.com/Suremaker/OctopusProjectBuilder.wiki.git wiki
 	cp .\Manual.md wiki\Manual.md -Force
 	call git commit '-am' "build commit"
-	call git push
+	call git push origin master
 }
