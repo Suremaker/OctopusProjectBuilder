@@ -39,7 +39,7 @@ Define-Step -Name 'Update Wiki' -Target 'update-wiki' -Body {
 	cp .\Manual.md wiki\Manual.md -Force
 	try {
 		pushd wiki
-		call git commit '-am' '--allow-empty' "wiki commit $VERSION"
+		call git commit '-a' '--allow-empty' '-m' "wiki commit $VERSION"
 		call git push origin master
 	}
 	finally {
