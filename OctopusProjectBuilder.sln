@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctopusProjectBuilder.Console", "OctopusProjectBuilder.Console\OctopusProjectBuilder.Console.csproj", "{58085949-91A1-4F05-B903-D08522AABEF6}"
 EndProject
@@ -22,7 +22,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{511D4145-C87C-47E9-83F3-706B65A7B633}"
 	ProjectSection(SolutionItems) = preProject
 		AssemblyVersion.cs = AssemblyVersion.cs
-		current_version = current_version
 		LICENSE = LICENSE
 		LICENSE-YamlDotNet = LICENSE-YamlDotNet
 		Manual.md = Manual.md

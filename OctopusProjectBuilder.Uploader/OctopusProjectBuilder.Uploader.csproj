@@ -71,6 +71,11 @@
     <Compile Include="Converters\EnvironmentConverter.cs" />
     <Compile Include="Converters\LibraryVariableSetConverter.cs" />
     <Compile Include="Converters\LifecycleConverter.cs" />
+    <Compile Include="Converters\MachineCleanupPolicyConverter.cs" />
+    <Compile Include="Converters\MachineConnectivityPolicyConverter.cs" />
+    <Compile Include="Converters\MachineHealthCheckPolicyConverter.cs" />
+    <Compile Include="Converters\MachinePolicyConverter.cs" />
+    <Compile Include="Converters\MachineUpdatePolicyConverter.cs" />
     <Compile Include="Converters\PermissionConverter.cs" />
     <Compile Include="Converters\PhaseConverter.cs" />
     <Compile Include="Converters\ProjectTriggerConverter.cs" />

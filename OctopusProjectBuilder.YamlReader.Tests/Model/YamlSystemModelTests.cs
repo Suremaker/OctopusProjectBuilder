@@ -177,6 +177,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
         {
             var model1 = new YamlOctopusModel
             {
+                MachinePolicies = new[] { new YamlMachinePolicy { Name = "N1" } },
                 LibraryVariableSets = new[] { new YamlLibraryVariableSet { Name = "N1" } },
                 ProjectGroups = new[] { new YamlProjectGroup { Name = "N1" } },
                 Lifecycles = new[] { new YamlLifecycle { Name = "N1" } },
@@ -192,6 +193,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
             };
             var model2 = new YamlOctopusModel
             {
+                MachinePolicies = new[] { new YamlMachinePolicy { Name = "N2" } },
                 LibraryVariableSets = new[] { new YamlLibraryVariableSet { Name = "N2" } },
                 ProjectGroups = new[] { new YamlProjectGroup { Name = "N2" } },
                 Lifecycles = new[] { new YamlLifecycle { Name = "N2" } },
@@ -207,6 +209,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
             };
 
             model1.MergeIn(model2);
+            Assert.That(model1.MachinePolicies.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "N1", "N2" }));
             Assert.That(model1.LibraryVariableSets.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "N1", "N2" }));
             Assert.That(model1.ProjectGroups.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "N1", "N2" }));
             Assert.That(model1.Lifecycles.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "N1", "N2" }));
@@ -242,6 +245,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests.Model
             };
 
             model1.MergeIn(model2);
+            Assert.That(model1.MachinePolicies, Is.Null);
             Assert.That(model1.LibraryVariableSets, Is.Null);
             Assert.That(model1.ProjectGroups.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "N2" }));
             Assert.That(model1.Lifecycles.Select(s => s.Name).ToArray(), Is.EqualTo(new[] { "N1" }));

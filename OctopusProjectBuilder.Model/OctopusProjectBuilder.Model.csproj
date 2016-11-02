@@ -52,6 +52,12 @@
     <Compile Include="IVariableSet.cs" />
     <Compile Include="LibraryVariableSet.cs" />
     <Compile Include="Lifecycle.cs" />
+    <Compile Include="MachineCleanupPolicy.cs" />
+    <Compile Include="MachineConnectivityPolicy.cs" />
+    <Compile Include="MachineHealthCheckPolicy.cs" />
+    <Compile Include="MachinePolicy.cs" />
+    <Compile Include="MachineHealthCheckScriptPolicy.cs" />
+    <Compile Include="MachineUpdatePolicy.cs" />
     <Compile Include="Permission.cs" />
     <Compile Include="Phase.cs" />
     <Compile Include="Project.cs" />

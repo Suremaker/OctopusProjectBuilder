@@ -15,8 +15,7 @@
       * templating.
     </summary>
     <releaseNotes>
-      + Updated Octopus.Client to 4.0.1
-      + Added support to ProjectTriggers
+      + Added support for machine policies
     </releaseNotes>
     <copyright>Copyright © Wojciech Kotlarski 2016</copyright>
     <tags>octopus yaml configuration</tags>

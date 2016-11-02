@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Octopus.Client.Model;
@@ -6,6 +7,7 @@ using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.TestUtils;
 using OctopusProjectBuilder.Uploader.Tests.Helpers;
 using Ploeh.AutoFixture;
+using Environment = OctopusProjectBuilder.Model.Environment;
 using Permission = OctopusProjectBuilder.Model.Permission;
 
 namespace OctopusProjectBuilder.Uploader.Tests
@@ -16,6 +18,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
         private ModelDownloader _downloader;
         private FakeOctopusRepository _repository;
         private ModelUploader _uploader;
+        private static readonly Random Random = new Random();
 
         [SetUp]
         public void SetUp()
@@ -463,6 +466,56 @@ namespace OctopusProjectBuilder.Uploader.Tests
             Assert.That(actual.Name, Is.EqualTo(name2));
         }
 
+        [Test]
+        public void It_should_upload_and_download_machine_policies()
+        {
+            var expected = new SystemModelBuilder()
+                .AddMachinePolicy(CreateItemWithRename<MachinePolicy>(false))
+                .AddMachinePolicy(CreateItemWithRename<MachinePolicy>(false))
+                .Build();
+            _uploader.UploadModel(expected);
+            var actual = _downloader.DownloadModel();
+
+            actual.AssertDeepEqualsTo(expected);
+        }
+
+        [Test]
+        public void It_should_rename_machine_policy()
+        {
+            var name1 = CreateItem<string>();
+            var name2 = CreateItem<string>();
+            var description1 = CreateItem<string>();
+            var description2 = CreateItem<string>();
+
+            var model1 = new SystemModelBuilder()
+                .AddMachinePolicy(new MachinePolicy(
+                    new ElementIdentifier(name1),
+                    description1,
+                    CreateItem<Model.MachineHealthCheckPolicy>(),
+                    CreateItem<Model.MachineConnectivityPolicy>(),
+                    CreateItem<Model.MachineUpdatePolicy>(),
+                    CreateItem<Model.MachineCleanupPolicy>()))
+                .Build();
+            _uploader.UploadModel(model1);
+
+            var originalId = _repository.MachinePolicies.FindByName(model1.MachinePolicies.Single().Identifier.Name).Id;
+
+            var model2 = new SystemModelBuilder()
+                .AddMachinePolicy(new MachinePolicy(
+                    new ElementIdentifier(name2, name1),
+                    description2,
+                    CreateItem<Model.MachineHealthCheckPolicy>(),
+                    CreateItem<Model.MachineConnectivityPolicy>(),
+                    CreateItem<Model.MachineUpdatePolicy>(),
+                    CreateItem<Model.MachineCleanupPolicy>()))
+                .Build();
+            _uploader.UploadModel(model2);
+
+            var actual = _repository.MachinePolicies.Get(originalId);
+            Assert.That(actual.Name, Is.EqualTo(name2));
+            Assert.That(actual.Description, Is.EqualTo(description2));
+        }
+
         private T CreateItem<T>()
         {
             return CreateItemWithRename<T>(true);
@@ -476,7 +529,22 @@ namespace OctopusProjectBuilder.Uploader.Tests
             fixture.Register<IReadOnlyDictionary<string, PropertyValue>>(() => fixture.Create<Dictionary<string, PropertyValue>>());
             fixture.Register<IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>>>(() => new Dictionary<VariableScopeType, IEnumerable<ElementReference>>());
             fixture.Register(() => new PropertyValue(false, fixture.Create<string>()));
+            fixture.Register(() =>
+            {
+                var maximum = (int)TimeSpan.FromHours(99).TotalMinutes;
+                return TimeSpan.FromMinutes(Random.Next(maximum));
+            });
+            fixture.Register(GetRandomValueExcludingUnspecified<Model.MachineConnectivityBehavior>);
+            fixture.Register(GetRandomValueExcludingUnspecified<Model.MachineScriptPolicyRunType>);
+            fixture.Register(GetRandomValueExcludingUnspecified<Model.DeleteMachinesBehavior>);
+            fixture.Register(GetRandomValueExcludingUnspecified<Model.CalamariUpdateBehavior>);
+            fixture.Register(GetRandomValueExcludingUnspecified<Model.TentacleUpdateBehavior>);
             return fixture.Create<T>();
+        }
+
+        private static TEnum GetRandomValueExcludingUnspecified<TEnum>()
+        {
+            return (TEnum)(object)Random.Next(Enum.GetNames(typeof(TEnum)).Length - 1);
         }
     }
 }

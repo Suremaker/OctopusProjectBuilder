@@ -11,6 +11,22 @@ namespace OctopusProjectBuilder.YamlReader.Model
     [Description("Octopus model root type.")]
     public class YamlOctopusModel
     {
+        public YamlOctopusModel() { }
+
+        private YamlOctopusModel(YamlMachinePolicy[] machinePolicies, YamlEnvironment[] environments, YamlProjectGroup[] projectGroups, YamlProject[] projects, YamlLifecycle[] lifecycles, YamlLibraryVariableSet[] libraryVariableSets, YamlUserRole[] userRoles, YamlTeam[] teams)
+        {
+            MachinePolicies = machinePolicies;
+            Environments = environments;
+            ProjectGroups = projectGroups;
+            Projects = projects;
+            Lifecycles = lifecycles;
+            LibraryVariableSets = libraryVariableSets;
+            UserRoles = userRoles;
+            Teams = teams;
+        }
+
+        [Description("List of Machine Policies.")]
+        public YamlMachinePolicy[] MachinePolicies { get; set; }
         [Description("List of Project Groups.")]
         public YamlEnvironment[] Environments { get; set; }
         [Description("List of Project Groups.")]
@@ -58,25 +74,28 @@ namespace OctopusProjectBuilder.YamlReader.Model
             foreach (var team in Teams.EnsureNotNull())
                 builder.AddTeam(team.ToModel());
 
+            foreach (var machinePolicy in MachinePolicies.EnsureNotNull())
+                builder.AddMachinePolicy(machinePolicy.ToModel());
+
             return builder;
         }
 
         public static YamlOctopusModel FromModel(SystemModel model)
         {
-            return new YamlOctopusModel
-            {
-                Environments = model.Environments.Select(YamlEnvironment.FromModel).ToArray().NullIfEmpty(),
-                ProjectGroups = model.ProjectGroups.Select(YamlProjectGroup.FromModel).ToArray().NullIfEmpty(),
-                Projects = model.Projects.Select(YamlProject.FromModel).ToArray().NullIfEmpty(),
-                Lifecycles = model.Lifecycles.Select(YamlLifecycle.FromModel).ToArray().NullIfEmpty(),
-                LibraryVariableSets = model.LibraryVariableSets.Select(YamlLibraryVariableSet.FromModel).ToArray().NullIfEmpty(),
-                UserRoles = model.UserRoles.Select(YamlUserRole.FromModel).ToArray().NullIfEmpty(),
-                Teams = model.Teams.Select(YamlTeam.FromModel).ToArray().NullIfEmpty()
-            };
+            return new YamlOctopusModel(
+                model.MachinePolicies.Select(YamlMachinePolicy.FromModel).ToArray().NullIfEmpty(), 
+                model.Environments.Select(YamlEnvironment.FromModel).ToArray().NullIfEmpty(), 
+                model.ProjectGroups.Select(YamlProjectGroup.FromModel).ToArray().NullIfEmpty(), 
+                model.Projects.Select(YamlProject.FromModel).ToArray().NullIfEmpty(), 
+                model.Lifecycles.Select(YamlLifecycle.FromModel).ToArray().NullIfEmpty(), 
+                model.LibraryVariableSets.Select(YamlLibraryVariableSet.FromModel).ToArray().NullIfEmpty(), 
+                model.UserRoles.Select(YamlUserRole.FromModel).ToArray().NullIfEmpty(), 
+                model.Teams.Select(YamlTeam.FromModel).ToArray().NullIfEmpty());
         }
 
         public YamlOctopusModel MergeIn(YamlOctopusModel model)
         {
+            MachinePolicies = this.MergeItemsIn(model, x => x.MachinePolicies);
             Environments = this.MergeItemsIn(model, x => x.Environments);
             ProjectGroups = this.MergeItemsIn(model, x => x.ProjectGroups);
             LibraryVariableSets = this.MergeItemsIn(model, x => x.LibraryVariableSets);

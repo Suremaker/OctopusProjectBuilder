@@ -25,6 +25,7 @@ namespace OctopusProjectBuilder.Uploader
         public SystemModel DownloadModel()
         {
             return new SystemModel(
+                _repository.MachinePolicies.FindAll().Select(ReadMachinePolicy),
                 _repository.Lifecycles.FindAll().Select(ReadLifecycle),
                 _repository.ProjectGroups.FindAll().Select(ReadProjectGroup),
                 _repository.LibraryVariableSets.FindAll().Select(ReadLibraryVariableSet),
@@ -32,6 +33,12 @@ namespace OctopusProjectBuilder.Uploader
                 _repository.Environments.FindAll().Select(ReadEnvironment),
                 _repository.UserRoles.FindAll().Select(ReadUserRole),
                 _repository.Teams.FindAll().Select(ReadTeam));
+        }
+
+        private MachinePolicy ReadMachinePolicy(MachinePolicyResource resource)
+        {
+            Logger.Info($"Downloading {nameof(MachinePolicyResource)}: {resource.Name}");
+            return resource.ToModel();
         }
 
         private LibraryVariableSet ReadLibraryVariableSet(LibraryVariableSetResource resource)

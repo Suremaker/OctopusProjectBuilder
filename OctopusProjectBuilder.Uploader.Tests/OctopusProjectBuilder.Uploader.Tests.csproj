@@ -77,6 +77,7 @@
     <Compile Include="Helpers\FakeLibraryVariableSetRepository.cs" />
     <Compile Include="Helpers\FakeDeploymentProcessRepository.cs" />
     <Compile Include="Helpers\FakeLifecycleRepository.cs" />
+    <Compile Include="Helpers\FakeMachinePolicyRepository.cs" />
     <Compile Include="Helpers\FakeMachineRepository.cs" />
     <Compile Include="Helpers\FakeMachineRoleRepository.cs" />
     <Compile Include="Helpers\FakeOctopusClient.cs" />
