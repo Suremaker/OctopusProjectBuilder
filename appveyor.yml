@@ -20,16 +20,13 @@ artifacts:
     name: Packages
 
 deploy:
-  release: OctopusProjectBuilder-v$(APPVEYOR_REPO_TAG_NAME)
-  description: 'test'
-  provider: GitHub
-  auth_token:
-    secure: Xu3+xPTTII2UDM8Bc6DH0H82IlTLOdJ3+ROJBOP84PvWvuYotiNk/OHRw+eMVuur
-  artifact: /.*\.nupkg/
-  draft: true
-  prerelease: false
+  provider: NuGet
+  api_key:
+    secure: wsVSfiTOvjdQgExU1aVzfww+N1ptKt1et5epn7/mx/67+FI/QxR76eR7oGmEDNr+
+  skip_symbols: true
+  artifact: /OctopusProjectBuilder\.Console\..*\.nupkg/
   on:
-    branch: appveyor
+    branch: master
     appveyor_repo_tag: true
 
 after_deploy:
