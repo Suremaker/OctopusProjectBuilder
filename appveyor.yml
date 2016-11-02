@@ -1,0 +1,20 @@
+version: '{build}'
+
+skip_tags: false
+image: Visual Studio 2015
+platform: Any CPU
+configuration: Release
+
+cache:
+  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+
+build_script:
+  - ps: build.ps1
+
+test: off
+
+artifacts:
+  - path: reports
+    name: Reports
+  - path: '*.nupkg'
+    name: Packages
