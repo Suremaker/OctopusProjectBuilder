@@ -30,3 +30,10 @@ Define-Step -Name 'Packaging' -Target 'build' -Body {
 	
 	Package-DeployableNuSpec -Package 'OctopusProjectBuilder.Console.nuspec' -version $VERSION
 }
+
+Define-Step -Name 'Update Wiki' -Target 'update-wiki' -Body {
+	call git clone https://github.com/Suremaker/OctopusProjectBuilder.wiki.git wiki
+	cp .\Manual.md wiki\Manual.md -Force
+	call git commit '-am' "build commit"
+	call git push
+}
