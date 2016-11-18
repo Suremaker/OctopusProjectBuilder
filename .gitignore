@@ -8,3 +8,4 @@ make/psmake.*
 *.nupkg
 reports/
 wiki/
+Manual.md

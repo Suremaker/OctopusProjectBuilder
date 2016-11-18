@@ -4,6 +4,7 @@ namespace OctopusProjectBuilder.Model
 {
     public class SystemModelBuilder
     {
+        private readonly List<MachinePolicy> _machinePolicies = new List<MachinePolicy>();
         private readonly List<Environment> _environments = new List<Environment>();
         private readonly List<ProjectGroup> _projectGroups = new List<ProjectGroup>();
         private readonly List<Project> _projects = new List<Project>();
@@ -54,9 +55,16 @@ namespace OctopusProjectBuilder.Model
             return this;
         }
 
+        public SystemModelBuilder AddMachinePolicy(MachinePolicy machinePolicy)
+        {
+            _machinePolicies.Add(machinePolicy);
+            return this;
+        }
+
         public SystemModel Build()
         {
             return new SystemModel(
+                _machinePolicies, 
                 _lifecycles, 
                 _projectGroups, 
                 _libraryVariableSets, 

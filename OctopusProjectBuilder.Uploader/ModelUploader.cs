@@ -27,6 +27,9 @@ namespace OctopusProjectBuilder.Uploader
 
         public void UploadModel(SystemModel model)
         {
+            foreach (var machinePolicy in model.MachinePolicies)
+                UploadMachinePolicy(machinePolicy);
+
             foreach (var environment in model.Environments)
                 UploadEnvironment(environment);
 
@@ -95,6 +98,12 @@ namespace OctopusProjectBuilder.Uploader
         {
             var resource = LoadResource(_repository.ProjectGroups, projectGroup.Identifier).UpdateWith(projectGroup);
             Upsert(_repository.ProjectGroups, resource);
+        }
+
+        private void UploadMachinePolicy(MachinePolicy machinePolicy)
+        {
+            var resource = LoadResource(_repository.MachinePolicies, machinePolicy.Identifier).UpdateWith(machinePolicy);
+            Upsert(_repository.MachinePolicies, resource);
         }
 
         private void UploadEnvironment(Environment environment)

@@ -11,6 +11,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             var fakeDeploymentProcessRepository = new FakeDeploymentProcessRepository();
             var fakeOctopusClient = new FakeOctopusClient();
 
+            MachinePolicies = new FakeMachinePolicyRepository();
             DeploymentProcesses = fakeDeploymentProcessRepository;
             ProjectGroups = new FakeProjectGroupRepository();
             VariableSets = fakeVariableSetRepository;

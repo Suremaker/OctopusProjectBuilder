@@ -325,6 +325,67 @@ Teams:
             AssertExt.AssertDeepEqualsTo(model.Teams, expected);
         }
 
+        [Test]
+        public void It_should_read_machine_policies()
+        {
+            var content = @"---
+MachinePolicies:
+- Name: name1
+  RenamedFrom: oldName1
+  Description: some description 1
+  ConnectivityPolicy:
+    ConnectivityBehavior: MayBeOfflineAndCanBeSkipped
+  HealthCheckPolicy:
+    HealthCheckInterval: 01:00
+    TentacleEndpoint:
+      RunType: Inline
+      ScriptBody: some script
+  UpdatePolicy:
+    CalamariUpdateBehavior: UpdateAlways
+    TentacleUpdateBehavior: Update
+  CleanupPolicy:
+    DeleteMachinesBehavior: DeleteUnavailableMachines
+    DeleteMachinesElapsedTimeSpan: 02:00
+...
+";
+            var expected = new[]
+            {
+                new YamlMachinePolicy()
+                {
+                    Name = "name1",
+                    RenamedFrom = "oldName1",
+                    Description = "some description 1",
+                    HealthCheckPolicy = new YamlMachineHealthCheckPolicy
+                    {
+                        HealthCheckInterval = "01:00",
+                        TentacleEndpoint = new YamlMachineHealthCheckScriptPolicy
+                        {
+                            RunType = MachineScriptPolicyRunType.Inline,
+                            ScriptBody = "some script"
+                        }
+                    },
+                    ConnectivityPolicy = new YamlMachineConnectivityPolicy
+                    {
+                        ConnectivityBehavior = MachineConnectivityBehavior.MayBeOfflineAndCanBeSkipped
+                    },
+                    UpdatePolicy = new YamlMachineUpdatePolicy
+                    {
+                        CalamariUpdateBehavior = CalamariUpdateBehavior.UpdateAlways,
+                        TentacleUpdateBehavior = TentacleUpdateBehavior.Update
+                    },
+                    CleanupPolicy = new YamlMachineCleanupPolicy
+                    {
+                        DeleteMachinesBehavior = DeleteMachinesBehavior.DeleteUnavailableMachines,
+                        DeleteMachinesElapsedTimeSpan = "02:00"
+                    }
+                }
+            };
+
+            var model = Read(content);
+
+            AssertExt.AssertDeepEqualsTo(model.MachinePolicies, expected);
+        }
+
         private YamlOctopusModel Read(string content)
         {
             return _reader.Read(new MemoryStream(Encoding.UTF8.GetBytes(content), false)).Single();
