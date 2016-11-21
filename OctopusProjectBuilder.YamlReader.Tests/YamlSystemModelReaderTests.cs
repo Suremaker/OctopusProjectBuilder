@@ -336,7 +336,7 @@ MachinePolicies:
   ConnectivityPolicy:
     ConnectivityBehavior: MayBeOfflineAndCanBeSkipped
   HealthCheckPolicy:
-    HealthCheckInterval: 01:00
+    HealthCheckInterval: 00:01:00
     TentacleEndpoint:
       RunType: Inline
       ScriptBody: some script
@@ -345,7 +345,7 @@ MachinePolicies:
     TentacleUpdateBehavior: Update
   CleanupPolicy:
     DeleteMachinesBehavior: DeleteUnavailableMachines
-    DeleteMachinesElapsedTimeSpan: 02:00
+    DeleteMachinesElapsedTimeSpan: 00:02:00
 ...
 ";
             var expected = new[]
@@ -357,7 +357,7 @@ MachinePolicies:
                     Description = "some description 1",
                     HealthCheckPolicy = new YamlMachineHealthCheckPolicy
                     {
-                        HealthCheckInterval = "01:00",
+                        HealthCheckInterval = "00:01:00",
                         TentacleEndpoint = new YamlMachineHealthCheckScriptPolicy
                         {
                             RunType = MachineScriptPolicyRunType.Inline,
@@ -376,7 +376,7 @@ MachinePolicies:
                     CleanupPolicy = new YamlMachineCleanupPolicy
                     {
                         DeleteMachinesBehavior = DeleteMachinesBehavior.DeleteUnavailableMachines,
-                        DeleteMachinesElapsedTimeSpan = "02:00"
+                        DeleteMachinesElapsedTimeSpan = "00:02:00"
                     }
                 }
             };

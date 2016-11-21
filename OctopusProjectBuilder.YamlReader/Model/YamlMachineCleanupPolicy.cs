@@ -15,7 +15,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [DefaultValue(-1)]
         public DeleteMachinesBehavior DeleteMachinesBehavior { get; set; }
 
-        [Description(@"Time before machines are automatically deleted. The format is ""hh:mm.""")]
+        [Description("Time before machines are automatically deleted. https://github.com/OctopusDeploy/Issues/issues/2938.")]
         [YamlMember(Order = 2)]
         public string DeleteMachinesElapsedTimeSpan { get; set; }
 

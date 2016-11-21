@@ -15,7 +15,8 @@
       * templating.
     </summary>
     <releaseNotes>
-      + Added support for machine policies
+      + Use .NET time span format for machine policy
+      + Add machine cleanup time span GitHub issue link
     </releaseNotes>
     <copyright>Copyright © Wojciech Kotlarski 2016</copyright>
     <tags>octopus yaml configuration</tags>

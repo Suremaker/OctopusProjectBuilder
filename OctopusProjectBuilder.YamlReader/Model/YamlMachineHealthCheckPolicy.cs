@@ -10,7 +10,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
     [Serializable]
     public class YamlMachineHealthCheckPolicy
     {
-        [Description(@"Time between health checks. The format is ""hh:mm.""")]
+        [Description("Time between health checks.")]
         [YamlMember(Order = 1)]
         public string HealthCheckInterval { get; set; }
 
