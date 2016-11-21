@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using OctopusProjectBuilder.Model;
-using OctopusProjectBuilder.YamlReader.Helpers;
 using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
@@ -15,7 +14,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [DefaultValue(-1)]
         public DeleteMachinesBehavior DeleteMachinesBehavior { get; set; }
 
-        [Description(@"Time before machines are automatically deleted. The format is ""hh:mm.""")]
+        [Description("Time before machines are automatically deleted. https://github.com/OctopusDeploy/Issues/issues/2938.")]
         [YamlMember(Order = 2)]
         public string DeleteMachinesElapsedTimeSpan { get; set; }
 
@@ -34,7 +33,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
             if (model.DeleteMachinesBehavior == DeleteMachinesBehavior.DoNotDelete)
                 return new YamlMachineCleanupPolicy();
             if (model.DeleteMachinesBehavior == DeleteMachinesBehavior.DeleteUnavailableMachines)
-                return new YamlMachineCleanupPolicy(model.DeleteMachinesBehavior, model.DeleteMachinesElapsedTimeSpan.FromModel());
+                return new YamlMachineCleanupPolicy(model.DeleteMachinesBehavior, $"{model.DeleteMachinesElapsedTimeSpan}");
 
             throw new InvalidOperationException($"Unsupported {nameof(model.DeleteMachinesBehavior)}");
         }
@@ -43,7 +42,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         {
             if (DeleteMachinesBehavior == DeleteMachinesBehavior.Unspecified || DeleteMachinesBehavior == DeleteMachinesBehavior.DoNotDelete)
                 return MachineCleanupPolicy.DoNotDelete();
-            return MachineCleanupPolicy.DeleteUnavailableMachines(DeleteMachinesElapsedTimeSpan.ToModel());
+            return MachineCleanupPolicy.DeleteUnavailableMachines(TimeSpan.Parse(DeleteMachinesElapsedTimeSpan));
         }
     }
 }

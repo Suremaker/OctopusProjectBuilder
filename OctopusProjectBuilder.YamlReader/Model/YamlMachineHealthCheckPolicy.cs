@@ -10,7 +10,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
     [Serializable]
     public class YamlMachineHealthCheckPolicy
     {
-        [Description(@"Time between health checks. The format is ""hh:mm.""")]
+        [Description("Time between health checks.")]
         [YamlMember(Order = 1)]
         public string HealthCheckInterval { get; set; }
 
@@ -36,7 +36,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public static YamlMachineHealthCheckPolicy FromModel(MachineHealthCheckPolicy model)
         {
             return new YamlMachineHealthCheckPolicy(
-                model.HealthCheckInterval.FromModel(),
+                $"{model.HealthCheckInterval}",
                 YamlMachineHealthCheckScriptPolicy.FromModel(model.TentacleEndpointHealthCheckPolicy),
                 YamlMachineHealthCheckScriptPolicy.FromModel(model.SshEndpointHealthCheckPolicy));
         }
@@ -44,7 +44,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public MachineHealthCheckPolicy ToModel()
         {
             return new MachineHealthCheckPolicy(
-                HealthCheckInterval.ToModel(),
+                TimeSpan.Parse(HealthCheckInterval),
                 TentacleEndpoint.ToModel(),
                 SshEndpoint.ToModel());
         }

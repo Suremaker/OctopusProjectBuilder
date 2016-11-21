@@ -58,7 +58,6 @@
     </Compile>
     <Compile Include="Helpers\PathExtensions.cs" />
     <Compile Include="Helpers\TemplateProcessor.cs" />
-    <Compile Include="Helpers\YamlFormattingExtensions.cs" />
     <Compile Include="Helpers\YamlModelExtensions.cs" />
     <Compile Include="Model\Templates\IYamlTemplate.cs" />
     <Compile Include="Model\IYamlTemplateBased.cs" />
