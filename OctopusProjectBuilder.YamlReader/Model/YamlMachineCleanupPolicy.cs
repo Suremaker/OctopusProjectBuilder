@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using OctopusProjectBuilder.Model;
+using OctopusProjectBuilder.YamlReader.Helpers;
 using YamlDotNet.Serialization;
 
 namespace OctopusProjectBuilder.YamlReader.Model
@@ -33,7 +34,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
             if (model.DeleteMachinesBehavior == DeleteMachinesBehavior.DoNotDelete)
                 return new YamlMachineCleanupPolicy();
             if (model.DeleteMachinesBehavior == DeleteMachinesBehavior.DeleteUnavailableMachines)
-                return new YamlMachineCleanupPolicy(model.DeleteMachinesBehavior, $"{model.DeleteMachinesElapsedTimeSpan}");
+                return new YamlMachineCleanupPolicy(model.DeleteMachinesBehavior, model.DeleteMachinesElapsedTimeSpan.FromModel());
 
             throw new InvalidOperationException($"Unsupported {nameof(model.DeleteMachinesBehavior)}");
         }
@@ -42,7 +43,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         {
             if (DeleteMachinesBehavior == DeleteMachinesBehavior.Unspecified || DeleteMachinesBehavior == DeleteMachinesBehavior.DoNotDelete)
                 return MachineCleanupPolicy.DoNotDelete();
-            return MachineCleanupPolicy.DeleteUnavailableMachines(TimeSpan.Parse(DeleteMachinesElapsedTimeSpan));
+            return MachineCleanupPolicy.DeleteUnavailableMachines(DeleteMachinesElapsedTimeSpan.ToModel());
         }
     }
 }

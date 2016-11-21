@@ -36,7 +36,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public static YamlMachineHealthCheckPolicy FromModel(MachineHealthCheckPolicy model)
         {
             return new YamlMachineHealthCheckPolicy(
-                $"{model.HealthCheckInterval}",
+                model.HealthCheckInterval.FromModel(),
                 YamlMachineHealthCheckScriptPolicy.FromModel(model.TentacleEndpointHealthCheckPolicy),
                 YamlMachineHealthCheckScriptPolicy.FromModel(model.SshEndpointHealthCheckPolicy));
         }
@@ -44,7 +44,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public MachineHealthCheckPolicy ToModel()
         {
             return new MachineHealthCheckPolicy(
-                TimeSpan.Parse(HealthCheckInterval),
+                HealthCheckInterval.ToModel(),
                 TentacleEndpoint.ToModel(),
                 SshEndpoint.ToModel());
         }
