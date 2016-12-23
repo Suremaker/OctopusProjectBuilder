@@ -36,6 +36,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 case VariableScopeType.Action:
                     return GetDeploymentAction(deploymentProcess, a => a.Name, reference.Name, nameof(DeploymentActionResource.Name)).Id;
                 case VariableScopeType.Channel:
+                    return repository.Channels.ResolveResourceId(reference);
                 default:
                     throw new InvalidOperationException($"Unsupported ScopeField: {key}");
             }
@@ -54,6 +55,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 case ScopeField.Role:
                     return new ElementReference(id);
                 case ScopeField.Channel:
+                    return new ElementReference(repository.Channels.Get(id).Name);
                 default:
                     throw new InvalidOperationException($"Unsupported ScopeField: {key}");
             }

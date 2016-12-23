@@ -205,6 +205,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 {VariableScopeType.Environment, new[] {new ElementReference("env1"), new ElementReference("env2")}},
                 {VariableScopeType.Machine, new[] {new ElementReference("m1"), new ElementReference("m2")}},
                 {VariableScopeType.Role, new[] {new ElementReference("r1"), new ElementReference("r2")}},
+                {VariableScopeType.Channel, new[] {new ElementReference("ch1"), new ElementReference("ch2")}},
                 {VariableScopeType.Action, deploymentProcess.DeploymentSteps.SelectMany(s => s.Actions.Select(a => a.Name)).Select(action => new ElementReference(action)).ToArray()}
             };
             var variables = new[]
@@ -230,6 +231,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
             _repository.Machines.Create(new MachineResource { Name = "m2" });
             _repository.FakeMachineRoles.Add("r1");
             _repository.FakeMachineRoles.Add("r2");
+            _repository.Channels.Create(new ChannelResource { Name = "ch1" });
+            _repository.Channels.Create(new ChannelResource { Name = "ch2" });
 
             _uploader.UploadModel(expected);
             var actual = _downloader.DownloadModel();
@@ -284,6 +287,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 {VariableScopeType.Environment, new []{new ElementReference("env1"), new ElementReference("env2") }},
                 {VariableScopeType.Machine, new []{new ElementReference("m1"), new ElementReference("m2") }},
                 {VariableScopeType.Role, new []{new ElementReference("r1"), new ElementReference("r2") }},
+                {VariableScopeType.Channel, new []{new ElementReference("ch1"), new ElementReference("ch2") }}
             };
             var expected = new SystemModelBuilder()
                 .AddEnvironment(environment1)
@@ -302,6 +306,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
             _repository.Machines.Create(new MachineResource { Name = "m2" });
             _repository.FakeMachineRoles.Add("r1");
             _repository.FakeMachineRoles.Add("r2");
+            _repository.Channels.Create(new ChannelResource { Name = "ch1" });
+            _repository.Channels.Create(new ChannelResource { Name = "ch2" });
 
             _uploader.UploadModel(expected);
             var actual = _downloader.DownloadModel();

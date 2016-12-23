@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\FakeChannelRepository.cs" />
     <Compile Include="Helpers\FakeEnvironmentRepository.cs" />
     <Compile Include="Helpers\FakeLibraryVariableSetRepository.cs" />
     <Compile Include="Helpers\FakeDeploymentProcessRepository.cs" />

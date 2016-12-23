@@ -25,6 +25,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             Teams = new FakeTeamsRepository();
             Users = new FakeUsersRepository();
             ProjectTriggers = new FakeProjectTriggersRepository(fakeOctopusClient);
+            Channels = new FakeChannelRepository();
             Client = fakeOctopusClient;
         }
 
