@@ -17,14 +17,14 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 resource.Prompt?.ToModel());
         }
 
-        public static VariableResource UpdateWith(this VariableResource resource, Variable model, IOctopusRepository repository, DeploymentProcessResource deploymentProcess)
+        public static VariableResource UpdateWith(this VariableResource resource, Variable model, IOctopusRepository repository, DeploymentProcessResource deploymentProcess, ProjectResource project)
         {
             resource.Name = model.Name;
             resource.IsEditable = model.IsEditable;
             resource.IsSensitive = model.IsSensitive;
             resource.Value = model.Value;
             resource.Prompt = model.Prompt?.FromModel();
-            resource.Scope.UpdateWith(model.Scope, repository, deploymentProcess);
+            resource.Scope.UpdateWith(model.Scope, repository, deploymentProcess, project);
             return resource;
         }
     }

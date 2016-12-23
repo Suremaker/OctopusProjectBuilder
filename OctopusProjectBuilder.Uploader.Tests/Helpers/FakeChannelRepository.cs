@@ -8,7 +8,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
     {
         public ChannelResource FindByName(ProjectResource project, string name)
         {
-            throw new System.NotImplementedException();
+            return FindByName(name);
         }
 
         public ChannelEditor CreateOrModify(ProjectResource project, string name)

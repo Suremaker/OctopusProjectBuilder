@@ -13,9 +13,9 @@ namespace OctopusProjectBuilder.Uploader.Converters
             return resource.Variables.Select(v => v.ToModel(deploymentProcessResource, repository));
         }
 
-        public static VariableSetResource UpdateWith(this VariableSetResource resource, IVariableSet model, IOctopusRepository repository, DeploymentProcessResource deploymentProcess)
+        public static VariableSetResource UpdateWith(this VariableSetResource resource, IVariableSet model, IOctopusRepository repository, DeploymentProcessResource deploymentProcess, ProjectResource project)
         {
-            resource.Variables = model.Variables.Select(v => new VariableResource().UpdateWith(v, repository, deploymentProcess)).ToList();
+            resource.Variables = model.Variables.Select(v => new VariableResource().UpdateWith(v, repository, deploymentProcess, project)).ToList();
             return resource;
         }
     }

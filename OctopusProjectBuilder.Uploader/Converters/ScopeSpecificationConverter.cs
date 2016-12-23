@@ -15,15 +15,15 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 kv => kv.Value.Select(id => ResolveReference(kv.Key, id, repository, deploymentProcessResource)).ToArray().AsEnumerable());
         }
 
-        public static ScopeSpecification UpdateWith(this ScopeSpecification resource, IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>> model, IOctopusRepository repository, DeploymentProcessResource deploymentProcess)
+        public static ScopeSpecification UpdateWith(this ScopeSpecification resource, IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>> model, IOctopusRepository repository, DeploymentProcessResource deploymentProcess, ProjectResource project)
         {
             resource.Clear();
             foreach (var kv in model)
-                resource.Add((ScopeField)kv.Key, new ScopeValue(kv.Value.Select(reference => ResolveId(kv.Key, reference, repository, deploymentProcess))));
+                resource.Add((ScopeField)kv.Key, new ScopeValue(kv.Value.Select(reference => ResolveId(kv.Key, reference, repository, deploymentProcess, project))));
             return resource;
         }
 
-        private static string ResolveId(VariableScopeType key, ElementReference reference, IOctopusRepository repository, DeploymentProcessResource deploymentProcess)
+        private static string ResolveId(VariableScopeType key, ElementReference reference, IOctopusRepository repository, DeploymentProcessResource deploymentProcess, ProjectResource project)
         {
             switch (key)
             {
@@ -36,7 +36,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 case VariableScopeType.Action:
                     return GetDeploymentAction(deploymentProcess, a => a.Name, reference.Name, nameof(DeploymentActionResource.Name)).Id;
                 case VariableScopeType.Channel:
-                    return repository.Channels.ResolveResourceId(reference);
+                    return repository.Channels.FindByName(project, reference.Name).Id;
                 default:
                     throw new InvalidOperationException($"Unsupported ScopeField: {key}");
             }

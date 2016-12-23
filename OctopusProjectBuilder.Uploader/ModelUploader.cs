@@ -58,7 +58,7 @@ namespace OctopusProjectBuilder.Uploader
             resource = Upsert(_repository.LibraryVariableSets, resource);
             Update(
                 _repository.VariableSets,
-                _repository.VariableSets.Get(resource.VariableSetId).UpdateWith(libraryVariableSet, _repository, null),
+                _repository.VariableSets.Get(resource.VariableSetId).UpdateWith(libraryVariableSet, _repository, null, null),
                 resource.Name);
         }
 
@@ -79,7 +79,7 @@ namespace OctopusProjectBuilder.Uploader
 
             Update(
                 _repository.VariableSets,
-                _repository.VariableSets.Get(projectResource.VariableSetId).UpdateWith(project, _repository, deploymentProcess),
+                _repository.VariableSets.Get(projectResource.VariableSetId).UpdateWith(project, _repository, deploymentProcess, projectResource),
                 projectResource.Name);
 
             UploadProjectTriggers(projectResource, project.Triggers.ToArray());
