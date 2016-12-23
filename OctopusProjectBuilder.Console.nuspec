@@ -14,10 +14,7 @@
       * configuration of: Project Groups, Lifecycles, Projects, Library Variable Sets, Environments,
       * templating.
     </summary>
-    <releaseNotes>
-      + Use .NET time span format for machine policy
-      + Add machine cleanup time span GitHub issue link
-    </releaseNotes>
+    <releaseNotes>Please visit https://github.com/Suremaker/OctopusProjectBuilder/releases for details.</releaseNotes>
     <copyright>Copyright © Wojciech Kotlarski 2016</copyright>
     <tags>octopus yaml configuration</tags>
     <language>en-US</language>
