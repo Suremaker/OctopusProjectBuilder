@@ -13,7 +13,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
     {
         public YamlOctopusModel() { }
 
-        private YamlOctopusModel(YamlMachinePolicy[] machinePolicies, YamlEnvironment[] environments, YamlProjectGroup[] projectGroups, YamlProject[] projects, YamlLifecycle[] lifecycles, YamlLibraryVariableSet[] libraryVariableSets, YamlUserRole[] userRoles, YamlTeam[] teams)
+        private YamlOctopusModel(YamlMachinePolicy[] machinePolicies, YamlEnvironment[] environments, YamlProjectGroup[] projectGroups, YamlProject[] projects, YamlLifecycle[] lifecycles, YamlLibraryVariableSet[] libraryVariableSets, YamlUserRole[] userRoles, YamlTeam[] teams, YamlTenant[] tenants, YamlTagSet[] tagsets)
         {
             MachinePolicies = machinePolicies;
             Environments = environments;
@@ -23,6 +23,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
             LibraryVariableSets = libraryVariableSets;
             UserRoles = userRoles;
             Teams = teams;
+            Tenants = tenants;
+            TagSets = tagsets;
         }
 
         [Description("List of Machine Policies.")]
@@ -41,6 +43,11 @@ namespace OctopusProjectBuilder.YamlReader.Model
         public YamlUserRole[] UserRoles { get; set; }
         [Description("List of Teams.")]
         public YamlTeam[] Teams { get; set; }
+        [Description("List of tenants.")]
+        public YamlTenant[] Tenants { get; set; }
+        [Description("List of tagsets")]
+        public YamlTagSet[] TagSets { get; set; }
+
         [Description("Templates node allowing to define templates for other octopus model elements.")]
         public YamlTemplates Templates { get; set; }
 
@@ -77,6 +84,12 @@ namespace OctopusProjectBuilder.YamlReader.Model
             foreach (var machinePolicy in MachinePolicies.EnsureNotNull())
                 builder.AddMachinePolicy(machinePolicy.ToModel());
 
+            foreach (var tenant in Tenants.EnsureNotNull())
+                builder.AddTenant(tenant.ToModel());
+
+            foreach (var tagset in TagSets.EnsureNotNull())
+                builder.AddTagSet(tagset.ToModel());
+
             return builder;
         }
 
@@ -90,7 +103,9 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 model.Lifecycles.Select(YamlLifecycle.FromModel).ToArray().NullIfEmpty(), 
                 model.LibraryVariableSets.Select(YamlLibraryVariableSet.FromModel).ToArray().NullIfEmpty(), 
                 model.UserRoles.Select(YamlUserRole.FromModel).ToArray().NullIfEmpty(), 
-                model.Teams.Select(YamlTeam.FromModel).ToArray().NullIfEmpty());
+                model.Teams.Select(YamlTeam.FromModel).ToArray().NullIfEmpty(),
+                model.Tenants.Select(YamlTenant.FromModel).ToArray().NullIfEmpty(),
+                model.TagSets.Select(YamlTagSet.FromModel).ToArray().NullIfEmpty());
         }
 
         public YamlOctopusModel MergeIn(YamlOctopusModel model)
@@ -103,6 +118,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
             Projects = this.MergeItemsIn(model, x => x.Projects);
             UserRoles = this.MergeItemsIn(model, x => x.UserRoles);
             Teams = this.MergeItemsIn(model, x => x.Teams);
+            Tenants = this.MergeItemsIn(model, x => x.Tenants);
+            TagSets = this.MergeItemsIn(model, x => x.TagSets);
             Templates = YamlTemplates.MergeIn(Templates, model.Templates);
             return this;
         }

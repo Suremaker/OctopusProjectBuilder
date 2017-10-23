@@ -82,10 +82,13 @@
     <Compile Include="Model\Templates\YamlProjectTemplate.cs" />
     <Compile Include="Model\YamlProjectTrigger.cs" />
     <Compile Include="Model\YamlProjectTriggerProperties.cs" />
+    <Compile Include="Model\YamlPropertyValues.cs" />
     <Compile Include="Model\YamlPropertyValue.cs" />
     <Compile Include="Model\YamlRetentionPolicy.cs" />
     <Compile Include="Model\Templates\YamlTemplateReference.cs" />
+    <Compile Include="Model\YamlTagSet.cs" />
     <Compile Include="Model\YamlTeam.cs" />
+    <Compile Include="Model\YamlTenant.cs" />
     <Compile Include="Model\YamlUserRole.cs" />
     <Compile Include="Model\YamlVariable.cs" />
     <Compile Include="Model\YamlVariablePrompt.cs" />

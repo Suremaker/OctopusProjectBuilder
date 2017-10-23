@@ -84,7 +84,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .Build();
             _uploader.UploadModel(model1);
 
-            var originalId = _repository.Lifecycles.FindOne(l => l.Name == model1.Lifecycles.Single().Identifier.Name).Id;
+            var originalId = _repository.Lifecycles.FindOne(l => l.Name == model1.Lifecycles.Single().Identifier.Name)
+                .Id;
 
             var model2 = new SystemModelBuilder()
                 .AddLifecycle(new Lifecycle(
@@ -118,7 +119,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .Build();
             _uploader.UploadModel(model1);
 
-            var originalId = _repository.LibraryVariableSets.FindOne(l => l.Name == model1.LibraryVariableSets.Single().Identifier.Name).Id;
+            var originalId = _repository.LibraryVariableSets
+                .FindOne(l => l.Name == model1.LibraryVariableSets.Single().Identifier.Name)
+                .Id;
 
             var model2 = new SystemModelBuilder()
                 .AddLibraryVariableSet(new LibraryVariableSet(
@@ -148,7 +151,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<Variable>(),
                     Enumerable.Empty<ElementReference>(),
                     new ElementReference("lifecycle1"),
-                    new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>()))
+                    new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>(),
+                    TenantedDeploymentMode.TenantedOrUntenanted))
                 .Build();
 
             _repository.Lifecycles.Create(new LifecycleResource { Name = "lifecycle1" });
@@ -164,7 +168,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<Variable>(),
                     Enumerable.Empty<ElementReference>(),
                     new ElementReference("lifecycle1"),
-                    new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>()))
+                    new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>(),
+                    TenantedDeploymentMode.TenantedOrUntenanted))
                 .Build();
             _uploader.UploadModel(model2);
 
@@ -180,7 +185,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var environment2 = new Environment(new ElementIdentifier("env2"), CreateItem<string>());
 
             var projectGroup = new ProjectGroup(CreateItemWithRename<ElementIdentifier>(false), string.Empty);
-            var libraryVariableSet = new LibraryVariableSet(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), LibraryVariableSet.VariableSetContentType.Variables, Enumerable.Empty<Variable>());
+            var libraryVariableSet = new LibraryVariableSet(CreateItemWithRename<ElementIdentifier>(false),
+                CreateItem<string>(), LibraryVariableSet.VariableSetContentType.Variables,
+                Enumerable.Empty<Variable>());
             var lifecycle = new Lifecycle(
                 CreateItemWithRename<ElementIdentifier>(false),
                 string.Empty,
@@ -190,15 +197,25 @@ namespace OctopusProjectBuilder.Uploader.Tests
 
             var deploymentProcess = new DeploymentProcess(new List<DeploymentStep>
             {
-                new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(), CreateItem<DeploymentStep.StepStartTrigger>(), CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new []
-                {
-                    new DeploymentAction(CreateItem<string>(), CreateItem<string>(), CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new []{new ElementReference("env1")}),
-                    new DeploymentAction(CreateItem<string>(), CreateItem<string>(), CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new []{new ElementReference("env2")})
-                }),
-                new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(), CreateItem<DeploymentStep.StepStartTrigger>(), CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new []
-                {
-                    new DeploymentAction(CreateItem<string>(), CreateItem<string>(), CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new []{new ElementReference("env1")})
-                })
+                new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(),
+                    CreateItem<DeploymentStep.StepStartTrigger>(),
+                    CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new[]
+                    {
+                        new DeploymentAction(CreateItem<string>(), CreateItem<string>(),
+                            CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
+                            new[] {new ElementReference("env1")}),
+                        new DeploymentAction(CreateItem<string>(), CreateItem<string>(),
+                            CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
+                            new[] {new ElementReference("env2")})
+                    }),
+                new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(),
+                    CreateItem<DeploymentStep.StepStartTrigger>(),
+                    CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new[]
+                    {
+                        new DeploymentAction(CreateItem<string>(), CreateItem<string>(),
+                            CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
+                            new[] {new ElementReference("env1")})
+                    })
             });
             var scope = new Dictionary<VariableScopeType, IEnumerable<ElementReference>>
             {
@@ -206,16 +223,33 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 {VariableScopeType.Machine, new[] {new ElementReference("m1"), new ElementReference("m2")}},
                 {VariableScopeType.Role, new[] {new ElementReference("r1"), new ElementReference("r2")}},
                 {VariableScopeType.Channel, new[] {new ElementReference("ch1"), new ElementReference("ch2")}},
-                {VariableScopeType.Action, deploymentProcess.DeploymentSteps.SelectMany(s => s.Actions.Select(a => a.Name)).Select(action => new ElementReference(action)).ToArray()}
+                {
+                    VariableScopeType.Action,
+                    deploymentProcess.DeploymentSteps.SelectMany(s => s.Actions.Select(a => a.Name))
+                        .Select(action => new ElementReference(action))
+                        .ToArray()
+                }
             };
             var variables = new[]
             {
-                new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(), scope, CreateItem<VariablePrompt>()),
-                new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(), scope, CreateItem<VariablePrompt>())
+                new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(), scope,
+                    CreateItem<VariablePrompt>()),
+                new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(), scope,
+                    CreateItem<VariablePrompt>())
             };
 
-            var project1 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), CreateItem<VersioningStrategy>(), Enumerable.Empty<ProjectTrigger>());
-            var project2 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables, new[] { new ElementReference(libraryVariableSet.Identifier.Name) }, new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name), null, new[] { CreateProjectTrigger("m1", "env1"), CreateProjectTrigger("m2", "env2") });
+            var project1 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(),
+                CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables,
+                new[] { new ElementReference(libraryVariableSet.Identifier.Name) },
+                new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name),
+                CreateItem<VersioningStrategy>(), Enumerable.Empty<ProjectTrigger>(),
+                TenantedDeploymentMode.TenantedOrUntenanted);
+            var project2 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(),
+                CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables,
+                new[] { new ElementReference(libraryVariableSet.Identifier.Name) },
+                new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name),
+                null, new[] { CreateProjectTrigger("m1", "env1"), CreateProjectTrigger("m2", "env2") },
+                TenantedDeploymentMode.TenantedOrUntenanted);
 
             var expected = new SystemModelBuilder()
                 .AddProject(project1)
@@ -242,8 +276,12 @@ namespace OctopusProjectBuilder.Uploader.Tests
 
         private ProjectTrigger CreateProjectTrigger(string machineRef, string envRef)
         {
-            var triggerProperties = new ProjectTriggerProperties(new[] { ProjectTriggerProperties.TriggerEventType.NewDeploymentTargetBecomesAvailable }, new[] { new ElementReference(machineRef) }, new[] { new ElementReference(envRef) });
-            return new ProjectTrigger(CreateItem<string>(), CreateItem<ProjectTrigger.ProjectTriggerType>(), triggerProperties);
+            var triggerProperties =
+                new ProjectTriggerProperties(
+                    new[] { ProjectTriggerProperties.TriggerEventType.NewDeploymentTargetBecomesAvailable },
+                    new[] { new ElementReference(machineRef) }, new[] { new ElementReference(envRef) });
+            return new ProjectTrigger(CreateItem<string>(), CreateItem<ProjectTrigger.ProjectTriggerType>(),
+                triggerProperties);
         }
 
         [Test]
@@ -260,8 +298,20 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
                 new[]
                 {
-                    new Phase( CreateItemWithRename<ElementIdentifier>(false), CreateItem<RetentionPolicy>(), CreateItem<RetentionPolicy>(), CreateItem<int>(), new [] { new ElementReference(environment1.Identifier.Name), new ElementReference(environment2.Identifier.Name) }, new [] { new ElementReference(environment3.Identifier.Name) }),
-                    new Phase( CreateItemWithRename<ElementIdentifier>(false), CreateItem<RetentionPolicy>(), CreateItem<RetentionPolicy>(), CreateItem<int>(), new [] { new ElementReference(environment2.Identifier.Name), new ElementReference(environment3.Identifier.Name) }, new [] { new ElementReference(environment1.Identifier.Name) })
+                    new Phase(CreateItemWithRename<ElementIdentifier>(false), CreateItem<RetentionPolicy>(),
+                        CreateItem<RetentionPolicy>(), CreateItem<int>(),
+                        new[]
+                        {
+                            new ElementReference(environment1.Identifier.Name),
+                            new ElementReference(environment2.Identifier.Name)
+                        }, new[] {new ElementReference(environment3.Identifier.Name)}),
+                    new Phase(CreateItemWithRename<ElementIdentifier>(false), CreateItem<RetentionPolicy>(),
+                        CreateItem<RetentionPolicy>(), CreateItem<int>(),
+                        new[]
+                        {
+                            new ElementReference(environment2.Identifier.Name),
+                            new ElementReference(environment3.Identifier.Name)
+                        }, new[] {new ElementReference(environment1.Identifier.Name)})
                 });
 
             var expected = new SystemModelBuilder()
@@ -283,11 +333,12 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var environment1 = new Environment(new ElementIdentifier("env1"), CreateItem<string>());
             var environment2 = new Environment(new ElementIdentifier("env2"), CreateItem<string>());
 
-            var scope = new Dictionary<VariableScopeType, IEnumerable<ElementReference>> {
-                {VariableScopeType.Environment, new []{new ElementReference("env1"), new ElementReference("env2") }},
-                {VariableScopeType.Machine, new []{new ElementReference("m1"), new ElementReference("m2") }},
-                {VariableScopeType.Role, new []{new ElementReference("r1"), new ElementReference("r2") }},
-                {VariableScopeType.Channel, new []{new ElementReference("ch1"), new ElementReference("ch2") }}
+            var scope = new Dictionary<VariableScopeType, IEnumerable<ElementReference>>
+            {
+                {VariableScopeType.Environment, new[] {new ElementReference("env1"), new ElementReference("env2")}},
+                {VariableScopeType.Machine, new[] {new ElementReference("m1"), new ElementReference("m2")}},
+                {VariableScopeType.Role, new[] {new ElementReference("r1"), new ElementReference("r2")}},
+                {VariableScopeType.Channel, new[] {new ElementReference("ch1"), new ElementReference("ch2")}}
             };
             var expected = new SystemModelBuilder()
                 .AddEnvironment(environment1)
@@ -296,9 +347,12 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddLibraryVariableSet(new LibraryVariableSet(CreateItemWithRename<ElementIdentifier>(false),
                     CreateItem<string>(), CreateItem<LibraryVariableSet.VariableSetContentType>(), new[]
                     {
-                        new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(), scope, CreateItem<VariablePrompt>()),
-                        new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(), scope, CreateItem<VariablePrompt>()),
-                        new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(), scope, CreateItem<VariablePrompt>())
+                        new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(),
+                            scope, CreateItem<VariablePrompt>()),
+                        new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(),
+                            scope, CreateItem<VariablePrompt>()),
+                        new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(),
+                            scope, CreateItem<VariablePrompt>())
                     }))
                 .Build();
 
@@ -375,20 +429,146 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var description2 = CreateItem<string>();
 
             var model1 = new SystemModelBuilder()
-                .AddUserRole(new UserRole(new ElementIdentifier(name1), description1, CreateItem<IEnumerable<Permission>>()))
+                .AddUserRole(new UserRole(new ElementIdentifier(name1), description1,
+                    CreateItem<IEnumerable<Permission>>()))
                 .Build();
             _uploader.UploadModel(model1);
 
             var originalId = _repository.UserRoles.FindByName(model1.UserRoles.Single().Identifier.Name).Id;
 
             var model2 = new SystemModelBuilder()
-                .AddUserRole(new UserRole(new ElementIdentifier(name2, name1), description2, CreateItem<IEnumerable<Permission>>()))
+                .AddUserRole(new UserRole(new ElementIdentifier(name2, name1), description2,
+                    CreateItem<IEnumerable<Permission>>()))
                 .Build();
             _uploader.UploadModel(model2);
 
             var actual = _repository.UserRoles.Get(originalId);
             Assert.That(actual.Name, Is.EqualTo(name2));
             Assert.That(actual.Description, Is.EqualTo(description2));
+        }
+
+        [Test]
+        public void It_should_rename_tagset()
+        {
+            var name1 = CreateItem<string>();
+            var name2 = CreateItem<string>();
+
+            var model1 = new SystemModelBuilder()
+                .AddTagSet(new TagSet(new ElementIdentifier(name1), CreateItem<IEnumerable<string>>()))
+                .Build();
+            _uploader.UploadModel(model1);
+
+            var originalId = _repository.TagSets.FindByName(model1.TagSets.Single().Identifier.Name).Id;
+
+            var model2 = new SystemModelBuilder()
+                .AddTagSet(new TagSet(new ElementIdentifier(name2, name1), CreateItem<IEnumerable<string>>()))
+                .Build();
+            _uploader.UploadModel(model2);
+
+            var actual = _repository.TagSets.Get(originalId);
+            Assert.That(actual.Name, Is.EqualTo(name2));
+        }
+
+        [Test]
+        public void It_should_rename_tenant()
+        {
+            var name1 = CreateItem<string>();
+            var name2 = CreateItem<string>();
+
+            var model1 = new SystemModelBuilder()
+                .AddTenant(new Tenant(new ElementIdentifier(name1), CreateItem<IEnumerable<ElementReference>>(), new Dictionary<string, IEnumerable<string>>()))
+                .Build();
+            _uploader.UploadModel(model1);
+
+            var originalId = _repository.Tenants.FindByName(model1.Tenants.Single().Identifier.Name).Id;
+
+            var model2 = new SystemModelBuilder()
+                .AddTenant(new Tenant(new ElementIdentifier(name2, name1), CreateItem<IEnumerable<ElementReference>>(), new Dictionary<string, IEnumerable<string>>()))
+                .Build();
+            _uploader.UploadModel(model2);
+
+            var actual = _repository.Tenants.Get(originalId);
+            Assert.That(actual.Name, Is.EqualTo(name2));
+        }
+
+        [Test]
+        public void It_should_upload_and_download_tagsets()
+        {
+            var expected = new SystemModelBuilder()
+                .AddTagSet(new TagSet(new ElementIdentifier("ts1"), new List<string> { "t1", "t2" }))
+                .AddTagSet(new TagSet(new ElementIdentifier("ts2"), new List<string> { "t3", "t4" }))
+                .Build();
+
+            _uploader.UploadModel(expected);
+            var actual = _downloader.DownloadModel();
+
+            actual.AssertDeepEqualsTo(expected);
+        }
+
+        [Test]
+        public void It_should_upload_and_download_tenant()
+        {
+            var tagset = new TagSet(new ElementIdentifier("ts1"), new List<string> { "t1", "t2" });
+            var environment1 = new Environment(new ElementIdentifier("env1"), CreateItem<string>());
+
+            var projectGroup = new ProjectGroup(CreateItemWithRename<ElementIdentifier>(false), string.Empty);
+            var libraryVariableSet = new LibraryVariableSet(CreateItemWithRename<ElementIdentifier>(false),
+                CreateItem<string>(), LibraryVariableSet.VariableSetContentType.Variables,
+                Enumerable.Empty<Variable>());
+            var lifecycle = new Lifecycle(
+                CreateItemWithRename<ElementIdentifier>(false),
+                string.Empty,
+                new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
+                new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
+                Enumerable.Empty<Phase>());
+
+            var deploymentProcess = new DeploymentProcess(new List<DeploymentStep>
+            {
+                new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(),
+                    CreateItem<DeploymentStep.StepStartTrigger>(),
+                    CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new[]
+                    {
+                        new DeploymentAction(CreateItem<string>(), CreateItem<string>(),
+                            CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
+                            new[] {new ElementReference("env1")}),
+                    })
+            });
+            var scope = new Dictionary<VariableScopeType, IEnumerable<ElementReference>>
+            {
+                {VariableScopeType.Environment, new[] {new ElementReference("env1")}},
+                {
+                    VariableScopeType.Action,
+                    deploymentProcess.DeploymentSteps.SelectMany(s => s.Actions.Select(a => a.Name))
+                        .Select(action => new ElementReference(action))
+                        .ToArray()
+                }
+            };
+            var variables = new[] { new Variable(CreateItem<string>(), CreateItem<bool>(), CreateItem<bool>(), CreateItem<string>(), scope, CreateItem<VariablePrompt>()) };
+
+            var project1 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(),
+                CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables,
+                new[] { new ElementReference(libraryVariableSet.Identifier.Name) },
+                new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name),
+                CreateItem<VersioningStrategy>(), Enumerable.Empty<ProjectTrigger>(),
+                TenantedDeploymentMode.TenantedOrUntenanted);
+
+            var tenant = new Tenant(new ElementIdentifier("t1"),
+                new[] { new ElementReference(tagset.Identifier.Name) },
+                new Dictionary<string, IEnumerable<string>> { { project1.Identifier.Name, new[] { environment1.Identifier.Name } } });
+
+            var expected = new SystemModelBuilder()
+                .AddProject(project1)
+                .AddTenant(tenant)
+                .AddProjectGroup(projectGroup)
+                .AddLifecycle(lifecycle)
+                .AddLibraryVariableSet(libraryVariableSet)
+                .AddEnvironment(environment1)
+                .Build();
+
+            _uploader.UploadModel(expected);
+            var actual = _downloader.DownloadModel();
+
+            actual.AssertDeepEqualsTo(expected);
         }
 
         [Test]
@@ -409,7 +589,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 Enumerable.Empty<Variable>(),
                 Enumerable.Empty<ElementReference>(),
                 new ElementReference("lifecycle1"),
-                new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>());
+                new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>(),
+                TenantedDeploymentMode.TenantedOrUntenanted);
             var environment1 = new Environment(new ElementIdentifier("env1"), CreateItem<string>());
 
             var team = new Team(

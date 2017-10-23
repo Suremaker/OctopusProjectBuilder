@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common.Logging;
 using Octopus.Client;
@@ -39,17 +40,35 @@ namespace OctopusProjectBuilder.Uploader
             foreach (var projectGroup in model.ProjectGroups)
                 UploadProjectGroup(projectGroup);
 
+            foreach (var tagSet in model.TagSets)
+                UploadTagSet(tagSet);
+
             foreach (var libraryVariableSet in model.LibraryVariableSets)
                 UploadLibraryVariableSet(libraryVariableSet);
 
             foreach (var project in model.Projects)
                 UploadProject(project);
 
+            foreach (var tenant in model.Tenants)
+                UploadTenant(tenant);
+
             foreach (var userRole in model.UserRoles)
                 UploadUserRole(userRole);
 
             foreach (var team in model.Teams)
                 UploadTeam(team);
+        }
+
+        private void UploadTenant(Tenant tenant)
+        {
+            var resource = LoadResource(_repository.Tenants, tenant.Identifier).UpdateWith(tenant, _repository);
+            Upsert(_repository.Tenants, resource);
+        }
+
+        private void UploadTagSet(TagSet tagSet)
+        {
+            var resource = LoadResource(_repository.TagSets, tagSet.Identifier).UpdateWith(tagSet, _repository);
+            Upsert(_repository.TagSets, resource);
         }
 
         private void UploadLibraryVariableSet(LibraryVariableSet libraryVariableSet)

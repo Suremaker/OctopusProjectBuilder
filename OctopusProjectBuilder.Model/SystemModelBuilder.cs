@@ -12,6 +12,8 @@ namespace OctopusProjectBuilder.Model
         private readonly List<LibraryVariableSet> _libraryVariableSets = new List<LibraryVariableSet>();
         private readonly List<UserRole> _userRoles = new List<UserRole>();
         private readonly List<Team> _teams = new List<Team>();
+        private readonly List<Tenant> _tenants = new List<Tenant>();
+        private readonly List<TagSet> _tagSets = new List<TagSet>();
 
         public SystemModelBuilder AddProjectGroup(ProjectGroup group)
         {
@@ -61,17 +63,31 @@ namespace OctopusProjectBuilder.Model
             return this;
         }
 
+        public SystemModelBuilder AddTenant(Tenant tenant)
+        {
+            _tenants.Add(tenant);
+            return this;
+        }
+
+        public SystemModelBuilder AddTagSet(TagSet tagSet)
+        {
+            _tagSets.Add(tagSet);
+            return this;
+        }
+
         public SystemModel Build()
         {
             return new SystemModel(
-                _machinePolicies, 
-                _lifecycles, 
-                _projectGroups, 
-                _libraryVariableSets, 
-                _projects, 
+                _machinePolicies,
+                _lifecycles,
+                _projectGroups,
+                _libraryVariableSets,
+                _projects,
                 _environments,
                 _userRoles,
-                _teams);
+                _teams,
+                _tenants, 
+                _tagSets);
         }
     }
 }

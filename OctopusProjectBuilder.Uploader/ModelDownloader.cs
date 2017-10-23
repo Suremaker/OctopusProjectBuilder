@@ -32,7 +32,9 @@ namespace OctopusProjectBuilder.Uploader
                 _repository.Projects.FindAll().Select(ReadProject),
                 _repository.Environments.FindAll().Select(ReadEnvironment),
                 _repository.UserRoles.FindAll().Select(ReadUserRole),
-                _repository.Teams.FindAll().Select(ReadTeam));
+                _repository.Teams.FindAll().Select(ReadTeam),
+                _repository.Tenants.FindAll().Select(ReadTenant),
+                _repository.TagSets.FindAll().Select(ReadTagSet));
         }
 
         private MachinePolicy ReadMachinePolicy(MachinePolicyResource resource)
@@ -80,6 +82,18 @@ namespace OctopusProjectBuilder.Uploader
         private Team ReadTeam(TeamResource resource)
         {
             Logger.Info($"Downloading {nameof(TeamResource)}: {resource.Name}");
+            return resource.ToModel(_repository);
+        }
+
+        private Tenant ReadTenant(TenantResource resource)
+        {
+            Logger.Info($"Downloading {nameof(TenantResource)}: {resource.Name}");
+            return resource.ToModel(_repository);
+        }
+
+        private TagSet ReadTagSet(TagSetResource resource)
+        {
+            Logger.Info($"Downloading {nameof(TagSetResource)}: {resource.Name}");
             return resource.ToModel(_repository);
         }
     }

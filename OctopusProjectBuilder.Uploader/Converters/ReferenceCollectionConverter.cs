@@ -19,5 +19,12 @@ namespace OctopusProjectBuilder.Uploader.Converters
         {
             return collection.Select(id => new ElementReference(repository.Get(id).Name));
         }
+
+        public static void UpdateWith(this IDictionary<string, ReferenceCollection> resource, IReadOnlyDictionary<string, IEnumerable<ElementReference>> model)
+        {
+            resource.Clear();
+            foreach (var keyValuePair in model)
+                resource.Add(keyValuePair.Key, new ReferenceCollection(keyValuePair.Value.Select(x => x.Name)));
+        }
     }
 }
