@@ -12,13 +12,13 @@ namespace OctopusProjectBuilder.Uploader.Converters
             var projectGroupResourceId = repository.ProjectGroups.ResolveResourceId(model.ProjectGroupRef);
             var resolveResourceId = repository.Lifecycles.ResolveResourceId(model.LifecycleRef);
             resource.Name = model.Identifier.Name;
-            //resource.ReleaseCreationStrategy;
             resource.AutoCreateRelease = model.AutoCreateRelease;
             resource.DefaultToSkipIfAlreadyInstalled = model.DefaultToSkipIfAlreadyInstalled;
             resource.Description = model.Description;
             resource.IsDisabled = model.IsDisabled;
             resource.LifecycleId = resolveResourceId;
             resource.ProjectGroupId = projectGroupResourceId;
+            resource.TenantedDeploymentMode = (ProjectTenantedDeploymentMode)model.TenantedDeploymentMode;
             resource.IncludedLibraryVariableSetIds = model.IncludedLibraryVariableSetRefs.Select(r => repository.LibraryVariableSets.ResolveResourceId(r)).ToList();
             if (model.VersioningStrategy != null)
                 resource.VersioningStrategy = (resource.VersioningStrategy ?? new VersioningStrategyResource()).UpdateWith(model.VersioningStrategy);
@@ -40,7 +40,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 new ElementReference(repository.Lifecycles.Get(resource.LifecycleId).Name),
                 new ElementReference(repository.ProjectGroups.Get(resource.ProjectGroupId).Name),
                 resource.VersioningStrategy?.ToModel(),
-                repository.Client.FindAllProjectTriggers(resource).Select(t => t.ToModel(repository)));
+                repository.Client.FindAllProjectTriggers(resource).Select(t => t.ToModel(repository)),
+                (TenantedDeploymentMode)resource.TenantedDeploymentMode);
         }
     }
 }

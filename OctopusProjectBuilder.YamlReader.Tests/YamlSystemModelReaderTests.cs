@@ -386,6 +386,66 @@ MachinePolicies:
             AssertExt.AssertDeepEqualsTo(model.MachinePolicies, expected);
         }
 
+        [Test]
+        public void It_should_read_tenants()
+        {
+            var content = @"---
+Tenants:
+- Name: qmt
+  TenantTagRefs:
+  - qmt/uk
+  ProjectEnvironmants:
+  - Key: project
+    Values:
+    - test
+    - moartest
+...";
+            var expectedTenants = new[]
+            {
+                new YamlTenant
+                {
+                    Name = "qmt",
+                    ProjectEnvironmants = new []
+                    {
+                        new YamlPropertyValues
+                        {
+                            Key = "project",
+                            Values = new [] { "test", "moartest"}
+                        }
+                    },
+                    TenantTagRefs = new []{"qmt/uk"}
+                }
+            };
+
+            var model = Read(content);
+
+            AssertExt.AssertDeepEqualsTo(model.Tenants, expectedTenants);
+        }
+
+        [Test]
+        public void It_should_read_tagsets()
+        {
+            var content = @"---
+TagSets:
+- Name: qmt
+  Tags:
+  - uk
+  - za
+...";
+            var expectedTagsets = new[]
+            {
+                new YamlTagSet
+                {
+                    Name = "qmt",
+                    Tags = new [] {"uk", "za"}
+                }
+            };
+
+            var model = Read(content);
+
+            AssertExt.AssertDeepEqualsTo(model.TagSets, expectedTagsets);
+        }
+
         private YamlOctopusModel Read(string content)
         {
             return _reader.Read(new MemoryStream(Encoding.UTF8.GetBytes(content), false)).Single();

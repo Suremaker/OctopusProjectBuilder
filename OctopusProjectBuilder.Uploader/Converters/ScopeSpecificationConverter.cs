@@ -37,6 +37,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
                     return GetDeploymentAction(deploymentProcess, a => a.Name, reference.Name, nameof(DeploymentActionResource.Name)).Id;
                 case VariableScopeType.Channel:
                     return repository.Channels.FindByName(project, reference.Name).Id;
+                case VariableScopeType.TenantTag:
+                    return reference.Name;
                 default:
                     throw new InvalidOperationException($"Unsupported ScopeField: {key}");
             }
@@ -56,6 +58,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
                     return new ElementReference(id);
                 case ScopeField.Channel:
                     return new ElementReference(repository.Channels.Get(id).Name);
+                case ScopeField.TenantTag:
+                    return new ElementReference(id);
                 default:
                     throw new InvalidOperationException($"Unsupported ScopeField: {key}");
             }

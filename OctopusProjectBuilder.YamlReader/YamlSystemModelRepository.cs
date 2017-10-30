@@ -74,6 +74,8 @@ namespace OctopusProjectBuilder.YamlReader
                 .Concat(splitModel.LibraryVariableSets.EnsureNotNull().Select(x => $"LibraryVariableSet_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Concat(splitModel.UserRoles.EnsureNotNull().Select(x => $"UserRole_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Concat(splitModel.Teams.EnsureNotNull().Select(x => $"Team_{x.Name.SanitiseNameIfNeeded()}.yml"))
+                .Concat(splitModel.Tenants.EnsureNotNull().Select(x => $"Tenant_{x.Name.SanitiseNameIfNeeded()}.yml"))
+                .Concat(splitModel.TagSets.EnsureNotNull().Select(x => $"TagSet_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Single();
             return modelDirectory + "\\" + name;
         }

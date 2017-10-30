@@ -93,6 +93,8 @@
     <Compile Include="Helpers\FakeUsersRepository.cs" />
     <Compile Include="Helpers\FakeVariableSetRepository.cs" />
     <Compile Include="Helpers\PropertyValueResourceJsonConverter.cs" />
+    <Compile Include="Helpers\FakeTagSetsRepository.cs" />
+    <Compile Include="Helpers\FakeTenantsRepository.cs" />
     <Compile Include="ModelDownloaderTests.cs" />
     <Compile Include="ModelUploaderValidationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

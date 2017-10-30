@@ -10,7 +10,8 @@ namespace OctopusProjectBuilder.Model
         Machine = 2,
         Role = 3,
         Action = 5,
-        Channel = 8
+        Channel = 8,
+        TenantTag = 9
     }
 
     public class Variable

@@ -27,6 +27,9 @@ The variable scope should be understood as `(role1 OR ...roleN) AND (machine1 OR
         [Description("List of Action references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them. The Action references can be only specified in Project variables (LibraryVariableSets does not support them).")]
         public string[] ActionRefs { get; set; }
 
+        [Description("List of TenantTags references (based on the name) where variable is applicable to. If none are specified, then variable is available to all of them.")]
+        public string[] TenantTagRefs { get; set; }
+
         public IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>> ToModel()
         {
             var result = new Dictionary<VariableScopeType, IEnumerable<ElementReference>>();
@@ -35,6 +38,7 @@ The variable scope should be understood as `(role1 OR ...roleN) AND (machine1 OR
             Add(result, VariableScopeType.Environment, EnvironmentRefs);
             Add(result, VariableScopeType.Channel, ChannelRefs);
             Add(result, VariableScopeType.Action, ActionRefs);
+            Add(result, VariableScopeType.TenantTag, TenantTagRefs);
             return result;
         }
 
@@ -56,6 +60,7 @@ The variable scope should be understood as `(role1 OR ...roleN) AND (machine1 OR
                 EnvironmentRefs = model.Where(kv => kv.Key == VariableScopeType.Environment).SelectMany(kv => kv.Value).Select(r => r.Name).ToArray().NullIfEmpty(),
                 MachineRefs = model.Where(kv => kv.Key == VariableScopeType.Machine).SelectMany(kv => kv.Value).Select(r => r.Name).ToArray().NullIfEmpty(),
                 RoleRefs = model.Where(kv => kv.Key == VariableScopeType.Role).SelectMany(kv => kv.Value).Select(r => r.Name).ToArray().NullIfEmpty(),
+                TenantTagRefs = model.Where(kv => kv.Key == VariableScopeType.TenantTag).SelectMany(kv => kv.Value).Select(r => r.Name).ToArray().NullIfEmpty(),
             };
         }
     }

@@ -4,9 +4,16 @@ using System.Linq;
 
 namespace OctopusProjectBuilder.Model
 {
+    public enum TenantedDeploymentMode
+    {
+        Untenanted,
+        TenantedOrUntenanted,
+        Tenanted
+    }
+
     public class Project : IVariableSet
     {
-        public Project(ElementIdentifier identifier, string description, bool isDisabled, bool autoCreateRelease, bool defaultToSkipIfAlreadyInstalled, DeploymentProcess deploymentProcess, IEnumerable<Variable> variables, IEnumerable<ElementReference> libraryVariableSetRefs, ElementReference lifecycleRef, ElementReference projectGroupRef, VersioningStrategy versioningStrategy, IEnumerable<ProjectTrigger> triggers)
+        public Project(ElementIdentifier identifier, string description, bool isDisabled, bool autoCreateRelease, bool defaultToSkipIfAlreadyInstalled, DeploymentProcess deploymentProcess, IEnumerable<Variable> variables, IEnumerable<ElementReference> libraryVariableSetRefs, ElementReference lifecycleRef, ElementReference projectGroupRef, VersioningStrategy versioningStrategy, IEnumerable<ProjectTrigger> triggers, TenantedDeploymentMode tenantedDeploymentMode)
         {
             if (identifier == null)
                 throw new ArgumentNullException(nameof(identifier));
@@ -28,6 +35,7 @@ namespace OctopusProjectBuilder.Model
             ProjectGroupRef = projectGroupRef;
             VersioningStrategy = versioningStrategy;
             Triggers = triggers.ToArray();
+            TenantedDeploymentMode = tenantedDeploymentMode;
         }
 
         public ElementIdentifier Identifier { get; }
@@ -42,6 +50,8 @@ namespace OctopusProjectBuilder.Model
         public IEnumerable<Variable> Variables { get; }
         public VersioningStrategy VersioningStrategy { get; }
         public IEnumerable<ProjectTrigger> Triggers { get; }
+        public TenantedDeploymentMode TenantedDeploymentMode { get; }
+
 
         public override string ToString()
         {
