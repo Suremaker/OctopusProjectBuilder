@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Octopus.Client.Extensibility;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories;
 using OctopusProjectBuilder.Model;

@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OctopusProjectBuilder.Model</RootNamespace>
     <AssemblyName>OctopusProjectBuilder.Model</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,7 +63,8 @@
     <Compile Include="Phase.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectTrigger.cs" />
-    <Compile Include="ProjectTriggerProperties.cs" />
+    <Compile Include="ProjectTriggerAutoDeployAction.cs" />
+    <Compile Include="ProjectTriggerMachineFilter.cs" />
     <Compile Include="PropertyValue.cs" />
     <Compile Include="RetentionPolicy.cs" />
     <Compile Include="SystemModel.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="TagSet.cs" />
     <Compile Include="Team.cs" />
     <Compile Include="Tenant.cs" />
+    <Compile Include="TenantedDeploymentMode.cs" />
     <Compile Include="UserRole.cs" />
     <Compile Include="Variable.cs" />
     <Compile Include="VariablePrompt.cs" />

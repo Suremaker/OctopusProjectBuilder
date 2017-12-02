@@ -4,13 +4,6 @@ using System.Linq;
 
 namespace OctopusProjectBuilder.Model
 {
-    public enum TenantedDeploymentMode
-    {
-        Untenanted,
-        TenantedOrUntenanted,
-        Tenanted
-    }
-
     public class Project : IVariableSet
     {
         public Project(ElementIdentifier identifier, string description, bool isDisabled, bool autoCreateRelease, bool defaultToSkipIfAlreadyInstalled, DeploymentProcess deploymentProcess, IEnumerable<Variable> variables, IEnumerable<ElementReference> libraryVariableSetRefs, ElementReference lifecycleRef, ElementReference projectGroupRef, VersioningStrategy versioningStrategy, IEnumerable<ProjectTrigger> triggers, TenantedDeploymentMode tenantedDeploymentMode)

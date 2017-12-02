@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Logging;
 using Octopus.Client;
+using Octopus.Client.Extensibility;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories;
 
@@ -100,17 +101,20 @@ namespace OctopusProjectBuilder.Uploader
                 _repository.VariableSets,
                 _repository.VariableSets.Get(projectResource.VariableSetId).UpdateWith(project, _repository, deploymentProcess, projectResource),
                 projectResource.Name);
-
-            UploadProjectTriggers(projectResource, project.Triggers.ToArray());
+            
+            UploadProjectTriggers(projectResource, project.Triggers);
         }
 
-        private void UploadProjectTriggers(ProjectResource projectResource, ProjectTrigger[] triggers)
+        private void UploadProjectTriggers(ProjectResource projectResource, IEnumerable<ProjectTrigger> triggers)
         {
-            foreach (var res in _repository.Client.FindAllProjectTriggers(projectResource))
-                Delete(_repository.ProjectTriggers, res, projectResource.Name);
+            foreach (var resource in _repository.Projects.GetTriggers(projectResource).Items)
+                Delete(_repository.ProjectTriggers, resource, projectResource.Name);
 
             foreach (var trigger in triggers)
-                Upsert(_repository.ProjectTriggers, new ProjectTriggerResource().UpdateWith(trigger, projectResource.Id, _repository));
+            {
+                var resource = LoadResource(name => _repository.ProjectTriggers.FindByName(projectResource, name), trigger.Identifier).UpdateWith(trigger, projectResource.Id, _repository);
+                Upsert(_repository.ProjectTriggers, resource);
+            }
         }
 
         private void UploadProjectGroup(ProjectGroup projectGroup)
@@ -171,7 +175,7 @@ namespace OctopusProjectBuilder.Uploader
         {
             return LoadResource(name => finder.FindOne(x => x.Name == name), identifier);
         }
-
+        
         private static TResource LoadResource<TResource>(Func<string, TResource> finder, ElementIdentifier identifier) where TResource : new()
         {
             var resource = finder(identifier.Name);

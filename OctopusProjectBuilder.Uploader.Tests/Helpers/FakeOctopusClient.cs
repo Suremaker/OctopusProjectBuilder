@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Octopus.Client;
+using Octopus.Client.Extensibility;
 using Octopus.Client.Model;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
@@ -19,6 +20,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
                 _resources.Add(path, list = new List<object>());
 
             list.Add(resource);
+        }
+
+        public IReadOnlyList<TResource> ListAll<TResource>(string path, object pathParameters = null)
+        {
+            return null;
         }
 
         public void Paginate<TResource>(string path, Func<ResourceCollection<TResource>, bool> getNextPage)
@@ -74,6 +80,10 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new NotImplementedException();
         }
 
+        public void Put(string path)
+        {
+        }
+
         public TResource Update<TResource>(string path, TResource resource, object pathParameters = null)
         {
             throw new NotImplementedException();
@@ -82,6 +92,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public void Delete(string path, object pathParameters = null)
         {
             throw new NotImplementedException();
+        }
+
+        public Stream GetContent(string path, object pathParameters = null)
+        {
+            return null;
         }
 
         public Stream GetContent(string path)

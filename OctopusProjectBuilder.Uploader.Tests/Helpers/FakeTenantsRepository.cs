@@ -33,9 +33,9 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new System.NotImplementedException();
         }
 
-        public List<TenantResource> FindAll(string name, string[] tags = null)
+        public List<TenantResource> FindAll(string name, string[] tags = null, int pageSize = 2147483647)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public TenantEditor CreateOrModify(string name)

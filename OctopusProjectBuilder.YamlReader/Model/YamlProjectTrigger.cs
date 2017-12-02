@@ -7,32 +7,30 @@ namespace OctopusProjectBuilder.YamlReader.Model
 {
     [Description("Project Trigger definition.")]
     [Serializable]
-    public class YamlProjectTrigger
+    public class YamlProjectTrigger : YamlNamedElement
     {
-        [Description("Trigger name.")]
-        [YamlMember(Order = 1)]
-        public string Name { get; set; }
-        [Description("Trigger type.")]
-        [YamlMember(Order = 2)]
-        public ProjectTrigger.ProjectTriggerType Type { get; set; }
-        [Description("Trigger properties.")]
+        [Description("Trigger Filter.")]
         [YamlMember(Order = 3)]
-        public YamlProjectTriggerProperties Properties { get; set; }
+        public YamlProjectTriggerFilter Filter { get; set; }
 
+        [Description("Trigger Action.")]
+        [YamlMember(Order = 4)]
+        public YamlProjectTriggerAction Action { get; set; }
+
+        public ProjectTrigger ToModel()
+        {
+            return new ProjectTrigger(ToModelName(), Filter.ToModel(), Action.ToModel());
+        }
 
         public static YamlProjectTrigger FromModel(ProjectTrigger model)
         {
             return new YamlProjectTrigger
             {
-                Name = model.Name,
-                Type = model.Type,
-                Properties = YamlProjectTriggerProperties.FromModel(model.Properties)
+                Name = model.Identifier.Name,
+                RenamedFrom = model.Identifier.RenamedFrom,
+                Filter = YamlProjectTriggerFilter.FromModel(model.Filter),
+                Action = YamlProjectTriggerAction.FromModel(model.Action)
             };
-        }
-
-        public ProjectTrigger ToModel()
-        {
-            return new ProjectTrigger(Name, Type, Properties.ToModel());
         }
     }
 }

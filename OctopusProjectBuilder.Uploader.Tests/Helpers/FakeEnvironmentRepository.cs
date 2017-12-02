@@ -7,29 +7,37 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeEnvironmentRepository : FakeNamedRepository<EnvironmentResource>, IEnvironmentRepository
     {
-        public List<MachineResource> GetMachines(EnvironmentResource environment)
+        public List<EnvironmentResource> GetAll()
         {
-            throw new System.NotImplementedException();
+            return null;
+        }
+
+        public List<MachineResource> GetMachines(EnvironmentResource environment, int? skip, int? take = null, string partialName = null,
+            string roles = null, bool? isDisabled = false, string healthStatuses = null, string commStyles = null,
+            string tenantIds = null, string tenantTags = null)
+        {
+            return null;
+        }
+
+        public EnvironmentsSummaryResource Summary(string ids = null, string partialName = null, string machinePartialName = null,
+            string roles = null, bool? isDisabled = false, string healthStatuses = null, string commStyles = null,
+            string tenantIds = null, string tenantTags = null, bool? hideEmptyEnvironments = false)
+        {
+            return null;
         }
 
         public void Sort(string[] environmentIdsInOrder)
         {
-            throw new System.NotImplementedException();
         }
 
         public EnvironmentEditor CreateOrModify(string name)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public EnvironmentEditor CreateOrModify(string name, string description)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public List<EnvironmentResource> GetAll()
-        {
-            throw new System.NotImplementedException();
+            return null;
         }
     }
 }
