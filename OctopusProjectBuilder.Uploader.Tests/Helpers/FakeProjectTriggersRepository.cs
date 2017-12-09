@@ -1,31 +1,21 @@
 ﻿using Octopus.Client.Editors;
 using Octopus.Client.Model;
+using Octopus.Client.Model.Triggers;
 using Octopus.Client.Repositories;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeProjectTriggersRepository : FakeRepository<ProjectTriggerResource>, IProjectTriggerRepository
     {
-        private readonly FakeOctopusClient _fakeClient;
-
-        public FakeProjectTriggersRepository(FakeOctopusClient fakeClient)
-        {
-            _fakeClient = fakeClient;
-        }
-
         public ProjectTriggerResource FindByName(ProjectResource project, string name)
         {
-            throw new System.NotImplementedException();
+            return FindOne(t => t.Name == name && t.ProjectId == project.Id);
         }
 
-        public ProjectTriggerEditor CreateOrModify(ProjectResource project, string name, ProjectTriggerType type)
+        public ProjectTriggerEditor CreateOrModify(ProjectResource project, string name, TriggerFilterResource filter,
+            TriggerActionResource action)
         {
             throw new System.NotImplementedException();
-        }
-
-        protected override void OnCreate(ProjectTriggerResource resource)
-        {
-            _fakeClient.AddResource(FakeProjectRepository.GetProjectTriggersLink(resource.ProjectId), resource);
         }
     }
 }

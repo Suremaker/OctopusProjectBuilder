@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.Uploader.Tests.Helpers;
+using TenantedDeploymentMode = OctopusProjectBuilder.Model.TenantedDeploymentMode;
 
 namespace OctopusProjectBuilder.Uploader.Tests
 {

@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OctopusProjectBuilder.Uploader</RootNamespace>
     <AssemblyName>OctopusProjectBuilder.Uploader</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,14 +47,24 @@
       <HintPath>..\packages\NuGet.Versioning.3.4.3\lib\net45\NuGet.Versioning.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Octopus.Client, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Octopus.Client.4.0.1\lib\net45\Octopus.Client.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Octopus.Client, Version=4.27.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Octopus.Client.4.27.2\lib\net451\Octopus.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Octopus.Client.Extensibility, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Octopus.Client.Extensibility.3.0.1\lib\netstandard1.2\Octopus.Client.Extensibility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.ComponentModel.Primitives, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Primitives.4.3.0\lib\net45\System.ComponentModel.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -79,7 +90,9 @@
     <Compile Include="Converters\PermissionConverter.cs" />
     <Compile Include="Converters\PhaseConverter.cs" />
     <Compile Include="Converters\ProjectEnvironmentsConverter.cs" />
+    <Compile Include="Converters\ProjectTriggerAutoDeployActionConverter.cs" />
     <Compile Include="Converters\ProjectTriggerConverter.cs" />
+    <Compile Include="Converters\ProjectTriggerMachineFilterConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\ReferenceCollectionConverter.cs" />
     <Compile Include="Converters\RetentionPeriodConverter.cs" />
@@ -97,10 +110,10 @@
     <Compile Include="ModelUploader.cs" />
     <Compile Include="Converters\ProjectConverter.cs" />
     <Compile Include="Converters\ProjectGroupConverter.cs" />
-    <Compile Include="ProjectTriggerRepositoryExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

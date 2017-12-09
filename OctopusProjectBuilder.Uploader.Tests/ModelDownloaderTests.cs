@@ -9,6 +9,7 @@ using OctopusProjectBuilder.Uploader.Tests.Helpers;
 using Ploeh.AutoFixture;
 using Environment = OctopusProjectBuilder.Model.Environment;
 using Permission = OctopusProjectBuilder.Model.Permission;
+using TenantedDeploymentMode = OctopusProjectBuilder.Model.TenantedDeploymentMode;
 
 namespace OctopusProjectBuilder.Uploader.Tests
 {
@@ -276,12 +277,13 @@ namespace OctopusProjectBuilder.Uploader.Tests
 
         private ProjectTrigger CreateProjectTrigger(string machineRef, string envRef)
         {
-            var triggerProperties =
-                new ProjectTriggerProperties(
-                    new[] { ProjectTriggerProperties.TriggerEventType.NewDeploymentTargetBecomesAvailable },
-                    new[] { new ElementReference(machineRef) }, new[] { new ElementReference(envRef) });
-            return new ProjectTrigger(CreateItem<string>(), CreateItem<ProjectTrigger.ProjectTriggerType>(),
-                triggerProperties);
+            var environments = new[] { new ElementReference(envRef) };
+            var roles = new[] { new ElementReference(machineRef) };
+            var eventGroups = new[] { new ElementReference("eg1") };
+            var eventCategories = new[] { new ElementReference("ec1") };
+            var triggerFilter =
+                new ProjectTriggerMachineFilter(environments, roles, eventGroups, eventCategories);
+            return new ProjectTrigger(CreateItemWithRename<ElementIdentifier>(false), triggerFilter, CreateItem<ProjectTriggerAutoDeployAction>());
         }
 
         [Test]

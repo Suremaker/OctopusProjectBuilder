@@ -9,6 +9,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         {
             var fakeVariableSetRepository = new FakeVariableSetRepository();
             var fakeDeploymentProcessRepository = new FakeDeploymentProcessRepository();
+            var fakeProjectTriggersRepository = new FakeProjectTriggersRepository();
             var fakeOctopusClient = new FakeOctopusClient();
 
             MachinePolicies = new FakeMachinePolicyRepository();
@@ -16,7 +17,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             ProjectGroups = new FakeProjectGroupRepository();
             VariableSets = fakeVariableSetRepository;
             LibraryVariableSets = new FakeLibraryVariableSetRepository(fakeVariableSetRepository);
-            Projects = new FakeProjectRepository(fakeVariableSetRepository, fakeDeploymentProcessRepository);
+            Projects = new FakeProjectRepository(fakeVariableSetRepository, fakeDeploymentProcessRepository, fakeProjectTriggersRepository);
             Lifecycles = new FakeLifecycleRepository();
             Environments = new FakeEnvironmentRepository();
             MachineRoles = FakeMachineRoles = new FakeMachineRoleRepository();
@@ -24,7 +25,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             UserRoles = new FakeUserRolesRepository();
             Teams = new FakeTeamsRepository();
             Users = new FakeUsersRepository();
-            ProjectTriggers = new FakeProjectTriggersRepository(fakeOctopusClient);
+            ProjectTriggers = fakeProjectTriggersRepository;
             Channels = new FakeChannelRepository();
             TagSets = new FakeTagSetsRepository();
             Tenants = new FakeTenantsRepository();
@@ -35,8 +36,10 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public IArtifactRepository Artifacts { get; }
         public IActionTemplateRepository ActionTemplates { get; }
         public ICertificateRepository Certificates { get; }
+        public ICertificateConfigurationRepository CertificateConfiguration { get; }
         public IBackupRepository Backups { get; }
         public IBuiltInPackageRepositoryRepository BuiltInPackageRepository { get; }
+        public ICommunityActionTemplateRepository CommunityActionTemplates { get; }
         public IDashboardConfigurationRepository DashboardConfigurations { get; }
         public IDashboardRepository Dashboards { get; }
         public IDeploymentProcessRepository DeploymentProcesses { get; }
@@ -69,6 +72,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public IProjectTriggerRepository ProjectTriggers { get; }
         public IAccountRepository Accounts { get; }
         public IRetentionPolicyRepository RetentionPolicies { get; }
+        public IConfigurationRepository Configuration { get; }
         public IDefectsRepository Defects { get; }
         public IOctopusServerNodeRepository OctopusServerNodes { get; }
         public FakeMachineRoleRepository FakeMachineRoles { get; }

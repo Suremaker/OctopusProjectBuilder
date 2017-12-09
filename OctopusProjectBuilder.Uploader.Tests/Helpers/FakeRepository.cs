@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories;
 using Octopus.Client.Serialization;
@@ -81,8 +79,8 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 
         private T Clone(T resource)
         {
-            var serialized = JsonConvert.SerializeObject(resource, JsonSerialization.GetDefaultSerializerSettings());
-            return JsonConvert.DeserializeObject<T>(serialized, JsonSerialization.GetDefaultSerializerSettings());
+            var serialized = JsonSerialization.SerializeObject(resource);
+            return JsonSerialization.DeserializeObject<T>(serialized);
         }
     }
 }

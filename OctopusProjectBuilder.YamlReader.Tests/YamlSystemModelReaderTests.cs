@@ -171,7 +171,15 @@ ProjectGroups:
                       Value: propValue3
                       IsSensitive: True
                     - Key: propKey4
-                      Value: propValue4";
+                      Value: propValue4
+      Triggers:
+        - Name: trigger1
+          Filter:
+            EventGroupRefs:
+            - MachineAvailableForDeployment
+          Action:
+            ShouldRedeployWhenMachineHasBeenDeployedTo: true";
+
             var expected = new[]
             {
                 new YamlProject
@@ -243,6 +251,18 @@ ProjectGroups:
                                     }
                                 }
                             }
+                        }
+                    },
+                    Triggers = new []
+                    {
+                        new YamlProjectTrigger
+                        {
+                            Name = "trigger1",
+                            Filter = new YamlProjectTriggerFilter
+                            {
+                                EventGroupRefs = new [] { "MachineAvailableForDeployment" }
+                            },
+                            Action = new YamlProjectTriggerAction {ShouldRedeployWhenMachineHasBeenDeployedTo = true}
                         }
                     }
                 }

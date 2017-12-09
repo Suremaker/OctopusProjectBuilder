@@ -1,21 +1,25 @@
+using System;
+
 namespace OctopusProjectBuilder.Model
 {
     public class ProjectTrigger
     {
-        public enum ProjectTriggerType
+        public ElementIdentifier Identifier { get; }
+        public ProjectTriggerMachineFilter Filter { get;  }
+        public ProjectTriggerAutoDeployAction Action { get;  }
+
+        public ProjectTrigger(ElementIdentifier identifier, ProjectTriggerMachineFilter filter, ProjectTriggerAutoDeployAction action)
         {
-            DeploymentTarget
+            if (identifier == null)
+                throw new ArgumentNullException(nameof(identifier));
+            Identifier = identifier;
+            Filter = filter;
+            Action = action;
         }
 
-        public string Name { get;  }
-        public ProjectTriggerType Type { get;  }
-        public ProjectTriggerProperties Properties { get;  }
-
-        public ProjectTrigger(string name, ProjectTriggerType type, ProjectTriggerProperties properties)
+        public override string ToString()
         {
-            Name = name;
-            Type = type;
-            Properties = properties;
+            return Identifier.ToString();
         }
     }
 }

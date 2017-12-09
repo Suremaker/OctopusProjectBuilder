@@ -10,28 +10,46 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
     {
         public MachineResource Discover(string host, int port = 10933, DiscoverableEndpointType? discoverableEndpointType = null)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public MachineConnectionStatus GetConnectionStatus(MachineResource machine)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public List<MachineResource> FindByThumbprint(string thumbprint)
         {
-            throw new System.NotImplementedException();
+            return null;
+        }
+
+        public IReadOnlyList<TaskResource> GetTasks(MachineResource machine)
+        {
+            return null;
+        }
+
+        public IReadOnlyList<TaskResource> GetTasks(MachineResource machine, object pathParameters)
+        {
+            return null;
         }
 
         public MachineEditor CreateOrModify(string name, EndpointResource endpoint, EnvironmentResource[] environments, string[] roles,
-            TenantResource[] tenants, TagResource[] tenantTags)
+            TenantResource[] tenants, TagResource[] tenantTags, TenantedDeploymentMode? tenantedDeploymentParticipation)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
-        public MachineEditor CreateOrModify(string name, EndpointResource endpoint, EnvironmentResource[] environments, string[] roles)
+        public MachineEditor CreateOrModify(string name, EndpointResource endpoint, EnvironmentResource[] environments,
+            string[] roles)
         {
-            throw new System.NotImplementedException();
+            return null;
+        }
+
+        public ResourceCollection<MachineResource> List(int skip = 0, int? take = null, string ids = null, string name = null,
+            string partialName = null, string roles = null, bool? isDisabled = false, string healthStatuses = null,
+            string commStyles = null, string tenantIds = null, string tenantTags = null, string environmentIds = null)
+        {
+            return null;
         }
     }
 }
