@@ -12,7 +12,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
         public static Dictionary<VariableScopeType, IEnumerable<ElementReference>> ToModel(this ScopeSpecification resource, DeploymentProcessResource deploymentProcessResource, IOctopusRepository repository)
         {
             return resource.ToDictionary(kv => (VariableScopeType)kv.Key,
-                kv => kv.Value.Select(id => ResolveReference(kv.Key, id, repository, deploymentProcessResource)).ToArray().AsEnumerable());
+                kv => kv.Value.AsParallel().Select(id => ResolveReference(kv.Key, id, repository, deploymentProcessResource)).AsParallel().ToArray().AsEnumerable());
         }
 
         public static ScopeSpecification UpdateWith(this ScopeSpecification resource, IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>> model, IOctopusRepository repository, DeploymentProcessResource deploymentProcess, ProjectResource project)
@@ -51,9 +51,9 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 case ScopeField.Action:
                     return new ElementReference(GetDeploymentAction(deploymentProcessResource, a => a.Id, id, nameof(DeploymentActionResource.Id)).Name);
                 case ScopeField.Environment:
-                    return new ElementReference(repository.Environments.Get(id).Name);
+                    return new ElementReference(repository.Environments.FindByName(id)?.Name);
                 case ScopeField.Machine:
-                    return new ElementReference(repository.Machines.Get(id).Name);
+                    return new ElementReference(repository.Machines.FindByName(id)?.Name);
                 case ScopeField.Role:
                     return new ElementReference(id);
                 case ScopeField.Channel:
