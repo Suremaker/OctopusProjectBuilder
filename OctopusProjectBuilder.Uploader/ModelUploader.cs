@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Logging;
 using Octopus.Client;
-using Octopus.Client.Extensibility;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories;
 
 using OctopusProjectBuilder.Uploader.Converters;
+
+using IResource = Octopus.Client.Model.IResource;
 
 namespace OctopusProjectBuilder.Uploader
 {

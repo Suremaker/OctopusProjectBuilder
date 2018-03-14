@@ -2,7 +2,7 @@
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
-using TenantedDeploymentMode = Octopus.Client.Model.TenantedDeploymentMode;
+
 
 namespace OctopusProjectBuilder.Uploader.Converters
 {
@@ -19,7 +19,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             resource.IsDisabled = model.IsDisabled;
             resource.LifecycleId = lifecycleResourceId;
             resource.ProjectGroupId = projectGroupResourceId;
-            resource.TenantedDeploymentMode = (TenantedDeploymentMode)model.TenantedDeploymentMode;
+            resource.TenantedDeploymentMode = (ProjectTenantedDeploymentMode)model.TenantedDeploymentMode;
             resource.IncludedLibraryVariableSetIds = model.IncludedLibraryVariableSetRefs.Select(r => repository.LibraryVariableSets.ResolveResourceId(r)).ToList();
             if (model.VersioningStrategy != null)
                 resource.VersioningStrategy = (resource.VersioningStrategy ?? new VersioningStrategyResource()).UpdateWith(model.VersioningStrategy);

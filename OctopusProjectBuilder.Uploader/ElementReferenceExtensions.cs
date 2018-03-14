@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Octopus.Client.Extensibility;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories;
 using OctopusProjectBuilder.Model;
@@ -18,7 +17,7 @@ namespace OctopusProjectBuilder.Uploader
         }
 
         public static string ResolveResourceId<TResource>(this IPaginate<TResource> repository, ElementReference reference) where TResource : Resource, INamedResource
-        {
+		{
             var resource = repository.FindOne(r => string.Equals(Trim(r.Name), Trim(reference.Name), StringComparison.OrdinalIgnoreCase));
             if (resource == null)
                 throw new KeyNotFoundException($"{typeof(TResource).Name} with name '{reference.Name}' not found.");
