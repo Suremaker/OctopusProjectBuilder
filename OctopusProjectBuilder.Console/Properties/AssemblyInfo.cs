@@ -1,12 +1,12 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("OctopusProjectBuilder.Console")]
 [assembly: AssemblyDescription("Console application allowing to configure Octopus resources from YAML files.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OctopusProjectBuilder.Console")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Twinfield International N.V.")]
+[assembly: AssemblyProduct("Twinfield")]
+[assembly: AssemblyTrademark("Twinfield")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
