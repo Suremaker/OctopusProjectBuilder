@@ -6,6 +6,7 @@
         public string OctopusUrl { get; set; }
         public string OctopusApiKey { get; set; }
         public string DefinitionsDir { get; set; }
+		public string ProjectGroup { get; set; }
         public Verb Action { get; set; }
     }
 }
