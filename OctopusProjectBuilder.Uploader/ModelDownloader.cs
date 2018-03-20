@@ -23,75 +23,75 @@ namespace OctopusProjectBuilder.Uploader
         }
 
         public SystemModel DownloadModel()
-        {
-            return new SystemModel(
-                _repository.MachinePolicies.FindAll().Select(ReadMachinePolicy),
-                _repository.Lifecycles.FindAll().Select(ReadLifecycle),
-                _repository.ProjectGroups.FindAll().Select(ReadProjectGroup),
-                _repository.LibraryVariableSets.FindAll().Select(ReadLibraryVariableSet),
-                _repository.Projects.FindAll().Select(ReadProject),
-                _repository.Environments.FindAll().Select(ReadEnvironment),
-                _repository.UserRoles.FindAll().Select(ReadUserRole),
-                _repository.Teams.FindAll().Select(ReadTeam),
-                _repository.Tenants.FindAll().Select(ReadTenant),
-                _repository.TagSets.FindAll().Select(ReadTagSet));
-        }
+		{
+			return new SystemModel(
+				_repository.MachinePolicies.FindAll().Select(DownloadMachinePolicy),
+				_repository.Lifecycles.FindAll().Select(DownloadLifecycle),
+				_repository.ProjectGroups.FindAll().Select(DownloadProjectGroup),
+				_repository.LibraryVariableSets.FindAll().AsParallel().Select(DownloadLibraryVariableSet),				
+				_repository.Projects.FindAll().Select(DownloadProject),
+				_repository.Environments.FindAll().Select(DownloadEnvironment),
+				_repository.UserRoles.FindAll().Select(DownloadUserRole),
+				_repository.Teams.FindAll().Select(DownloadTeam),
+				_repository.Tenants.FindAll().Select(DownloadTenant),				
+				_repository.TagSets.FindAll().Select(DownloadTagSet));
+		}
 
-        private MachinePolicy ReadMachinePolicy(MachinePolicyResource resource)
+        internal MachinePolicy DownloadMachinePolicy(MachinePolicyResource resource)
         {
             Logger.Info($"Downloading {nameof(MachinePolicyResource)}: {resource.Name}");
             return resource.ToModel();
         }
 
-        private LibraryVariableSet ReadLibraryVariableSet(LibraryVariableSetResource resource)
+        internal LibraryVariableSet DownloadLibraryVariableSet(LibraryVariableSetResource resource)
         {
             Logger.Info($"Downloading {nameof(LibraryVariableSetResource)}: {resource.Name}");
             return resource.ToModel(_repository);
         }
 
-        private Lifecycle ReadLifecycle(LifecycleResource resource)
+        internal Lifecycle DownloadLifecycle(LifecycleResource resource)
         {
             Logger.Info($"Downloading {nameof(LifecycleResource)}: {resource.Name}");
             return resource.ToModel(_repository);
         }
 
-        private Project ReadProject(ProjectResource resource)
+        internal Project DownloadProject(ProjectResource resource)
         {
             Logger.Info($"Downloading {nameof(ProjectResource)}: {resource.Name}");
             return resource.ToModel(_repository);
         }
 
-        private static ProjectGroup ReadProjectGroup(ProjectGroupResource resource)
+        internal ProjectGroup DownloadProjectGroup(ProjectGroupResource resource)
         {
             Logger.Info($"Downloading {nameof(ProjectGroupResource)}: {resource.Name}");
             return resource.ToModel();
         }
 
-        private static Environment ReadEnvironment(EnvironmentResource resource)
+        internal static Environment DownloadEnvironment(EnvironmentResource resource)
         {
             Logger.Info($"Downloading {nameof(EnvironmentResource)}: {resource.Name}");
             return resource.ToModel();
         }
 
-        private static UserRole ReadUserRole(UserRoleResource resource)
+        internal static UserRole DownloadUserRole(UserRoleResource resource)
         {
             Logger.Info($"Downloading {nameof(UserRoleResource)}: {resource.Name}");
             return resource.ToModel();
         }
 
-        private Team ReadTeam(TeamResource resource)
+        internal Team DownloadTeam(TeamResource resource)
         {
             Logger.Info($"Downloading {nameof(TeamResource)}: {resource.Name}");
             return resource.ToModel(_repository);
         }
 
-        private Tenant ReadTenant(TenantResource resource)
+        internal Tenant DownloadTenant(TenantResource resource)
         {
             Logger.Info($"Downloading {nameof(TenantResource)}: {resource.Name}");
             return resource.ToModel(_repository);
         }
 
-        private TagSet ReadTagSet(TagSetResource resource)
+        internal TagSet DownloadTagSet(TagSetResource resource)
         {
             Logger.Info($"Downloading {nameof(TagSetResource)}: {resource.Name}");
             return resource.ToModel(_repository);
