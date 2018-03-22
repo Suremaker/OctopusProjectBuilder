@@ -25,7 +25,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
 
         public LibraryVariableSet ToModel()
         {
-            return new LibraryVariableSet(ToModelName(), Description, ContentType, Variables.EnsureNotNull().Select(v => v.ToModel()));
+            return new LibraryVariableSet(ToModelName(), Description, ContentType, Variables.EnsureNotNull().Select(v => v.ToModel()).ToArray());
         }
 
         public static YamlLibraryVariableSet FromModel(LibraryVariableSet model)

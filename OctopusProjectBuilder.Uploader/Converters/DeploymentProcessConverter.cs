@@ -9,7 +9,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
     {
         public static DeploymentProcess ToModel(this DeploymentProcessResource resource, IOctopusRepository repository)
         {
-            return new DeploymentProcess(resource.Steps.Select(s => s.ToModel(repository)));
+            return new DeploymentProcess(resource.Steps.AsParallel().Select(s => s.ToModel(repository)));
         }
 
         public static DeploymentProcessResource UpdateWith(this DeploymentProcessResource resource, DeploymentProcess model, IOctopusRepository repository)

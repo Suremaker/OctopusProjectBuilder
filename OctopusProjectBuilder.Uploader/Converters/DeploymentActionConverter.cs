@@ -20,7 +20,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             resource.Name = model.Name;
             resource.ActionType = model.ActionType;
             resource.Properties.UpdateWith(model.Properties);
-            resource.Environments.UpdateWith(model.EnvironmentRefs.Select(r => repository.Environments.ResolveResourceId(r)));
+            resource.Environments.UpdateWith(model.EnvironmentRefs.AsParallel().Select(r => repository.Environments.ResolveResourceId(r)));
             return resource;
         }
     }

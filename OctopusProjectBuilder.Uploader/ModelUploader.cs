@@ -19,7 +19,8 @@ namespace OctopusProjectBuilder.Uploader
         private static readonly ILog Logger = LogManager.GetLogger<ModelUploader>();
         private readonly IOctopusRepository _repository;
 
-        public ModelUploader(string octopusUrl, string octopusApiKey) : this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
+        public ModelUploader(string octopusUrl, string octopusApiKey) : 
+			this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
         {
         }
 

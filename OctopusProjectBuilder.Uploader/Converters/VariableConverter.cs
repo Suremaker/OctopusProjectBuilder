@@ -1,3 +1,5 @@
+using Common.Logging;
+
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
@@ -6,8 +8,12 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class VariableConverter
     {
+	    static readonly ILog Logger = LogManager.GetLogger(typeof(VariableConverter));
+
         public static Variable ToModel(this VariableResource resource, DeploymentProcessResource deploymentProcessResource, IOctopusRepository repository)
         {
+			Logger.Trace($"Converting variable {resource.Name} to model...");
+
             return new Variable(
                 resource.Name,
                 resource.IsEditable,

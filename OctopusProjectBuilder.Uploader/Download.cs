@@ -36,6 +36,24 @@ namespace OctopusProjectBuilder.Uploader
 			return this;
 		}
 
+		public Download OnlyProjects(string[] names)
+		{
+			var projects = repository.Projects.FindByNames(names).ToList();
+
+			if (!projects.Any())
+				throw new ArgumentException("Projects are not found.");
+
+			AddProjects(projects);
+
+			var groupIds = projects.Select(p => p.Id);
+
+			var octopusProjects = repository.Projects.FindMany(project => groupIds.Contains(project.ProjectGroupId));
+
+			AddProjects(octopusProjects);
+
+			return this;
+		}
+
 
 		public Download OnlyGroups(string[] names)
 		{
@@ -43,6 +61,7 @@ namespace OctopusProjectBuilder.Uploader
 
 			if (!groups.Any())
 				throw new ArgumentException("Groups are not found.");
+
 			scope.Groups.AddRange(groups);
 
 			var groupIds = groups.Select(p => p.Id);
@@ -75,10 +94,10 @@ namespace OctopusProjectBuilder.Uploader
 			scope.Projects.AddRange(octopusProjects);
 
 			var varSets = GetVariableSetResources(octopusProjects);
-			scope.LibraryVariableSets.AddRange(varSets);
+			AddLibraryVariableSets(varSets);
 
 			var lifeCycles = GetLifecycleResources(octopusProjects);
-			scope.Lifecycles.AddRange(lifeCycles);
+			AddLifeCycles(lifeCycles);			
 		}
 
 		List<LibraryVariableSetResource> GetVariableSetResources(List<ProjectResource> octopusProjects)
@@ -98,6 +117,11 @@ namespace OctopusProjectBuilder.Uploader
 		void AddLifeCycles(List<LifecycleResource> cycles)
 		{
 			scope.Lifecycles.AddRange(cycles);
+		}
+
+		void AddLibraryVariableSets(List<LibraryVariableSetResource> variableSets)
+		{
+			scope.LibraryVariableSets.AddRange(variableSets);
 		}
 
 
@@ -128,7 +152,7 @@ namespace OctopusProjectBuilder.Uploader
 
 			var projectGroups = scope.IsDefined ? scope.LibraryVariableSets : repository.LibraryVariableSets.FindAll();
 
-			return projectGroups.AsParallel().Select(downloader.DownloadLibraryVariableSet);
+			return projectGroups.Select(downloader.DownloadLibraryVariableSet);
 		}
 
 
