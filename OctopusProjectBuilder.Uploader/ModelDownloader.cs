@@ -21,7 +21,6 @@ namespace OctopusProjectBuilder.Uploader
 		{
 			_repository = repository;
 		}
-
 		
 
 		internal MachinePolicy DownloadMachinePolicy(MachinePolicyResource resource)
@@ -30,25 +29,25 @@ namespace OctopusProjectBuilder.Uploader
 			return resource.ToModel();
 		}
 
-		internal LibraryVariableSet DownloadLibraryVariableSet(LibraryVariableSetResource resource)
+		public LibraryVariableSet DownloadLibraryVariableSet(LibraryVariableSetResource resource)
 		{
 			Logger.Info($"Downloading {nameof(LibraryVariableSetResource)}: {resource.Name}");
 			return resource.ToModel(_repository);
 		}
 
-		internal Lifecycle DownloadLifecycle(LifecycleResource resource)
+		public Lifecycle DownloadLifecycle(LifecycleResource resource)
 		{
 			Logger.Info($"Downloading {nameof(LifecycleResource)}: {resource.Name}");
 			return resource.ToModel(_repository);
 		}
 
-		internal Project DownloadProject(ProjectResource resource)
+		public Project DownloadProject(ProjectResource resource)
 		{
 			Logger.Info($"Downloading {nameof(ProjectResource)}: {resource.Name}");
 			return resource.ToModel(_repository);
 		}
 
-		internal ProjectGroup DownloadProjectGroup(ProjectGroupResource resource)
+		public ProjectGroup DownloadProjectGroup(ProjectGroupResource resource)
 		{
 			Logger.Info($"Downloading {nameof(ProjectGroupResource)}: {resource.Name}");
 			return resource.ToModel();
