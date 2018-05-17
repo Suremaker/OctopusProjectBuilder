@@ -31,7 +31,7 @@ namespace OctopusProjectBuilder.Model
             TenantedDeploymentMode = tenantedDeploymentMode;
         }
 
-        public ElementIdentifier Identifier { get; }
+        public ElementIdentifier Identifier { get; private set; }
         public string Description { get; }
         public bool IsDisabled { get; }
         public bool AutoCreateRelease { get; }
@@ -39,7 +39,7 @@ namespace OctopusProjectBuilder.Model
         public DeploymentProcess DeploymentProcess { get; }
         public IEnumerable<ElementReference> IncludedLibraryVariableSetRefs { get; }
         public ElementReference LifecycleRef { get; }
-        public ElementReference ProjectGroupRef { get; }
+        public ElementReference ProjectGroupRef { get; set; }
         public IEnumerable<Variable> Variables { get; }
         public VersioningStrategy VersioningStrategy { get; }
         public IEnumerable<ProjectTrigger> Triggers { get; }
@@ -50,5 +50,10 @@ namespace OctopusProjectBuilder.Model
         {
             return Identifier.ToString();
         }
+
+	    public void Rename(string name)
+	    {
+		    Identifier = new ElementIdentifier(name, Identifier.RenamedFrom);
+	    }
     }
 }

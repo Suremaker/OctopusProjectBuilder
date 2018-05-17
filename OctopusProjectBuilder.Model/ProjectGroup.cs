@@ -12,8 +12,14 @@ namespace OctopusProjectBuilder.Model
             Description = description;
         }
 
-        public ElementIdentifier Identifier { get; }
-        public string Description { get; }
+        public ElementIdentifier Identifier { get; private set; }
+
+	    public void Rename(string name)
+	    {
+		    Identifier = new ElementIdentifier(name, Identifier.RenamedFrom);
+	    }
+
+		public string Description { get; }
 
         public override string ToString()
         {
