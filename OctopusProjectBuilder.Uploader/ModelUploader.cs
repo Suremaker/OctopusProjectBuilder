@@ -90,16 +90,27 @@ namespace OctopusProjectBuilder.Uploader
 			Upsert(_repository.Lifecycles, resource);
 		}
 
+		void UploadProjectChannels(ProjectResource projectResource, IEnumerable<ProjectChannel> channels)
+		{
+			foreach (var channel in channels)
+			{
+				var resource = LoadResource(name => _repository.Channels.FindByName(projectResource, name), channel.Identifier).UpdateWith(channel, projectResource);
+				Upsert(_repository.Channels, resource);
+			}
+		}
+
 		private void UploadProject(Project project)
 		{
+
 			var projectResource = Upsert(_repository.Projects, LoadResource(_repository.Projects, project.Identifier).UpdateWith(project, _repository));
-			UpdateChannels(_repository, project, projectResource);
+
+			UploadProjectChannels(projectResource, project.Channels);
 
 			var deploymentProcess = Update(
-				 _repository.DeploymentProcesses,
-				 _repository.DeploymentProcesses.Get(projectResource.DeploymentProcessId).UpdateWith(project.DeploymentProcess, _repository),
-				 projectResource.Name);
-			
+						_repository.DeploymentProcesses,
+						_repository.DeploymentProcesses.Get(projectResource.DeploymentProcessId).UpdateWith(project.DeploymentProcess, projectResource, _repository),
+						projectResource.Name);
+
 			Update(
 				_repository.VariableSets,
 				_repository.VariableSets.Get(projectResource.VariableSetId).UpdateWith(project, _repository, deploymentProcess, projectResource),
@@ -107,29 +118,7 @@ namespace OctopusProjectBuilder.Uploader
 			
 			UploadProjectTriggers(projectResource, project.Triggers);
 		}
-
-		static void UpdateChannels(IOctopusRepository repository, Project project, ProjectResource resource)
-		{
-			var channels = project.Variables
-				.Select(v => v.Scope.Where(scope => scope.Key == VariableScopeType.Channel)
-							.Select(scope => scope.Value))
-				.SelectMany(i => i)
-				.SelectMany(i => i)
-				.Select(c => c.Name)
-				.Distinct()
-				.ToArray();
-
-			if (channels.Any())
-			{
-				foreach (var name in channels)
-				{
-					var channel = repository.Channels.FindByName(resource, name);
-					if (channel == null)
-						repository.Channels.Create(new ChannelResource { Name = name, IsDefault = false, ProjectId = resource.Id });
-				}
-			}
-		}
-
+		
 
 		private void UploadProjectTriggers(ProjectResource projectResource, IEnumerable<ProjectTrigger> triggers)
 		{

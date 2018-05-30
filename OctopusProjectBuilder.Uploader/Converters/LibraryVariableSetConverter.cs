@@ -15,7 +15,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 new ElementIdentifier(resource.Name), 
                 resource.Description, 
                 (LibraryVariableSet.VariableSetContentType) resource.ContentType,
-                variableSetResource.Variables.AsParallel().Select(v => v.ToModel(null, repository)).ToArray());
+                variableSetResource.Variables.AsParallel().Select(v => v.ToModel(null, null, repository)).ToArray());
         }
 
         public static LibraryVariableSetResource UpdateWith(this LibraryVariableSetResource resource, LibraryVariableSet model)

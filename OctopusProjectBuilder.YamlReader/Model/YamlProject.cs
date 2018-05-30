@@ -63,7 +63,12 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [YamlMember(Order = 15)]
         public YamlProjectTrigger[] Triggers { get; set; }
 
-        public void ApplyTemplate(YamlTemplates templates)
+
+	    [Description("Project channels.")]
+	    [YamlMember(Order = 16)]
+	    public YamlProjectChannel[] Channels { get; set; }
+
+		public void ApplyTemplate(YamlTemplates templates)
         {
             this.ApplyTemplate(templates?.Projects);
             foreach (var step in (DeploymentProcess?.Steps).EnsureNotNull())
@@ -85,7 +90,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 new ElementReference(ProjectGroupRef),
                 VersioningStrategy?.ToModel(),
                 Triggers.EnsureNotNull().Select(t => t.ToModel()),
-                (TenantedDeploymentMode)Enum.Parse(typeof(TenantedDeploymentMode), TenantedDeploymentMode));
+                (TenantedDeploymentMode)Enum.Parse(typeof(TenantedDeploymentMode), TenantedDeploymentMode),
+				Channels.EnsureNotNull().Select(c => c.ToModel()));
         }
 
         public static YamlProject FromModel(Project model)
@@ -105,7 +111,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 IncludedLibraryVariableSetRefs = model.IncludedLibraryVariableSetRefs.Select(r => r.Name).ToArray().NullIfEmpty(),
                 VersioningStrategy = YamlVersioningStrategy.FromModel(model.VersioningStrategy),
                 Triggers = model.Triggers.Select(YamlProjectTrigger.FromModel).ToArray().NullIfEmpty(),
-                TenantedDeploymentMode = model.TenantedDeploymentMode.ToString()
+                TenantedDeploymentMode = model.TenantedDeploymentMode.ToString(),
+				Channels =  model.Channels.Select(YamlProjectChannel.FromModel).ToArray().NullIfEmpty()
             };
         }
     }

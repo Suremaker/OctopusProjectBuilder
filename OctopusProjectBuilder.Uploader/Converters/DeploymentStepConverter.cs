@@ -18,15 +18,16 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 resource.Actions.Select(a => a.ToModel(repository)));
         }
 
-        public static DeploymentStepResource UpdateWith(this DeploymentStepResource resource, DeploymentStep model, IOctopusRepository repository)
+        public static DeploymentStepResource UpdateWith(this DeploymentStepResource resource, DeploymentStep model, ProjectResource projectResource, IOctopusRepository repository)
         {
             resource.Name = model.Name;
             resource.Condition = (DeploymentStepCondition)model.Condition;
             resource.RequiresPackagesToBeAcquired = model.RequiresPackagesToBeAcquired;
             resource.StartTrigger = (DeploymentStepStartTrigger)model.StartTrigger;
             resource.Properties.UpdateWith(model.Properties);
+			
             resource.Actions.Clear();
-            foreach (var action in model.Actions.Select(a => new DeploymentActionResource().UpdateWith(a, repository)))
+            foreach (var action in model.Actions.Select(a => new DeploymentActionResource().UpdateWith(a, projectResource, repository)))
                 resource.Actions.Add(action);
             return resource;
         }

@@ -10,7 +10,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
     {
 	    static readonly ILog Logger = LogManager.GetLogger(typeof(VariableConverter));
 
-        public static Variable ToModel(this VariableResource resource, DeploymentProcessResource deploymentProcessResource, IOctopusRepository repository)
+        public static Variable ToModel(this VariableResource resource, DeploymentProcessResource deploymentProcessResource, ProjectResource projectResource, IOctopusRepository repository)
         {
 			Logger.Trace($"Converting variable {resource.Name} to model...");
 
@@ -19,7 +19,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 resource.IsEditable,
                 resource.IsSensitive,
                 resource.Value,
-                resource.Scope.ToModel(deploymentProcessResource, repository),
+                resource.Scope.ToModel(deploymentProcessResource, projectResource, repository),
                 resource.Prompt?.ToModel());
         }
 

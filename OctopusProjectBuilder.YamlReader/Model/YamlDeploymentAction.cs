@@ -33,7 +33,11 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
         [YamlMember(Order = 5)]
         public YamlPropertyValue[] Properties { get; set; }
 
-        public void ApplyTemplate(YamlTemplates templates)
+	    [Description("List of channel references (based on the name) where action would be performed on. If none are specified, then action would be performed for all channels.")]
+	    [YamlMember(Order = 4)]
+	    public string[] ChannelRefs { get; set; }
+
+		public void ApplyTemplate(YamlTemplates templates)
         {
             this.ApplyTemplate(templates?.DeploymentActions);
         }
@@ -45,13 +49,20 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
                 Name = model.Name,
                 ActionType = model.ActionType,
                 Properties = YamlPropertyValue.FromModel(model.Properties),
-                EnvironmentRefs = model.EnvironmentRefs.Select(r => r.Name).ToArray().NullIfEmpty()
-            };
+                EnvironmentRefs = model.EnvironmentRefs.Select(r => r.Name).ToArray().NullIfEmpty(),
+				ChannelRefs = model.ChannelRefs.Select(r => r.Name).ToArray().NullIfEmpty(),
+			};
         }
 
         public DeploymentAction ToModel()
         {
-            return new DeploymentAction(Name, ActionType, YamlPropertyValue.ToModel(Properties), EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)));
+            return new DeploymentAction(
+				Name, 
+				ActionType,
+				YamlPropertyValue.ToModel(Properties),
+				EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)),
+				ChannelRefs.EnsureNotNull().Select(name => new ElementReference(name))
+				);
         }
     }
 }

@@ -25,55 +25,55 @@ namespace OctopusProjectBuilder.Uploader
 
 		internal MachinePolicy DownloadMachinePolicy(MachinePolicyResource resource)
 		{
-			Logger.Info($"Downloading {nameof(MachinePolicyResource)}: {resource.Name}");
+			Logger.Trace($"Downloading {nameof(MachinePolicyResource)}: {resource.Name}");
 			return resource.ToModel();
 		}
 
 		public LibraryVariableSet DownloadLibraryVariableSet(LibraryVariableSetResource resource)
 		{
-			Logger.Info($"Downloading {nameof(LibraryVariableSetResource)}: {resource.Name}");
+			Logger.Trace($"Downloading {nameof(LibraryVariableSetResource)}: {resource.Name}");
 			return resource.ToModel(_repository);
 		}
 
 		public Lifecycle DownloadLifecycle(LifecycleResource resource)
 		{
-			Logger.Info($"Downloading {nameof(LifecycleResource)}: {resource.Name}");
+			Logger.Trace($"Downloading {nameof(LifecycleResource)}: {resource.Name}");
 			return resource.ToModel(_repository);
 		}
 
 		public Project DownloadProject(ProjectResource resource)
 		{
-			Logger.Info($"Downloading {nameof(ProjectResource)}: {resource.Name}");
+			Logger.Trace($"Downloading {nameof(ProjectResource)}: {resource.Name}");
 			return resource.ToModel(_repository);
 		}
 
 		public ProjectGroup DownloadProjectGroup(ProjectGroupResource resource)
 		{
-			Logger.Info($"Downloading {nameof(ProjectGroupResource)}: {resource.Name}");
+			Logger.Trace($"Downloading {nameof(ProjectGroupResource)}: {resource.Name}");
 			return resource.ToModel();
 		}
 
 		internal static Environment DownloadEnvironment(EnvironmentResource resource)
 		{
-			Logger.Info($"Downloading {nameof(EnvironmentResource)}: {resource.Name}");
+			Logger.Trace($"Downloading {nameof(EnvironmentResource)}: {resource.Name}");
 			return resource.ToModel();
 		}
 
 		internal static UserRole DownloadUserRole(UserRoleResource resource)
 		{
-			Logger.Info($"Downloading {nameof(UserRoleResource)}: {resource.Name}");
+			Logger.Trace($"Downloading {nameof(UserRoleResource)}: {resource.Name}");
 			return resource.ToModel();
 		}
 
 		internal Team DownloadTeam(TeamResource resource)
 		{
-			Logger.Info($"Downloading {nameof(TeamResource)}: {resource.Name}");
+			Logger.Trace($"Downloading {nameof(TeamResource)}: {resource.Name}");
 			return resource.ToModel(_repository);
 		}
 
 		internal Tenant DownloadTenant(TenantResource resource)
 		{
-			Logger.Info($"Downloading {nameof(TenantResource)}: {resource.Name}");
+			Logger.Trace($"Downloading {nameof(TenantResource)}: {resource.Name}");
 			return resource.ToModel(_repository);
 		}
 

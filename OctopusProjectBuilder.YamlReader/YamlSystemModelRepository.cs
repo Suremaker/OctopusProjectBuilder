@@ -24,7 +24,7 @@ namespace OctopusProjectBuilder.YamlReader
 
         private YamlOctopusModel[] LoadModels(string path)
         {
-            Logger.Info($"Loading: {Path.GetFileName(path)}");
+            Logger.Debug($"Loading: {Path.GetFileName(path)}");
             return ReadFile(path);
         }
 
@@ -32,7 +32,7 @@ namespace OctopusProjectBuilder.YamlReader
         {
             foreach (var path in FindFiles(modelDirectory))
             {
-                Logger.Info($"Cleaning up: {Path.GetFileName(path)}");
+                Logger.Debug($"Cleaning up: {Path.GetFileName(path)}");
                 WriteFile(path + ".new", ReadFile(path).ToArray());
                 File.Move(path, path + ".old");
                 File.Move(path + ".new", path);
@@ -54,7 +54,7 @@ namespace OctopusProjectBuilder.YamlReader
 
         private void SaveModel(YamlOctopusModel model, string path)
         {
-            Logger.Info($"Saving: {Path.GetFileName(path)}");
+            Logger.Debug($"Saving: {Path.GetFileName(path)}");
             WriteFile(path, model);
         }
 

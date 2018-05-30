@@ -30,6 +30,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
 		public static Project ToModel(this ProjectResource resource, IOctopusRepository repository)
 		{
 			var deploymentProcessResource = repository.DeploymentProcesses.Get(resource.DeploymentProcessId);
+	
 			return new Project(
 				new ElementIdentifier(resource.Name),
 				resource.Description,
@@ -37,13 +38,14 @@ namespace OctopusProjectBuilder.Uploader.Converters
 				resource.AutoCreateRelease,
 				resource.DefaultToSkipIfAlreadyInstalled,
 				deploymentProcessResource.ToModel(repository),
-				repository.VariableSets.Get(resource.VariableSetId).ToModel(deploymentProcessResource, repository),
+				repository.VariableSets.Get(resource.VariableSetId).ToModel(deploymentProcessResource, resource, repository),
 				resource.IncludedLibraryVariableSetIds.Select(id => new ElementReference(repository.LibraryVariableSets.Get(id).Name)),
 				new ElementReference(repository.Lifecycles.Get(resource.LifecycleId).Name),
 				new ElementReference(repository.ProjectGroups.Get(resource.ProjectGroupId).Name),
 				resource.VersioningStrategy?.ToModel(),
 				repository.Projects.GetTriggers(resource).Items.Select(t => t.ToModel(repository)),
-				(Model.TenantedDeploymentMode)resource.TenantedDeploymentMode);
+				(Model.TenantedDeploymentMode)resource.TenantedDeploymentMode,
+				repository.Projects.GetChannels(resource).Items.Select(c => c.ToModel(repository)));
 		}
 	}
 }
