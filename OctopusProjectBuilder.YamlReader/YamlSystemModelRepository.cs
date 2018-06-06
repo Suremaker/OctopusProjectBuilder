@@ -13,10 +13,10 @@ namespace OctopusProjectBuilder.YamlReader
         private static readonly ILog Logger = LogManager.GetLogger<YamlSystemModelRepository>();
         private readonly YamlSystemModelReader _reader = new YamlSystemModelReader();
         private readonly YamlSystemModelWriter _writer = new YamlSystemModelWriter();
-        public SystemModel Load(string modelDirectory)
+        public SystemModel Load(string modelDirectory, SearchOption options = SearchOption.AllDirectories)
         {
             var model = new YamlOctopusModel();
-            var files = FindFiles(modelDirectory);
+            var files = FindFiles(modelDirectory, options);
             foreach (var subModel in files.SelectMany(LoadModels))
                 model.MergeIn(subModel);
             return model.ApplyTemplates().BuildWith(new SystemModelBuilder()).Build();
@@ -80,9 +80,9 @@ namespace OctopusProjectBuilder.YamlReader
             return modelDirectory + "\\" + name;
         }
 
-        private static IEnumerable<string> FindFiles(string modelDirectory)
+        private static IEnumerable<string> FindFiles(string modelDirectory, SearchOption options = SearchOption.AllDirectories)
         {
-            return Directory.EnumerateFiles(modelDirectory, "*.yml", SearchOption.AllDirectories);
+            return Directory.EnumerateFiles(modelDirectory, "*.yml", options);
         }
     }
 }
