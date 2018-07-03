@@ -1,195 +1,211 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Common.Logging;
+using System.Threading.Tasks;
 using Octopus.Client;
-using Octopus.Client.Extensibility;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
-
+using Octopus.Client.Repositories.Async;
 using OctopusProjectBuilder.Uploader.Converters;
+using Microsoft.Extensions.Logging;
+using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.Uploader
 {
-    using Model;
-
     public class ModelUploader
     {
-        private static readonly ILog Logger = LogManager.GetLogger<ModelUploader>();
-        private readonly IOctopusRepository _repository;
-
-        public ModelUploader(string octopusUrl, string octopusApiKey) : this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
-        {
-        }
-
-        public ModelUploader(IOctopusRepository repository)
+        private readonly ILogger<ModelUploader> _logger;
+        private readonly IOctopusAsyncRepository _repository;
+        
+        public ModelUploader(IOctopusAsyncRepository repository, ILoggerFactory loggerFactory)
         {
             _repository = repository;
+            _logger = loggerFactory.CreateLogger<ModelUploader>();
         }
 
-        public void UploadModel(SystemModel model)
+        public async Task UploadModel(SystemModel model)
         {
             foreach (var machinePolicy in model.MachinePolicies)
-                UploadMachinePolicy(machinePolicy);
+                await UploadMachinePolicy(machinePolicy);
 
             foreach (var environment in model.Environments)
-                UploadEnvironment(environment);
+                await UploadEnvironment(environment);
 
             foreach (var lifecycle in model.Lifecycles)
-                UploadLifecycle(lifecycle);
+                await UploadLifecycle(lifecycle);
 
             foreach (var projectGroup in model.ProjectGroups)
-                UploadProjectGroup(projectGroup);
+                await UploadProjectGroup(projectGroup);
 
             foreach (var tagSet in model.TagSets)
-                UploadTagSet(tagSet);
+                await UploadTagSet(tagSet);
 
             foreach (var libraryVariableSet in model.LibraryVariableSets)
-                UploadLibraryVariableSet(libraryVariableSet);
+                await UploadLibraryVariableSet(libraryVariableSet);
 
             foreach (var project in model.Projects)
-                UploadProject(project);
+                await UploadProject(project);
 
             foreach (var tenant in model.Tenants)
-                UploadTenant(tenant);
+                await UploadTenant(tenant);
 
             foreach (var userRole in model.UserRoles)
-                UploadUserRole(userRole);
+                await UploadUserRole(userRole);
 
             foreach (var team in model.Teams)
-                UploadTeam(team);
+                await UploadTeam(team);
         }
 
-        private void UploadTenant(Tenant tenant)
+        private async Task UploadTenant(Tenant tenant)
         {
-            var resource = LoadResource(_repository.Tenants, tenant.Identifier).UpdateWith(tenant, _repository);
-            Upsert(_repository.Tenants, resource);
+            var resource = await LoadResource(_repository.Tenants, tenant.Identifier);
+            await resource.UpdateWith(tenant, _repository);
+            await Upsert(_repository.Tenants, resource);
         }
 
-        private void UploadTagSet(TagSet tagSet)
+        private async Task UploadTagSet(TagSet tagSet)
         {
-            var resource = LoadResource(_repository.TagSets, tagSet.Identifier).UpdateWith(tagSet, _repository);
-            Upsert(_repository.TagSets, resource);
+            var resource = await LoadResource(_repository.TagSets, tagSet.Identifier);
+            resource.UpdateWith(tagSet, _repository);
+            await Upsert(_repository.TagSets, resource);
         }
 
-        private void UploadLibraryVariableSet(LibraryVariableSet libraryVariableSet)
+        private async Task UploadLibraryVariableSet(LibraryVariableSet libraryVariableSet)
         {
-            var resource = LoadResource(_repository.LibraryVariableSets, libraryVariableSet.Identifier).UpdateWith(libraryVariableSet);
-            resource = Upsert(_repository.LibraryVariableSets, resource);
-            Update(
+            var resource = await LoadResource(_repository.LibraryVariableSets, libraryVariableSet.Identifier);
+            resource.UpdateWith(libraryVariableSet);
+            resource = await Upsert(_repository.LibraryVariableSets, resource);
+
+            var variableSet = await _repository.VariableSets.Get(resource.VariableSetId);
+            await variableSet.UpdateWith(libraryVariableSet, _repository, null, null);
+
+            await Update(
                 _repository.VariableSets,
-                _repository.VariableSets.Get(resource.VariableSetId).UpdateWith(libraryVariableSet, _repository, null, null),
+                variableSet,
                 resource.Name);
         }
 
-        private void UploadLifecycle(Lifecycle lifecycle)
+        private async Task UploadLifecycle(Lifecycle lifecycle)
         {
-            var resource = LoadResource(_repository.Lifecycles, lifecycle.Identifier).UpdateWith(lifecycle, _repository);
-            Upsert(_repository.Lifecycles, resource);
+            var resource = await LoadResource(_repository.Lifecycles, lifecycle.Identifier);
+            await resource.UpdateWith(lifecycle, _repository);
+            await Upsert(_repository.Lifecycles, resource);
         }
 
-        private void UploadProject(Project project)
+        private async Task UploadProject(Project project)
         {
-            var projectResource = Upsert(_repository.Projects, LoadResource(_repository.Projects, project.Identifier).UpdateWith(project, _repository));
+            var projectResource = await LoadResource(_repository.Projects, project.Identifier);
+            await projectResource.UpdateWith(project, _repository);
+            await Upsert(_repository.Projects, projectResource);
 
-            var deploymentProcess = Update(
-                 _repository.DeploymentProcesses,
-                 _repository.DeploymentProcesses.Get(projectResource.DeploymentProcessId).UpdateWith(project.DeploymentProcess, _repository),
+            var deploymentProcessResource = await _repository.DeploymentProcesses.Get(projectResource.DeploymentProcessId);
+            await deploymentProcessResource.UpdateWith(project.DeploymentProcess, _repository);
+
+            await Update(_repository.DeploymentProcesses,
+                 deploymentProcessResource,
                  projectResource.Name);
 
-            Update(
+            var variableSetResource = await _repository.VariableSets.Get(projectResource.VariableSetId);
+            await variableSetResource.UpdateWith(project, _repository, deploymentProcessResource, projectResource);
+
+            await Update(
                 _repository.VariableSets,
-                _repository.VariableSets.Get(projectResource.VariableSetId).UpdateWith(project, _repository, deploymentProcess, projectResource),
+                variableSetResource,
                 projectResource.Name);
-            
-            UploadProjectTriggers(projectResource, project.Triggers);
+
+            await UploadProjectTriggers(projectResource, project.Triggers);
         }
 
-        private void UploadProjectTriggers(ProjectResource projectResource, IEnumerable<ProjectTrigger> triggers)
+        private async Task UploadProjectTriggers(ProjectResource projectResource, IEnumerable<ProjectTrigger> triggers)
         {
-            foreach (var resource in _repository.Projects.GetTriggers(projectResource).Items)
-                Delete(_repository.ProjectTriggers, resource, projectResource.Name);
+            var projectTriggers = await _repository.Projects.GetTriggers(projectResource);
+            foreach (var resource in projectTriggers.Items)
+                await Delete(_repository.ProjectTriggers, resource, projectResource.Name);
 
             foreach (var trigger in triggers)
             {
-                var resource = LoadResource(name => _repository.ProjectTriggers.FindByName(projectResource, name), trigger.Identifier).UpdateWith(trigger, projectResource.Id, _repository);
-                Upsert(_repository.ProjectTriggers, resource);
+                var resource = await LoadResource(name => _repository.ProjectTriggers.FindByName(projectResource, name), trigger.Identifier);
+                await resource.UpdateWith(trigger, projectResource.Id, _repository);
+                await Upsert(_repository.ProjectTriggers, resource);
             }
         }
 
-        private void UploadProjectGroup(ProjectGroup projectGroup)
+        private async Task UploadProjectGroup(ProjectGroup projectGroup)
         {
-            var resource = LoadResource(_repository.ProjectGroups, projectGroup.Identifier).UpdateWith(projectGroup);
-            Upsert(_repository.ProjectGroups, resource);
+            var resource = await LoadResource(_repository.ProjectGroups, projectGroup.Identifier);
+            resource.UpdateWith(projectGroup);
+            await Upsert(_repository.ProjectGroups, resource);
         }
 
-        private void UploadMachinePolicy(MachinePolicy machinePolicy)
+        private async Task UploadMachinePolicy(MachinePolicy machinePolicy)
         {
-            var resource = LoadResource(_repository.MachinePolicies, machinePolicy.Identifier).UpdateWith(machinePolicy);
-            Upsert(_repository.MachinePolicies, resource);
+            var resource = await LoadResource(_repository.MachinePolicies, machinePolicy.Identifier);
+            resource.UpdateWith(machinePolicy);
+            await Upsert(_repository.MachinePolicies, resource);
         }
 
-        private void UploadEnvironment(Environment environment)
+        private async Task UploadEnvironment(Model.Environment environment)
         {
-            var resource = LoadResource(_repository.Environments, environment.Identifier).UpdateWith(environment);
-            Upsert(_repository.Environments, resource);
+            var resource = await LoadResource(_repository.Environments, environment.Identifier);
+            resource.UpdateWith(environment);
+            await Upsert(_repository.Environments, resource);
         }
 
-        private void UploadUserRole(UserRole userRole)
+        private async Task UploadUserRole(UserRole userRole)
         {
-            var resource = LoadResource(_repository.UserRoles, userRole.Identifier).UpdateWith(userRole);
-            Upsert(_repository.UserRoles, resource);
+            var resource = await LoadResource(_repository.UserRoles, userRole.Identifier);
+            resource.UpdateWith(userRole);
+            await Upsert(_repository.UserRoles, resource);
         }
 
-        private void UploadTeam(Team team)
+        private async Task UploadTeam(Team team)
         {
-            var resource = LoadResource(_repository.Teams, team.Identifier).UpdateWith(team, _repository);
-            Upsert(_repository.Teams, resource);
+            var resource = await LoadResource(_repository.Teams, team.Identifier);
+            await resource.UpdateWith(team, _repository);
+            await Upsert(_repository.Teams, resource);
         }
 
-        private TResource Upsert<TRepository, TResource>(TRepository repository, TResource resource) where TResource : IResource, INamedResource where TRepository : ICreate<TResource>, IModify<TResource>
+        private async Task<TResource> Upsert<TRepository, TResource>(TRepository repository, TResource resource) where TResource : IResource, INamedResource where TRepository : ICreate<TResource>, IModify<TResource>
         {
             var result = string.IsNullOrWhiteSpace(resource.Id)
-                ? repository.Create(resource)
-                : repository.Modify(resource);
+                ? await repository.Create(resource)
+                : await repository.Modify(resource);
 
-            Logger.Debug($"Upserted {typeof(TResource).Name}: {resource.Name}");
+            _logger.LogDebug($"Upserted {typeof(TResource).Name}: {resource.Name}");
             return result;
         }
 
-        private TResource Update<TRepository, TResource>(TRepository repository, TResource resource, string parentName) where TResource : IResource where TRepository : IModify<TResource>
+        private async Task<TResource> Update<TRepository, TResource>(TRepository repository, TResource resource, string parentName) where TResource : IResource where TRepository : IModify<TResource>
         {
-            var result = repository.Modify(resource);
+            var result = await repository.Modify(resource);
 
-            Logger.Debug($"Updated {parentName} -> {typeof(TResource).Name}: {resource.Id}");
+            _logger.LogDebug($"Updated {parentName} -> {typeof(TResource).Name}: {resource.Id}");
             return result;
         }
 
-        private void Delete<TRepository, TResource>(TRepository repository, TResource resource, string parentName) where TRepository : IDelete<TResource> where TResource : IResource
+        private async Task Delete<TRepository, TResource>(TRepository repository, TResource resource, string parentName) where TRepository : IDelete<TResource> where TResource : IResource
         {
-            repository.Delete(resource);
-            Logger.Debug($"Deleted {parentName} -> {typeof(TResource).Name}: {resource.Id}");
+            await repository.Delete(resource);
+            _logger.LogDebug($"Deleted {parentName} -> {typeof(TResource).Name}: {resource.Id}");
         }
 
-        private static TResource LoadResource<TResource>(IFindByName<TResource> finder, ElementIdentifier identifier) where TResource : INamedResource, new()
+        private async Task<TResource> LoadResource<TResource>(IFindByName<TResource> finder, ElementIdentifier identifier) where TResource : INamedResource, new()
         {
-            return LoadResource(name => finder.FindOne(x => x.Name == name), identifier);
+            return await LoadResource(name => finder.FindOne(x => x.Name == name), identifier);
         }
         
-        private static TResource LoadResource<TResource>(Func<string, TResource> finder, ElementIdentifier identifier) where TResource : new()
+        private async Task<TResource> LoadResource<TResource>(Func<string, Task<TResource>> finder, ElementIdentifier identifier) where TResource : new()
         {
-            var resource = finder(identifier.Name);
+            var resource = await finder(identifier.Name);
             if (resource != null)
             {
-                Logger.InfoFormat("Updating {0}: {1}", typeof(TResource).Name, identifier.Name);
+                _logger.LogInformation("Updating {0}: {1}", typeof(TResource).Name, identifier.Name);
                 return resource;
             }
-            if (identifier.RenamedFrom != null && (resource = finder(identifier.RenamedFrom)) != null)
+            if (identifier.RenamedFrom != null && (resource = await finder(identifier.RenamedFrom)) != null)
             {
-                Logger.InfoFormat("Updating {0}: {1} => {2}", typeof(TResource).Name, identifier.RenamedFrom, identifier.Name);
+                _logger.LogInformation("Updating {0}: {1} => {2}", typeof(TResource).Name, identifier.RenamedFrom, identifier.Name);
                 return resource;
             }
-            Logger.InfoFormat("Creating {0}: {1}", typeof(TResource).Name, identifier.Name);
+            _logger.LogInformation("Creating {0}: {1}", typeof(TResource).Name, identifier.Name);
             return new TResource();
         }
     }

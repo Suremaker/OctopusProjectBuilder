@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Helpers;
 using OctopusProjectBuilder.YamlReader.Model;
@@ -10,9 +10,15 @@ namespace OctopusProjectBuilder.YamlReader
 {
     public class YamlSystemModelRepository : ISystemModelRepository
     {
-        private static readonly ILog Logger = LogManager.GetLogger<YamlSystemModelRepository>();
+        private readonly ILogger<YamlSystemModelRepository> _logger;
         private readonly YamlSystemModelReader _reader = new YamlSystemModelReader();
         private readonly YamlSystemModelWriter _writer = new YamlSystemModelWriter();
+
+        public YamlSystemModelRepository(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger<YamlSystemModelRepository>();
+        }
+
         public SystemModel Load(string modelDirectory)
         {
             var model = new YamlOctopusModel();
@@ -24,7 +30,7 @@ namespace OctopusProjectBuilder.YamlReader
 
         private YamlOctopusModel[] LoadModels(string path)
         {
-            Logger.Info($"Loading: {Path.GetFileName(path)}");
+            _logger.LogInformation($"Loading: {Path.GetFileName(path)}");
             return ReadFile(path);
         }
 
@@ -32,7 +38,7 @@ namespace OctopusProjectBuilder.YamlReader
         {
             foreach (var path in FindFiles(modelDirectory))
             {
-                Logger.Info($"Cleaning up: {Path.GetFileName(path)}");
+                _logger.LogInformation($"Cleaning up: {Path.GetFileName(path)}");
                 WriteFile(path + ".new", ReadFile(path).ToArray());
                 File.Move(path, path + ".old");
                 File.Move(path + ".new", path);
@@ -54,7 +60,7 @@ namespace OctopusProjectBuilder.YamlReader
 
         private void SaveModel(YamlOctopusModel model, string path)
         {
-            Logger.Info($"Saving: {Path.GetFileName(path)}");
+            _logger.LogInformation($"Saving: {Path.GetFileName(path)}");
             WriteFile(path, model);
         }
 

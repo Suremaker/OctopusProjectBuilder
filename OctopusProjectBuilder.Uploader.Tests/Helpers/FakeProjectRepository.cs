@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Octopus.Client.Editors;
-using Octopus.Client.Extensibility;
+using System.Threading.Tasks;
+using Octopus.Client.Editors.Async;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
@@ -22,58 +22,54 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             _projectTriggersRepository = projectTriggersRepository;
         }
 
-        public ResourceCollection<ReleaseResource> GetReleases(ProjectResource project, int skip = 0, int? take = null, string searchByVersion = null)
+        protected override async Task OnCreate(ProjectResource resource)
         {
-            return null;
+            resource.VariableSetId = (await _variableSetRepository.Create(new VariableSetResource())).Id;
+            resource.DeploymentProcessId = (await _deploymentProcessRepository.Create(new DeploymentProcessResource())).Id;
         }
 
-        public IReadOnlyList<ReleaseResource> GetAllReleases(ProjectResource project)
-        {
-            return null;
-        }
-
-        public ReleaseResource GetReleaseByVersion(ProjectResource project, string version)
+        public Task<List<ProjectResource>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public ResourceCollection<ChannelResource> GetChannels(ProjectResource project)
+        public Task<ResourceCollection<ReleaseResource>> GetReleases(ProjectResource project, int skip = 0)
         {
             throw new NotImplementedException();
         }
 
-        public ProgressionResource GetProgression(ProjectResource project)
-        {
-            return null;
-        }
-
-        public ResourceCollection<ProjectTriggerResource> GetTriggers(ProjectResource project)
-        {
-            return new ResourceCollection<ProjectTriggerResource>(_projectTriggersRepository.FindAll().Where(pt => pt.ProjectId == project.Id), new LinkCollection());
-        }
-
-        public void SetLogo(ProjectResource project, string fileName, Stream contents)
+        public Task<IReadOnlyList<ReleaseResource>> GetAllReleases(ProjectResource project)
         {
             throw new NotImplementedException();
         }
 
-        public ProjectEditor CreateOrModify(string name, ProjectGroupResource projectGroup, LifecycleResource lifecycle)
+        public Task<ReleaseResource> GetReleaseByVersion(ProjectResource project, string version)
         {
             throw new NotImplementedException();
         }
 
-        public ProjectEditor CreateOrModify(string name, ProjectGroupResource projectGroup, LifecycleResource lifecycle, string description)
+        public Task<ResourceCollection<ChannelResource>> GetChannels(ProjectResource project)
         {
             throw new NotImplementedException();
         }
 
-        protected override void OnCreate(ProjectResource resource)
+        public Task<ResourceCollection<ProjectTriggerResource>> GetTriggers(ProjectResource project)
         {
-            resource.VariableSetId = _variableSetRepository.Create(new VariableSetResource()).Id;
-            resource.DeploymentProcessId = _deploymentProcessRepository.Create(new DeploymentProcessResource()).Id;
+            var projectTriggers = _projectTriggersRepository.FindAll().GetAwaiter().GetResult().Where(pt => pt.ProjectId == project.Id);
+            return Task.FromResult(new ResourceCollection<ProjectTriggerResource>(projectTriggers, new LinkCollection()));
         }
 
-        public List<ProjectResource> GetAll()
+        public Task SetLogo(ProjectResource project, string fileName, Stream contents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ProjectEditor> CreateOrModify(string name, ProjectGroupResource projectGroup, LifecycleResource lifecycle)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ProjectEditor> CreateOrModify(string name, ProjectGroupResource projectGroup, LifecycleResource lifecycle, string description)
         {
             throw new NotImplementedException();
         }

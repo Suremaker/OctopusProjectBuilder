@@ -1,22 +1,42 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
-using Octopus.Client.Serialization;
+using Octopus.Client.Repositories.Async;
+using OctopusProjectBuilder.Uploader.Tests.Serialization;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     public class FakeRepository<T> : ICreate<T>, IGet<T>, IModify<T>, IDelete<T> where T : Resource
     {
-        private readonly List<T> _items = new List<T>();
+        protected readonly List<T> _items = new List<T>();
 
-        public T Refresh(T resource)
+        public Task<T> Create(T resource)
+        {
+            resource.Id = Guid.NewGuid().ToString();
+            OnCreate(resource);
+            _items.Add(Clone(resource));
+            return Task.FromResult(resource);
+        }
+
+        public Task<T> Get(string idOrHref)
+        {
+            return Task.FromResult(Clone(_items.Single(t => t.Id == idOrHref)));
+        }
+
+        public Task<List<T>> Get(params string[] ids)
+        {
+            return Task.FromResult(_items.Where(t => ids.Contains(t.Id)).Select(Clone).ToList());
+        }
+
+        public Task<T> Refresh(T resource)
         {
             throw new NotImplementedException();
         }
 
-        public T Modify(T resource)
+        public Task<T> Modify(T resource)
         {
             var index = _items.FindIndex(t => t.Id == resource.Id);
             if (index < 0)
@@ -24,63 +44,32 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             OnModify(_items[index], resource);
             resource.Id = _items[index].Id;
             _items[index] = Clone(resource);
-            return resource;
+            return Task.FromResult(resource);
         }
 
-        public void Delete(T resource)
+        public Task Delete(T resource)
         {
-            _items.RemoveAll(t => t.Id == resource.Id);
+            throw new NotImplementedException();
         }
 
-        protected virtual void OnCreate(T resource)
+        protected virtual Task OnCreate(T resource)
         {
+            return Task.CompletedTask;
         }
 
-        protected virtual void OnModify(T currentItem, T newItem)
+        protected virtual Task OnModify(T currentItem, T newItem)
         {
+            return Task.CompletedTask;
         }
 
-        public T Create(T resource)
+        protected static T Clone(T resource)
         {
-            resource.Id = Guid.NewGuid().ToString();
-            OnCreate(resource);
-            _items.Add(Clone(resource));
-            return resource;
-        }
+            if (ReferenceEquals(resource, null))
+            {
+                return default(T);
+            }
 
-        public T Get(string idOrHref)
-        {
-            return FindMany(t => t.Id == idOrHref).Single();
-        }
-
-        public List<T> Get(params string[] ids)
-        {
-            return FindMany(t => ids.Contains(t.Id));
-        }
-
-        public void Paginate(Func<ResourceCollection<T>, bool> getNextPage, string path = null, object pathParameters = null)
-        {
-        }
-
-        public T FindOne(Func<T, bool> search, string path = null, object pathParameters = null)
-        {
-            return FindMany(search).SingleOrDefault();
-        }
-
-        public List<T> FindMany(Func<T, bool> search, string path = null, object pathParameters = null)
-        {
-            return FindAll().Where(search).ToList();
-        }
-
-        public List<T> FindAll(string path = null, object pathParameters = null)
-        {
-            return _items.Select(Clone).ToList();
-        }
-
-        private T Clone(T resource)
-        {
-            var serialized = JsonSerialization.SerializeObject(resource);
-            return JsonSerialization.DeserializeObject<T>(serialized);
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(resource), JsonSerialization.GetDefaultSerializerSettings());
         }
     }
 }
