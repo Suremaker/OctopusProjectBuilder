@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoFixture;
 using NUnit.Framework;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.TestUtils;
 using OctopusProjectBuilder.YamlReader.Model;
 using OctopusProjectBuilder.YamlReader.Model.Templates;
 using OctopusProjectBuilder.YamlReader.Tests.Helpers;
-using Ploeh.AutoFixture;
 
 namespace OctopusProjectBuilder.YamlReader.Tests.Model
 {

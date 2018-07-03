@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
@@ -6,19 +7,19 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class ProjectTriggerConverter
     {
-        public static ProjectTrigger ToModel(this ProjectTriggerResource resource, IOctopusRepository repository)
+        public static async Task<ProjectTrigger> ToModel(this ProjectTriggerResource resource, IOctopusAsyncRepository repository)
         {
             return new ProjectTrigger(
                 new ElementIdentifier(resource.Name),
-                resource.Filter.ToModel(repository),
+                await resource.Filter.ToModel(repository),
                 resource.Action.ToModel());
         }
 
-        public static ProjectTriggerResource UpdateWith(this ProjectTriggerResource resource, ProjectTrigger model, string projectResourceId, IOctopusRepository repository)
+        public static async Task<ProjectTriggerResource> UpdateWith(this ProjectTriggerResource resource, ProjectTrigger model, string projectResourceId, IOctopusAsyncRepository repository)
         {
             resource.ProjectId = projectResourceId;
             resource.Name = model.Identifier.Name;
-            resource.Filter = model.Filter.FromModel(repository);
+            resource.Filter = await model.Filter.FromModel(repository);
             resource.Action = model.Action.FromModel();
             return resource;
         }

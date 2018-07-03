@@ -1,44 +1,45 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Octopus.Client.Editors;
+using System.Threading.Tasks;
+using Octopus.Client.Editors.Async;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeTenantsRepository : FakeNamedRepository<TenantResource>, ITenantRepository
     {
-        public List<TenantResource> GetAll()
+        public Task<List<TenantResource>> GetAll()
         {
             throw new System.NotImplementedException();
         }
 
-        public void SetLogo(TenantResource tenant, string fileName, Stream contents)
+        public Task SetLogo(TenantResource tenant, string fileName, Stream contents)
         {
             throw new System.NotImplementedException();
         }
 
-        public TenantVariableResource GetVariables(TenantResource tenant)
+        public Task<TenantVariableResource> GetVariables(TenantResource tenant)
         {
             throw new System.NotImplementedException();
         }
 
-        public TenantVariableResource ModifyVariables(TenantResource tenant, TenantVariableResource variables)
+        public Task<TenantVariableResource> ModifyVariables(TenantResource tenant, TenantVariableResource variables)
         {
             throw new System.NotImplementedException();
         }
 
-        public List<TenantsMissingVariablesResource> GetMissingVariables(string tenantId = null, string projectId = null, string environmentId = null)
+        public Task<List<TenantsMissingVariablesResource>> GetMissingVariables(string tenantId = null, string projectId = null, string environmentId = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public List<TenantResource> FindAll(string name, string[] tags = null, int pageSize = 2147483647)
+        public Task<List<TenantResource>> FindAll(string name, string[] tags = null)
         {
-            return null;
+            throw new System.NotImplementedException();
         }
 
-        public TenantEditor CreateOrModify(string name)
+        public Task<TenantEditor> CreateOrModify(string name)
         {
             throw new System.NotImplementedException();
         }

@@ -1,29 +1,30 @@
 using System;
 using System.Collections.Generic;
-using Octopus.Client.Editors;
+using System.Threading.Tasks;
+using Octopus.Client.Editors.Async;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeProjectGroupRepository : FakeNamedRepository<ProjectGroupResource>, IProjectGroupRepository
     {
-        public List<ProjectResource> GetProjects(ProjectGroupResource projectGroup)
+        public Task<List<ProjectGroupResource>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public ProjectGroupEditor CreateOrModify(string name)
+        public Task<List<ProjectResource>> GetProjects(ProjectGroupResource projectGroup)
         {
             throw new NotImplementedException();
         }
 
-        public ProjectGroupEditor CreateOrModify(string name, string description)
+        public Task<ProjectGroupEditor> CreateOrModify(string name)
         {
             throw new NotImplementedException();
         }
 
-        public List<ProjectGroupResource> GetAll()
+        public Task<ProjectGroupEditor> CreateOrModify(string name, string description)
         {
             throw new NotImplementedException();
         }

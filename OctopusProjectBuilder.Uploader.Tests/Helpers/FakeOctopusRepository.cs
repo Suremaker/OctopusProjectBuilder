@@ -1,9 +1,9 @@
 ﻿using Octopus.Client;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
-    internal class FakeOctopusRepository : IOctopusRepository
+    internal class FakeOctopusRepository : IOctopusAsyncRepository
     {
         public FakeOctopusRepository()
         {
@@ -20,7 +20,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             Projects = new FakeProjectRepository(fakeVariableSetRepository, fakeDeploymentProcessRepository, fakeProjectTriggersRepository);
             Lifecycles = new FakeLifecycleRepository();
             Environments = new FakeEnvironmentRepository();
-            MachineRoles = FakeMachineRoles = new FakeMachineRoleRepository();
+            MachineRoles = new FakeMachineRoleRepository();
             Machines = new FakeMachineRepository();
             UserRoles = new FakeUserRolesRepository();
             Teams = new FakeTeamsRepository();
@@ -32,7 +32,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             Client = fakeOctopusClient;
         }
 
-        public IOctopusClient Client { get; }
+        public IOctopusAsyncClient Client { get; }
         public IArtifactRepository Artifacts { get; }
         public IActionTemplateRepository ActionTemplates { get; }
         public ICertificateRepository Certificates { get; }
@@ -72,9 +72,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public IProjectTriggerRepository ProjectTriggers { get; }
         public IAccountRepository Accounts { get; }
         public IRetentionPolicyRepository RetentionPolicies { get; }
-        public IConfigurationRepository Configuration { get; }
         public IDefectsRepository Defects { get; }
         public IOctopusServerNodeRepository OctopusServerNodes { get; }
-        public FakeMachineRoleRepository FakeMachineRoles { get; }
     }
 }

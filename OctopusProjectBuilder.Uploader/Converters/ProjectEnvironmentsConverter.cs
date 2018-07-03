@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Octopus.Client;
 using Octopus.Client.Model;
 
@@ -7,18 +8,18 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class ProjectEnvironmentsConverter
     {
-        public static Dictionary<string, IEnumerable<string>> ToModel(this IDictionary<string, ReferenceCollection> collection, IOctopusRepository repository)
+        public static async Task<Dictionary<string, IEnumerable<string>>> ToModel(this IDictionary<string, ReferenceCollection> projectEnvironments, IOctopusAsyncRepository repository)
         {
-            var projectEnvs = new Dictionary<string, IEnumerable<string>>();
+            var model = new Dictionary<string, IEnumerable<string>>();
 
-            foreach (var pe in collection)
+            foreach (var projectEnvironment in projectEnvironments)
             {
-                var project = repository.Projects.FindOne(x => x.Id == pe.Key).Name;
-                var envs = pe.Value.Select(e => repository.Environments.FindOne(x => x.Id == e).Name).ToArray();
-                projectEnvs.Add(project, envs);
+                var project = await repository.Projects.FindOne(x => x.Id == projectEnvironment.Key);
+                var environments = await Task.WhenAll(projectEnvironment.Value.Select(async e => (await repository.Environments.FindOne(x => x.Id == e)).Name).ToArray());
+                model.Add(project.Name, environments);
             }
 
-            return projectEnvs;
+            return model;
         }
     }
 }

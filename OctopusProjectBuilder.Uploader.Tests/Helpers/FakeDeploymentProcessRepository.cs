@@ -1,27 +1,30 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeDeploymentProcessRepository : FakeRepository<DeploymentProcessResource>, IDeploymentProcessRepository
     {
-        public ReleaseTemplateResource GetTemplate(DeploymentProcessResource deploymentProcess, ChannelResource channel)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void OnModify(DeploymentProcessResource currentItem, DeploymentProcessResource newItem)
+        protected override Task OnModify(DeploymentProcessResource currentItem, DeploymentProcessResource newItem)
         {
             if (currentItem.Version != newItem.Version)
                 throw new InvalidOperationException("Object modified");
             UpdateActionIds(newItem);
+            return Task.CompletedTask;
         }
 
-        protected override void OnCreate(DeploymentProcessResource resource)
+        protected override Task OnCreate(DeploymentProcessResource resource)
         {
             UpdateActionIds(resource);
+            return Task.CompletedTask;
+        }
+
+        public Task<ReleaseTemplateResource> GetTemplate(DeploymentProcessResource deploymentProcess, ChannelResource channel)
+        {
+            throw new NotImplementedException();
         }
 
         private static void UpdateActionIds(DeploymentProcessResource newItem)

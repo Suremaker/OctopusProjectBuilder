@@ -1,73 +1,98 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeUsersRepository : FakeRepository<UserResource>, IUserRepository
     {
-        public UserResource Create(string username, string displayName, string password = null, string emailAddress = null)
+        public Task Paginate(Func<ResourceCollection<UserResource>, bool> getNextPage, string path = null, object pathParameters = null)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
-        public UserResource CreateServiceAccount(string username, string displayName)
+        public Task<UserResource> FindOne(Func<UserResource, bool> search, string path = null, object pathParameters = null)
         {
-            return null;
+            var user = _items.Single(search);
+            return Task.FromResult(user);
         }
 
-        public UserResource Register(RegisterCommand registerCommand)
+        public Task<List<UserResource>> FindMany(Func<UserResource, bool> search, string path = null, object pathParameters = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<UserResource>> FindAll(string path = null, object pathParameters = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<UserResource> Create(string username, string displayName, string password = null, string emailAddress = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<UserResource> CreateServiceAccount(string username, string displayName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<UserResource> Register(RegisterCommand registerCommand)
         {
             return Create(new UserResource { Username = registerCommand.Username });
         }
 
-        public void SignIn(LoginCommand loginCommand)
+        public Task SignIn(LoginCommand loginCommand)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void SignIn(string username, string password, bool rememberMe = false)
+        public Task SignIn(string username, string password, bool rememberMe = false)
         {
+            throw new NotImplementedException();
         }
 
-        public void SignOut()
+        public Task SignOut()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public UserResource GetCurrent()
+        public Task<UserResource> GetCurrent()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public UserPermissionSetResource GetPermissions(UserResource user)
+        public Task<UserPermissionSetResource> GetPermissions(UserResource user)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public ApiKeyResource CreateApiKey(UserResource user, string purpose = null)
+        public Task<ApiKeyResource> CreateApiKey(UserResource user, string purpose = null)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public List<ApiKeyResource> GetApiKeys(UserResource user)
+        public Task<List<ApiKeyResource>> GetApiKeys(UserResource user)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void RevokeApiKey(ApiKeyResource apiKey)
+        public Task RevokeApiKey(ApiKeyResource apiKey)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public InvitationResource Invite(string addToTeamId)
+        public Task<InvitationResource> Invite(string addToTeamId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public InvitationResource Invite(ReferenceCollection addToTeamIds)
+        public Task<InvitationResource> Invite(ReferenceCollection addToTeamIds)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

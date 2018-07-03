@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
@@ -7,16 +8,16 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class LifecycleConverter
     {
-        public static Lifecycle ToModel(this LifecycleResource resource, IOctopusRepository repository)
+        public static async Task<Lifecycle> ToModel(this LifecycleResource resource, IOctopusAsyncRepository repository)
         {
             return new Lifecycle(
                 new ElementIdentifier(resource.Name),
                 resource.Description,
                 resource.ReleaseRetentionPolicy.ToModel(),
                 resource.TentacleRetentionPolicy.ToModel(),
-                resource.Phases.Select(phase => phase.ToModel(repository)));
+                await Task.WhenAll(resource.Phases.Select(phase => phase.ToModel(repository))));
         }
-        public static LifecycleResource UpdateWith(this LifecycleResource resource, Lifecycle model, IOctopusRepository repository)
+        public static async Task<LifecycleResource> UpdateWith(this LifecycleResource resource, Lifecycle model, IOctopusAsyncRepository repository)
         {
             resource.Name = model.Identifier.Name;
             resource.Description = model.Description;
@@ -24,7 +25,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             resource.TentacleRetentionPolicy = model.TentacleRetentionPolicy.FromModel();
             resource.Phases.Clear();
             foreach (var phase in model.Phases)
-                resource.Phases.Add(new PhaseResource().UpdateWith(phase, repository));
+                resource.Phases.Add(await new PhaseResource().UpdateWith(phase, repository));
             return resource;
         }
     }

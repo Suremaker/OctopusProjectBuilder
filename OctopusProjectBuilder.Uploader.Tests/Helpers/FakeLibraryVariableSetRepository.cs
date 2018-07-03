@@ -1,29 +1,30 @@
-using Octopus.Client.Editors;
+using System.Threading.Tasks;
+using Octopus.Client.Editors.Async;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeLibraryVariableSetRepository : FakeNamedRepository<LibraryVariableSetResource>, ILibraryVariableSetRepository
     {
-        private readonly FakeVariableSetRepository _variableSetRepository;
+        private readonly FakeVariableSetRepository _fakeVariableSetRepository;
 
-        public FakeLibraryVariableSetRepository(FakeVariableSetRepository variableSetRepository)
+        public FakeLibraryVariableSetRepository(FakeVariableSetRepository fakeVariableSetRepository)
         {
-            _variableSetRepository = variableSetRepository;
+            _fakeVariableSetRepository = fakeVariableSetRepository;
         }
 
-        protected override void OnCreate(LibraryVariableSetResource resource)
+        protected override async Task OnCreate(LibraryVariableSetResource resource)
         {
-            resource.VariableSetId = _variableSetRepository.Create(new VariableSetResource()).Id;
+            resource.VariableSetId = (await _fakeVariableSetRepository.Create(new VariableSetResource())).Id;
         }
 
-        public LibraryVariableSetEditor CreateOrModify(string name)
+        public Task<LibraryVariableSetEditor> CreateOrModify(string name)
         {
             throw new System.NotImplementedException();
         }
 
-        public LibraryVariableSetEditor CreateOrModify(string name, string description)
+        public Task<LibraryVariableSetEditor> CreateOrModify(string name, string description)
         {
             throw new System.NotImplementedException();
         }
