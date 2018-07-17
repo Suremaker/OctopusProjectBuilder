@@ -17,7 +17,7 @@ namespace OctopusProjectBuilder.Model
         public VariableSetContentType ContentType { get; }
         public IEnumerable<Variable> Variables { get; }
 
-        public LibraryVariableSet(ElementIdentifier identifier, string description, VariableSetContentType contentType, IEnumerable<Variable> variables)
+        public LibraryVariableSet(ElementIdentifier identifier, string description, VariableSetContentType contentType, Variable[] variables)
         {
             if (identifier == null)
                 throw new ArgumentNullException(nameof(identifier));

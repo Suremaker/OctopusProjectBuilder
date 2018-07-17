@@ -13,10 +13,10 @@ namespace OctopusProjectBuilder.YamlReader
         private static readonly ILog Logger = LogManager.GetLogger<YamlSystemModelRepository>();
         private readonly YamlSystemModelReader _reader = new YamlSystemModelReader();
         private readonly YamlSystemModelWriter _writer = new YamlSystemModelWriter();
-        public SystemModel Load(string modelDirectory)
+        public SystemModel Load(string modelDirectory, SearchOption options = SearchOption.AllDirectories)
         {
             var model = new YamlOctopusModel();
-            var files = FindFiles(modelDirectory);
+            var files = FindFiles(modelDirectory, options);
             foreach (var subModel in files.SelectMany(LoadModels))
                 model.MergeIn(subModel);
             return model.ApplyTemplates().BuildWith(new SystemModelBuilder()).Build();
@@ -24,7 +24,7 @@ namespace OctopusProjectBuilder.YamlReader
 
         private YamlOctopusModel[] LoadModels(string path)
         {
-            Logger.Info($"Loading: {Path.GetFileName(path)}");
+            Logger.Debug($"Loading: {Path.GetFileName(path)}");
             return ReadFile(path);
         }
 
@@ -32,7 +32,7 @@ namespace OctopusProjectBuilder.YamlReader
         {
             foreach (var path in FindFiles(modelDirectory))
             {
-                Logger.Info($"Cleaning up: {Path.GetFileName(path)}");
+                Logger.Debug($"Cleaning up: {Path.GetFileName(path)}");
                 WriteFile(path + ".new", ReadFile(path).ToArray());
                 File.Move(path, path + ".old");
                 File.Move(path + ".new", path);
@@ -54,7 +54,7 @@ namespace OctopusProjectBuilder.YamlReader
 
         private void SaveModel(YamlOctopusModel model, string path)
         {
-            Logger.Info($"Saving: {Path.GetFileName(path)}");
+            Logger.Debug($"Saving: {Path.GetFileName(path)}");
             WriteFile(path, model);
         }
 
@@ -80,9 +80,9 @@ namespace OctopusProjectBuilder.YamlReader
             return modelDirectory + "\\" + name;
         }
 
-        private static IEnumerable<string> FindFiles(string modelDirectory)
+        private static IEnumerable<string> FindFiles(string modelDirectory, SearchOption options = SearchOption.AllDirectories)
         {
-            return Directory.EnumerateFiles(modelDirectory, "*.yml", SearchOption.AllDirectories);
+            return Directory.EnumerateFiles(modelDirectory, "*.yml", options);
         }
     }
 }

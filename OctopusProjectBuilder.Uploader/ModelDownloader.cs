@@ -7,94 +7,80 @@ using OctopusProjectBuilder.Uploader.Converters;
 
 namespace OctopusProjectBuilder.Uploader
 {
-    public class ModelDownloader
-    {
-        private static readonly ILog Logger = LogManager.GetLogger<ModelDownloader>();
-        private readonly IOctopusRepository _repository;
+	public class ModelDownloader
+	{
+		private static readonly ILog Logger = LogManager.GetLogger<ModelDownloader>();
+		private readonly IOctopusRepository _repository;
 
-        public ModelDownloader(string octopusUrl, string octopusApiKey)
-            : this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
-        {
-        }
+		public ModelDownloader(string octopusUrl, string octopusApiKey)
+			: this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
+		{
+		}
 
-        public ModelDownloader(IOctopusRepository repository)
-        {
-            _repository = repository;
-        }
+		public ModelDownloader(IOctopusRepository repository)
+		{
+			_repository = repository;
+		}
+		
 
-        public SystemModel DownloadModel()
-        {
-            return new SystemModel(
-                _repository.MachinePolicies.FindAll().Select(ReadMachinePolicy),
-                _repository.Lifecycles.FindAll().Select(ReadLifecycle),
-                _repository.ProjectGroups.FindAll().Select(ReadProjectGroup),
-                _repository.LibraryVariableSets.FindAll().Select(ReadLibraryVariableSet),
-                _repository.Projects.FindAll().Select(ReadProject),
-                _repository.Environments.FindAll().Select(ReadEnvironment),
-                _repository.UserRoles.FindAll().Select(ReadUserRole),
-                _repository.Teams.FindAll().Select(ReadTeam),
-                _repository.Tenants.FindAll().Select(ReadTenant),
-                _repository.TagSets.FindAll().Select(ReadTagSet));
-        }
+		internal MachinePolicy DownloadMachinePolicy(MachinePolicyResource resource)
+		{
+			Logger.Trace($"Downloading {nameof(MachinePolicyResource)}: {resource.Name}");
+			return resource.ToModel();
+		}
 
-        private MachinePolicy ReadMachinePolicy(MachinePolicyResource resource)
-        {
-            Logger.Info($"Downloading {nameof(MachinePolicyResource)}: {resource.Name}");
-            return resource.ToModel();
-        }
+		public LibraryVariableSet DownloadLibraryVariableSet(LibraryVariableSetResource resource)
+		{
+			Logger.Trace($"Downloading {nameof(LibraryVariableSetResource)}: {resource.Name}");
+			return resource.ToModel(_repository);
+		}
 
-        private LibraryVariableSet ReadLibraryVariableSet(LibraryVariableSetResource resource)
-        {
-            Logger.Info($"Downloading {nameof(LibraryVariableSetResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
-        }
+		public Lifecycle DownloadLifecycle(LifecycleResource resource)
+		{
+			Logger.Trace($"Downloading {nameof(LifecycleResource)}: {resource.Name}");
+			return resource.ToModel(_repository);
+		}
 
-        private Lifecycle ReadLifecycle(LifecycleResource resource)
-        {
-            Logger.Info($"Downloading {nameof(LifecycleResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
-        }
+		public Project DownloadProject(ProjectResource resource)
+		{
+			Logger.Trace($"Downloading {nameof(ProjectResource)}: {resource.Name}");
+			return resource.ToModel(_repository);
+		}
 
-        private Project ReadProject(ProjectResource resource)
-        {
-            Logger.Info($"Downloading {nameof(ProjectResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
-        }
+		public ProjectGroup DownloadProjectGroup(ProjectGroupResource resource)
+		{
+			Logger.Trace($"Downloading {nameof(ProjectGroupResource)}: {resource.Name}");
+			return resource.ToModel();
+		}
 
-        private static ProjectGroup ReadProjectGroup(ProjectGroupResource resource)
-        {
-            Logger.Info($"Downloading {nameof(ProjectGroupResource)}: {resource.Name}");
-            return resource.ToModel();
-        }
+		internal static Environment DownloadEnvironment(EnvironmentResource resource)
+		{
+			Logger.Trace($"Downloading {nameof(EnvironmentResource)}: {resource.Name}");
+			return resource.ToModel();
+		}
 
-        private static Environment ReadEnvironment(EnvironmentResource resource)
-        {
-            Logger.Info($"Downloading {nameof(EnvironmentResource)}: {resource.Name}");
-            return resource.ToModel();
-        }
+		internal static UserRole DownloadUserRole(UserRoleResource resource)
+		{
+			Logger.Trace($"Downloading {nameof(UserRoleResource)}: {resource.Name}");
+			return resource.ToModel();
+		}
 
-        private static UserRole ReadUserRole(UserRoleResource resource)
-        {
-            Logger.Info($"Downloading {nameof(UserRoleResource)}: {resource.Name}");
-            return resource.ToModel();
-        }
+		internal Team DownloadTeam(TeamResource resource)
+		{
+			Logger.Trace($"Downloading {nameof(TeamResource)}: {resource.Name}");
+			return resource.ToModel(_repository);
+		}
 
-        private Team ReadTeam(TeamResource resource)
-        {
-            Logger.Info($"Downloading {nameof(TeamResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
-        }
+		internal Tenant DownloadTenant(TenantResource resource)
+		{
+			Logger.Trace($"Downloading {nameof(TenantResource)}: {resource.Name}");
+			return resource.ToModel(_repository);
+		}
 
-        private Tenant ReadTenant(TenantResource resource)
-        {
-            Logger.Info($"Downloading {nameof(TenantResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
-        }
-
-        private TagSet ReadTagSet(TagSetResource resource)
-        {
-            Logger.Info($"Downloading {nameof(TagSetResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
-        }
-    }
+		internal TagSet DownloadTagSet(TagSetResource resource)
+		{
+			Logger.Info($"Downloading {nameof(TagSetResource)}: {resource.Name}");
+			return resource.ToModel(_repository);
+		}
+	}
 }

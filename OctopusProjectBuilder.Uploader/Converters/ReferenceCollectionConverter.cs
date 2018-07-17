@@ -17,7 +17,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
         }
 
         public static IEnumerable<ElementReference> ToModel<TResource>(this ReferenceCollection collection, IGet<TResource> repository) where TResource : INamedResource
-        {
+		{
             return collection.Select(id => new ElementReference(repository.Get(id).Name));
         }
 

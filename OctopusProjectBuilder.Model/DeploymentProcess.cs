@@ -7,7 +7,7 @@ namespace OctopusProjectBuilder.Model
     {
         public IEnumerable<DeploymentStep> DeploymentSteps { get; }
 
-        public DeploymentProcess(IEnumerable<DeploymentStep> deploymentSteps)
+		public DeploymentProcess(IEnumerable<DeploymentStep> deploymentSteps)
         {
             DeploymentSteps = deploymentSteps.ToArray();
         }

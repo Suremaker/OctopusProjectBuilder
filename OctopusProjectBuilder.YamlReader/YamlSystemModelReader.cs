@@ -16,7 +16,7 @@ namespace OctopusProjectBuilder.YamlReader
             var models = new List<YamlOctopusModel>();
             using (var reader = new StreamReader(stream))
             {
-                var eventReader = new EventReader(new Parser(reader));
+                var eventReader = new Parser(reader);
                 eventReader.Expect<StreamStart>();
 
                 while (eventReader.Accept<DocumentStart>())
