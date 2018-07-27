@@ -85,7 +85,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 new ElementReference(ProjectGroupRef),
                 VersioningStrategy?.ToModel(),
                 Triggers.EnsureNotNull().Select(t => t.ToModel()),
-                (TenantedDeploymentMode)Enum.Parse(typeof(TenantedDeploymentMode), TenantedDeploymentMode));
+                (TenantedDeploymentMode)Enum.Parse(typeof(TenantedDeploymentMode), TenantedDeploymentMode ?? default(TenantedDeploymentMode).ToString()));
         }
 
         public static YamlProject FromModel(Project model)
