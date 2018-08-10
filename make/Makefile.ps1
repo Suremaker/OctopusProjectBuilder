@@ -13,7 +13,8 @@ Define-Step -Name 'Tests' -Target 'build' -Body {
 	. (require 'psmake.mod.testing')
 	
 	Write-ShortStatus "Preparing OpenCover"
-	$openCoverConsole = $PSScriptRoot + "\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe"
+	$NugetPath = $env:USERPROFILE + "\.nuget"
+	$openCoverConsole = $NugetPath + "\packages\OpenCover\4.6.519\tools\OpenCover.Console.exe"
 
 	Write-ShortStatus "Running tests with OpenCover"
 	$RunnerArgs = "test", "OctopusProjectBuilder.YamlReader.Tests", "--no-build", "-f netcoreapp2.0", "-c Release", "-l:trx;LogFileName=..\..\reports\unit-test-results1.xml"
