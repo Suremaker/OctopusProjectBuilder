@@ -12,7 +12,7 @@ Define-Step -Name 'Tests' -Target 'build' -Body {
 
 	$dotCover = Fetch-Package JetBrains.dotCover.CommandLineTools 2018.1.4
 	$reportGenerator = Fetch-Package "ReportGenerator" 3.1.2
-	$dotnet = & where.exe dotnet.exe
+	$dotnet = get-command dotnet.exe | Select-Object -ExpandProperty Definition
 
 	$reportDirectory="reports"
 	function Run-TestsWithCoverage($csprojFileInfo)
