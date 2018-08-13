@@ -4,6 +4,7 @@ Define-Step -Name 'Update Assembly Info' -Target 'build' -Body {
 }
 
 Define-Step -Name 'Build' -Target 'build' -Body {
+	call dotnet --version
 	call dotnet build OctopusProjectBuilder.sln --configuration Release
 }
 
