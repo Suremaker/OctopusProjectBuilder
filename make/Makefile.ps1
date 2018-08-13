@@ -17,6 +17,7 @@ Define-Step -Name 'Tests' -Target 'build' -Body {
 	$openCoverConsole = $OpenCoverPath + "\tools\OpenCover.Console.exe"
 
 	Write-ShortStatus "Running tests with OpenCover"
+	mkdir "reports"
 	$RunnerArgs = "test", "OctopusProjectBuilder.YamlReader.Tests", "--no-build", "-f netcoreapp2.0", "-c Release", "-l:trx;LogFileName=..\..\reports\unit-test-results1.xml"
 	call "$openCoverConsole" "-log:Error" "-showunvisited" "-oldStyle" "-register:user" "-target:dotnet.exe" "-targetargs:`"$RunnerArgs`"" "`"-filter:+[OctopusProjectBuilder*]*`"" "-coverbytest:*.Tests.dll" "-output:$PSScriptRoot\..\reports\opencover1.xml"
 
