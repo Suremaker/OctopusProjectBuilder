@@ -4,7 +4,6 @@ Define-Step -Name 'Update Assembly Info' -Target 'build' -Body {
 }
 
 Define-Step -Name 'Build' -Target 'build' -Body {
-	call dotnet --version
 	call dotnet build OctopusProjectBuilder.sln --configuration Release
 }
 
@@ -20,7 +19,7 @@ Define-Step -Name 'Tests' -Target 'build' -Body {
 	{
 		Write-ShortStatus "Testing $($csprojFileInfo.Name)..."
 		$output = "$reportDirectory\$($csprojFileInfo.Name).dcvr"
-		call $dotCover\tools\dotCover.exe cover /TargetExecutable="""$dotnet""" /TargetArguments="test $($csprojFileInfo.FullName) --configuration Release --no-build --no-restore" /Output=$output /Filters="+:module=OctopusProjectBuilder*;-:module=*Tests*"
+		call $dotCover\tools\dotCover.exe cover /TargetExecutable=$dotnet /TargetArguments="test $($csprojFileInfo.FullName) --configuration Release" /Output=$output /Filters="+:module=OctopusProjectBuilder*;-:module=*Tests*"
 		return $output
 	}
 
