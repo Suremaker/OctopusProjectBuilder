@@ -5,23 +5,37 @@ Define-Step -Name 'Update Assembly Info' -Target 'build' -Body {
 
 Define-Step -Name 'Build' -Target 'build' -Body {
 	call $Context.NugetExe restore OctopusProjectBuilder.sln
-	call "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\msbuild.exe" OctopusProjectBuilder.sln /t:"Clean,Build" /p:Configuration=Release /m /verbosity:m /nologo /p:TreatWarningsAsErrors=true
+	#call "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\msbuild.exe" OctopusProjectBuilder.sln /t:"Clean,Build" /p:Configuration=Release /m /verbosity:m /nologo /p:TreatWarningsAsErrors=true
+	call dotnet build --configuration Release /p:DebugType=Full
 }
 
 Define-Step -Name 'Tests' -Target 'build' -Body {
 	. (require 'psmake.mod.testing')
+	
+	Write-ShortStatus "Preparing OpenCover"
+	$OpenCoverPath = Fetch-Package "OpenCover" "4.6.519"
+	$openCoverConsole = $OpenCoverPath + "\tools\OpenCover.Console.exe"
+
+	Write-ShortStatus "Running tests with OpenCover"
+	mkdir "reports"
+	$RunnerArgs = "test", "OctopusProjectBuilder.YamlReader.Tests", "--no-build", "-f netcoreapp2.0", "-c Release", "-l:trx;LogFileName=..\..\reports\unit-test-results1.xml"
+	call "$openCoverConsole" "-log:Error" "-showunvisited" "-oldStyle" "-register:user" "-target:dotnet.exe" "-targetargs:`"$RunnerArgs`"" "`"-filter:+[OctopusProjectBuilder*]*`"" "-coverbytest:*.Tests.dll" "-output:$PSScriptRoot\..\reports\opencover1.xml"
+
+	$RunnerArgs = "test", "OctopusProjectBuilder.Uploader.Tests", "--no-build", "-f netcoreapp2.0", "-c Release", "-l:trx;LogFileName=..\..\reports\unit-test-results2.xml"
+	call "$openCoverConsole" "-log:Error" "-showunvisited" "-oldStyle" "-register:user" "-target:dotnet.exe" "-targetargs:`"$RunnerArgs`"" "`"-filter:+[OctopusProjectBuilder*]*`"" "-coverbytest:*.Tests.dll" "-output:$PSScriptRoot\..\reports\opencover2.xml"
 
 	$tests = @()
-	$tests += Define-NUnit3Tests -GroupName 'Unit Tests' -TestAssembly "*.Tests\bin\Release\*.Tests.dll"
+	$tests += Create-Object @{CoverageReports = "reports\opencover1.xml", "reports\opencover2.xml";
+							  ReportDirectory = $PSScriptRoot + "\..\reports"
+							  TestResult = "..\..\reports\unit-test-results.xml"}
 
 	$tests `
-        | Run-Tests -EraseReportDirectory -Cover -CodeFilter '+[OctopusProjectBuilder*]* -[*.Tests*]*' -TestFilter '*.Tests.dll' `
         | Generate-CoverageSummary `
-        | Check-AcceptableCoverage -AcceptableCoverage 89
+        | Check-AcceptableCoverage -AcceptableCoverage 75
 }
 
 Define-Step -Name 'Documentation generation' -Target 'build' -Body {
-	& OctopusProjectBuilder.DocGen\bin\Release\OctopusProjectBuilder.DocGen.exe | out-file Manual.md -Encoding utf8
+	& dotnet .\OctopusProjectBuilder.DocGen\bin\Release\netcoreapp2.0\OctopusProjectBuilder.DocGen.dll | out-file Manual.md -Encoding utf8
 	if ($LastExitCode -ne 0) { throw "A program execution was not successful (Exit code: $LASTEXITCODE)." }
 }
 

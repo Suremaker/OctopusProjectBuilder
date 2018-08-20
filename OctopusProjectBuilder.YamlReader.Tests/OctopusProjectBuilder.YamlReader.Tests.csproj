@@ -7,6 +7,11 @@
     <StartupObject />
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="autofixture" Version="4.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />

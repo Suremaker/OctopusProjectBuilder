@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Octopus.Client;
 using Octopus.Client.Model;
@@ -94,7 +95,9 @@ namespace OctopusProjectBuilder.Uploader
         {
             var projectResource = await LoadResource(_repository.Projects, project.Identifier);
             await projectResource.UpdateWith(project, _repository);
-            await Upsert(_repository.Projects, projectResource);
+            var response = await Upsert(_repository.Projects, projectResource);
+            projectResource.DeploymentProcessId = response.DeploymentProcessId;
+            projectResource.VariableSetId = response.VariableSetId;
 
             var deploymentProcessResource = await _repository.DeploymentProcesses.Get(projectResource.DeploymentProcessId);
             await deploymentProcessResource.UpdateWith(project.DeploymentProcess, _repository);
@@ -116,11 +119,17 @@ namespace OctopusProjectBuilder.Uploader
 
         private async Task UploadProjectTriggers(ProjectResource projectResource, IEnumerable<ProjectTrigger> triggers)
         {
+            var triggerList = triggers.ToList();
+            if (!triggerList.Any())
+            {
+                return;
+            }
+
             var projectTriggers = await _repository.Projects.GetTriggers(projectResource);
             foreach (var resource in projectTriggers.Items)
                 await Delete(_repository.ProjectTriggers, resource, projectResource.Name);
 
-            foreach (var trigger in triggers)
+            foreach (var trigger in triggerList)
             {
                 var resource = await LoadResource(name => _repository.ProjectTriggers.FindByName(projectResource, name), trigger.Identifier);
                 await resource.UpdateWith(trigger, projectResource.Id, _repository);
@@ -168,7 +177,7 @@ namespace OctopusProjectBuilder.Uploader
             var result = string.IsNullOrWhiteSpace(resource.Id)
                 ? await repository.Create(resource)
                 : await repository.Modify(resource);
-
+            
             _logger.LogDebug($"Upserted {typeof(TResource).Name}: {resource.Name}");
             return result;
         }
