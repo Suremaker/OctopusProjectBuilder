@@ -4,44 +4,66 @@ Define-Step -Name 'Update Assembly Info' -Target 'build' -Body {
 }
 
 Define-Step -Name 'Build' -Target 'build' -Body {
-	call $Context.NugetExe restore OctopusProjectBuilder.sln
-	#call "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\msbuild.exe" OctopusProjectBuilder.sln /t:"Clean,Build" /p:Configuration=Release /m /verbosity:m /nologo /p:TreatWarningsAsErrors=true
-	call dotnet build --configuration Release /p:DebugType=Full
+	call dotnet build OctopusProjectBuilder.sln --configuration Release
 }
 
 Define-Step -Name 'Tests' -Target 'build' -Body {
 	. (require 'psmake.mod.testing')
-	
-	Write-ShortStatus "Preparing OpenCover"
-	$OpenCoverPath = Fetch-Package "OpenCover" "4.6.519"
-	$openCoverConsole = $OpenCoverPath + "\tools\OpenCover.Console.exe"
 
-	Write-ShortStatus "Running tests with OpenCover"
-	mkdir "reports"
-	$RunnerArgs = "test", "OctopusProjectBuilder.YamlReader.Tests", "--no-build", "-f netcoreapp2.0", "-c Release", "-l:trx;LogFileName=..\..\reports\unit-test-results1.xml"
-	call "$openCoverConsole" "-log:Error" "-showunvisited" "-oldStyle" "-register:user" "-target:dotnet.exe" "-targetargs:`"$RunnerArgs`"" "`"-filter:+[OctopusProjectBuilder*]*`"" "-coverbytest:*.Tests.dll" "-output:$PSScriptRoot\..\reports\opencover1.xml"
+	$dotCover = Fetch-Package JetBrains.dotCover.CommandLineTools 2018.1.4
+	$reportGenerator = Fetch-Package "ReportGenerator" 3.1.2
+	$dotnet = get-command dotnet.exe | Select-Object -ExpandProperty Definition
 
-	$RunnerArgs = "test", "OctopusProjectBuilder.Uploader.Tests", "--no-build", "-f netcoreapp2.0", "-c Release", "-l:trx;LogFileName=..\..\reports\unit-test-results2.xml"
-	call "$openCoverConsole" "-log:Error" "-showunvisited" "-oldStyle" "-register:user" "-target:dotnet.exe" "-targetargs:`"$RunnerArgs`"" "`"-filter:+[OctopusProjectBuilder*]*`"" "-coverbytest:*.Tests.dll" "-output:$PSScriptRoot\..\reports\opencover2.xml"
+	$reportDirectory="reports"
+	function Run-TestsWithCoverage($csprojFileInfo)
+	{
+		Write-ShortStatus "Testing $($csprojFileInfo.Name)..."
+		$output = "$reportDirectory\$($csprojFileInfo.Name).dcvr"
+		call $dotCover\tools\dotCover.exe cover /TargetExecutable=$dotnet /TargetArguments="test $($csprojFileInfo.FullName) --configuration Release --no-build --no-restore" /Output=$output /Filters="+:module=OctopusProjectBuilder*;-:module=*Tests*"
+		return $output
+	}
 
-	$tests = @()
-	$tests += Create-Object @{CoverageReports = "reports\opencover1.xml", "reports\opencover2.xml";
-							  ReportDirectory = $PSScriptRoot + "\..\reports"
-							  TestResult = "..\..\reports\unit-test-results.xml"}
+	function Merge-Reports
+	{
+		param(
+		[Parameter(Mandatory=$true,ValueFromPipeline=$true)]
+		$DcvrFiles
+		)
+		begin { $results=@() }
+		process { $results += $_ }
+		end {
+			$output = "$reportDirectory\unit-tests.dcvr"
+			$source = $results -join ';'
+			call $dotCover\tools\dotCover.exe merge /Source=$source /Output=$output
+			return $output;
+		}
+	}
 
-	$tests `
-        | Generate-CoverageSummary `
-        | Check-AcceptableCoverage -AcceptableCoverage 75
+	function Convert-Report($dcvrFile)
+	{
+		$output="$reportDirectory\unit-tests-coverage.xml"
+		call $dotCover\tools\dotCover.exe report /Source=$dcvrFile /ReportType=DetailedXML /Output=$output
+		return Create-Object @{ ReportDirectory=$reportDirectory; CoverageReports=$output; }
+	}
+
+	Remove-Item $reportDirectory -Force -Recurse -ErrorAction SilentlyContinue
+
+	Get-ChildItem -Recurse . -Filter *.Tests.csproj `
+		| %{ Run-TestsWithCoverage $_ } `
+		| Merge-Reports `
+		| %{ Convert-Report $_} `
+		| Generate-CoverageSummary -ReportGeneratorVersion 3.1.2 `
+		| Check-AcceptableCoverage -AcceptableCoverage 89
 }
 
 Define-Step -Name 'Documentation generation' -Target 'build' -Body {
-	& dotnet .\OctopusProjectBuilder.DocGen\bin\Release\netcoreapp2.0\OctopusProjectBuilder.DocGen.dll | out-file Manual.md -Encoding utf8
+	& dotnet run --project OctopusProjectBuilder.DocGen\OctopusProjectBuilder.DocGen.csproj --configuration Release | out-file Manual.md -Encoding utf8
 	if ($LastExitCode -ne 0) { throw "A program execution was not successful (Exit code: $LASTEXITCODE)." }
 }
 
 Define-Step -Name 'Packaging' -Target 'build' -Body {
 	. (require 'psmake.mod.packaging')
-	
+	call dotnet publish OctopusProjectBuilder.Console\OctopusProjectBuilder.Console.csproj --configuration Release --no-build
 	Package-DeployableNuSpec -Package 'OctopusProjectBuilder.Console.nuspec' -version $VERSION
 }
 
