@@ -83,7 +83,7 @@ namespace OctopusProjectBuilder.YamlReader
                 .Concat(splitModel.Tenants.EnsureNotNull().Select(x => $"Tenant_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Concat(splitModel.TagSets.EnsureNotNull().Select(x => $"TagSet_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Single();
-            return modelDirectory + "\\" + name;
+            return Path.Combine(modelDirectory, name);
         }
 
         private static IEnumerable<string> FindFiles(string modelDirectory)

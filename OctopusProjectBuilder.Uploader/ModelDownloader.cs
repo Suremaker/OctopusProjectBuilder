@@ -21,8 +21,6 @@ namespace OctopusProjectBuilder.Uploader
 
         public async Task<SystemModel> DownloadModel()
         {
-            var x = await Task.WhenAll((await _repository.MachinePolicies.FindAll()).Select(ReadMachinePolicy));
-
             return new SystemModel(
                 await Task.WhenAll((await _repository.MachinePolicies.FindAll()).Select(ReadMachinePolicy)),
                 await Task.WhenAll((await _repository.Lifecycles.FindAll()).Select(ReadLifecycle)),
