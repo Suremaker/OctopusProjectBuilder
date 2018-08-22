@@ -1,0 +1,1 @@
+dotnet OctopusProjectBuilder.Console.dll

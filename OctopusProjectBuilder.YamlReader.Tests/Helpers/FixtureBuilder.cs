@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using AutoFixture;
 using OctopusProjectBuilder.Model;
-using Ploeh.AutoFixture;
 
 namespace OctopusProjectBuilder.YamlReader.Tests.Helpers
 {

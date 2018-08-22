@@ -20,8 +20,9 @@
     <language>en-US</language>
   </metadata>
   <files>
-    <file src="OctopusProjectBuilder.Console\bin\Release\*.dll" target="" />
-    <file src="OctopusProjectBuilder.Console\bin\Release\*.exe" target="" />
+    <file src="OctopusProjectBuilder.Console\bin\Release\netcoreapp2.0\publish\*.dll" target="tools" />
+    <file src="OctopusProjectBuilder.Console\bin\Release\netcoreapp2.0\publish\*.bat" target="tools" />
+    <file src="OctopusProjectBuilder.Console\bin\Release\netcoreapp2.0\publish\*.json" target="tools" />
     <file src="LICENSE" target="\LICENSE" />
     <file src="LICENSE-YamlDotNet" target="\LICENSE-YamlDotNet" />
     <file src="Manual.md" target="" />

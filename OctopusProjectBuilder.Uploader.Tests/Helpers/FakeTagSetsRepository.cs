@@ -1,28 +1,29 @@
 ﻿using System.Collections.Generic;
-using Octopus.Client.Editors;
+using System.Threading.Tasks;
+using Octopus.Client.Editors.Async;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     public class FakeTagSetsRepository : FakeNamedRepository<TagSetResource>, ITagSetRepository
     {
-        public List<TagSetResource> GetAll()
+        public Task<List<TagSetResource>> GetAll()
         {
             throw new System.NotImplementedException();
         }
 
-        public void Sort(string[] tagSetIdsInOrder)
+        public Task Sort(string[] tagSetIdsInOrder)
         {
             throw new System.NotImplementedException();
         }
 
-        public TagSetEditor CreateOrModify(string name)
+        public Task<TagSetEditor> CreateOrModify(string name)
         {
             throw new System.NotImplementedException();
         }
 
-        public TagSetEditor CreateOrModify(string name, string description)
+        public Task<TagSetEditor> CreateOrModify(string name, string description)
         {
             throw new System.NotImplementedException();
         }

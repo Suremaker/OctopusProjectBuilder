@@ -90,6 +90,19 @@
         ProxyCreate = 85,
         ProxyView = 86,
         ProxyEdit = 87,
-        ProxyDelete = 88
+        ProxyDelete = 88,
+        SubscriptionCreate = 89,
+        SubscriptionView = 90,
+        SubscriptionEdit = 91,
+        SubscriptionDelete = 92,
+        TriggerCreate = 93,
+        TriggerView = 94,
+        TriggerEdit = 95,
+        TriggerDelete = 96,
+        CertificateView = 97,
+        CertificateCreate = 98,
+        CertificateEdit = 99,
+        CertificateDelete = 100,
+        CertificateExportPrivateKey = 101
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text;
+using AutoFixture;
 using NUnit.Framework;
 using OctopusProjectBuilder.TestUtils;
 using OctopusProjectBuilder.YamlReader.Model;
-using Ploeh.AutoFixture;
 
 namespace OctopusProjectBuilder.YamlReader.Tests
 {

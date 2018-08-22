@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
@@ -9,34 +10,42 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class ScopeSpecificationConverter
     {
-        public static Dictionary<VariableScopeType, IEnumerable<ElementReference>> ToModel(this ScopeSpecification resource, DeploymentProcessResource deploymentProcessResource, IOctopusRepository repository)
+        public static async Task<Dictionary<VariableScopeType, IEnumerable<ElementReference>>> ToModel(this ScopeSpecification resource, DeploymentProcessResource deploymentProcessResource, IOctopusAsyncRepository repository)
         {
-            return resource.ToDictionary(kv => (VariableScopeType)kv.Key,
-                kv => kv.Value.Select(id => ResolveReference(kv.Key, id, repository, deploymentProcessResource)).ToArray().AsEnumerable());
+            var model = new Dictionary<VariableScopeType, IEnumerable<ElementReference>>();
+            foreach (var kv in resource)
+            {
+                model.Add((VariableScopeType)kv.Key, await Task.WhenAll(kv.Value.Select(id => ResolveReference(kv.Key, id, repository, deploymentProcessResource))));
+            }
+
+            return await Task.FromResult(model);
         }
 
-        public static ScopeSpecification UpdateWith(this ScopeSpecification resource, IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>> model, IOctopusRepository repository, DeploymentProcessResource deploymentProcess, ProjectResource project)
+        public static async Task<ScopeSpecification> UpdateWith(this ScopeSpecification resource, IReadOnlyDictionary<VariableScopeType, IEnumerable<ElementReference>> model, IOctopusAsyncRepository repository, DeploymentProcessResource deploymentProcess, ProjectResource project)
         {
             resource.Clear();
             foreach (var kv in model)
-                resource.Add((ScopeField)kv.Key, new ScopeValue(kv.Value.Select(reference => ResolveId(kv.Key, reference, repository, deploymentProcess, project))));
+            {
+                resource.Add((ScopeField)kv.Key, new ScopeValue(await Task.WhenAll(kv.Value.Select(reference => ResolveId(kv.Key, reference, repository, deploymentProcess, project)))));
+            }
+
             return resource;
         }
 
-        private static string ResolveId(VariableScopeType key, ElementReference reference, IOctopusRepository repository, DeploymentProcessResource deploymentProcess, ProjectResource project)
+        private static async Task<string> ResolveId(VariableScopeType key, ElementReference reference, IOctopusAsyncRepository repository, DeploymentProcessResource deploymentProcess, ProjectResource project)
         {
             switch (key)
             {
                 case VariableScopeType.Environment:
-                    return repository.Environments.ResolveResourceId(reference);
+                    return await repository.Environments.ResolveResourceId(reference);
                 case VariableScopeType.Machine:
-                    return repository.Machines.ResolveResourceId(reference);
+                    return await repository.Machines.ResolveResourceId(reference);
                 case VariableScopeType.Role:
                     return reference.Name;
                 case VariableScopeType.Action:
                     return GetDeploymentAction(deploymentProcess, a => a.Name, reference.Name, nameof(DeploymentActionResource.Name)).Id;
                 case VariableScopeType.Channel:
-                    return repository.Channels.FindByName(project, reference.Name).Id;
+                    return (await repository.Channels.FindByName(project, reference.Name)).Id;
                 case VariableScopeType.TenantTag:
                     return reference.Name;
                 default:
@@ -44,20 +53,20 @@ namespace OctopusProjectBuilder.Uploader.Converters
             }
         }
 
-        private static ElementReference ResolveReference(ScopeField key, string id, IOctopusRepository repository, DeploymentProcessResource deploymentProcessResource)
+        private static async Task<ElementReference> ResolveReference(ScopeField key, string id, IOctopusAsyncRepository repository, DeploymentProcessResource deploymentProcessResource)
         {
             switch (key)
             {
                 case ScopeField.Action:
                     return new ElementReference(GetDeploymentAction(deploymentProcessResource, a => a.Id, id, nameof(DeploymentActionResource.Id)).Name);
                 case ScopeField.Environment:
-                    return new ElementReference(repository.Environments.Get(id).Name);
+                    return new ElementReference((await repository.Environments.Get(id)).Name);
                 case ScopeField.Machine:
-                    return new ElementReference(repository.Machines.Get(id).Name);
+                    return new ElementReference((await repository.Machines.Get(id)).Name);
                 case ScopeField.Role:
                     return new ElementReference(id);
                 case ScopeField.Channel:
-                    return new ElementReference(repository.Channels.Get(id).Name);
+                    return new ElementReference((await repository.Channels.Get(id)).Name);
                 case ScopeField.TenantTag:
                     return new ElementReference(id);
                 default:

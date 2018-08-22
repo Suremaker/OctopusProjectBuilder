@@ -1,5 +1,6 @@
 ﻿using System.Linq;
-using Common.Logging;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
@@ -9,92 +10,88 @@ namespace OctopusProjectBuilder.Uploader
 {
     public class ModelDownloader
     {
-        private static readonly ILog Logger = LogManager.GetLogger<ModelDownloader>();
-        private readonly IOctopusRepository _repository;
+        private readonly IOctopusAsyncRepository _repository;
+        private readonly ILogger<ModelDownloader> _logger;
 
-        public ModelDownloader(string octopusUrl, string octopusApiKey)
-            : this(new OctopusRepository(new OctopusClient(new OctopusServerEndpoint(octopusUrl, octopusApiKey))))
-        {
-        }
-
-        public ModelDownloader(IOctopusRepository repository)
+        public ModelDownloader(IOctopusAsyncRepository repository, ILoggerFactory loggerFactory)
         {
             _repository = repository;
+            _logger = loggerFactory.CreateLogger<ModelDownloader>();
         }
 
-        public SystemModel DownloadModel()
+        public async Task<SystemModel> DownloadModel()
         {
             return new SystemModel(
-                _repository.MachinePolicies.FindAll().Select(ReadMachinePolicy),
-                _repository.Lifecycles.FindAll().Select(ReadLifecycle),
-                _repository.ProjectGroups.FindAll().Select(ReadProjectGroup),
-                _repository.LibraryVariableSets.FindAll().Select(ReadLibraryVariableSet),
-                _repository.Projects.FindAll().Select(ReadProject),
-                _repository.Environments.FindAll().Select(ReadEnvironment),
-                _repository.UserRoles.FindAll().Select(ReadUserRole),
-                _repository.Teams.FindAll().Select(ReadTeam),
-                _repository.Tenants.FindAll().Select(ReadTenant),
-                _repository.TagSets.FindAll().Select(ReadTagSet));
+                await Task.WhenAll((await _repository.MachinePolicies.FindAll()).Select(ReadMachinePolicy)),
+                await Task.WhenAll((await _repository.Lifecycles.FindAll()).Select(ReadLifecycle)),
+                await Task.WhenAll((await _repository.ProjectGroups.FindAll()).Select(ReadProjectGroup)),
+                await Task.WhenAll((await _repository.LibraryVariableSets.FindAll()).Select(ReadLibraryVariableSet)),
+                await Task.WhenAll((await _repository.Projects.FindAll()).Select(ReadProject)),
+                await Task.WhenAll((await _repository.Environments.FindAll()).Select(ReadEnvironment)),
+                await Task.WhenAll((await _repository.UserRoles.FindAll()).Select(ReadUserRole)),
+                await Task.WhenAll((await _repository.Teams.FindAll()).Select(ReadTeam)),
+                await Task.WhenAll((await _repository.Tenants.FindAll()).Select(ReadTenant)),
+                await Task.WhenAll((await _repository.TagSets.FindAll()).Select(ReadTagSet)));
         }
 
-        private MachinePolicy ReadMachinePolicy(MachinePolicyResource resource)
+        private async Task<MachinePolicy> ReadMachinePolicy(MachinePolicyResource resource)
         {
-            Logger.Info($"Downloading {nameof(MachinePolicyResource)}: {resource.Name}");
-            return resource.ToModel();
+            _logger.LogInformation($"Downloading {nameof(MachinePolicyResource)}: {resource.Name}");
+            return await Task.FromResult(resource.ToModel());
         }
 
-        private LibraryVariableSet ReadLibraryVariableSet(LibraryVariableSetResource resource)
+        private async Task<LibraryVariableSet> ReadLibraryVariableSet(LibraryVariableSetResource resource)
         {
-            Logger.Info($"Downloading {nameof(LibraryVariableSetResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
+            _logger.LogInformation($"Downloading {nameof(LibraryVariableSetResource)}: {resource.Name}");
+            return await resource.ToModel(_repository);
         }
 
-        private Lifecycle ReadLifecycle(LifecycleResource resource)
+        private async Task<Lifecycle> ReadLifecycle(LifecycleResource resource)
         {
-            Logger.Info($"Downloading {nameof(LifecycleResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
+            _logger.LogInformation($"Downloading {nameof(LifecycleResource)}: {resource.Name}");
+            return await resource.ToModel(_repository);
         }
 
-        private Project ReadProject(ProjectResource resource)
+        private async Task<Project> ReadProject(ProjectResource resource)
         {
-            Logger.Info($"Downloading {nameof(ProjectResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
+            _logger.LogInformation($"Downloading {nameof(ProjectResource)}: {resource.Name}");
+            return await resource.ToModel(_repository);
         }
 
-        private static ProjectGroup ReadProjectGroup(ProjectGroupResource resource)
+        private async Task<ProjectGroup> ReadProjectGroup(ProjectGroupResource resource)
         {
-            Logger.Info($"Downloading {nameof(ProjectGroupResource)}: {resource.Name}");
-            return resource.ToModel();
+            _logger.LogInformation($"Downloading {nameof(ProjectGroupResource)}: {resource.Name}");
+            return await Task.FromResult(resource.ToModel());
         }
 
-        private static Environment ReadEnvironment(EnvironmentResource resource)
+        private async Task<Environment> ReadEnvironment(EnvironmentResource resource)
         {
-            Logger.Info($"Downloading {nameof(EnvironmentResource)}: {resource.Name}");
-            return resource.ToModel();
+            _logger.LogInformation($"Downloading {nameof(EnvironmentResource)}: {resource.Name}");
+            return await Task.FromResult(resource.ToModel());
         }
 
-        private static UserRole ReadUserRole(UserRoleResource resource)
+        private async Task<UserRole> ReadUserRole(UserRoleResource resource)
         {
-            Logger.Info($"Downloading {nameof(UserRoleResource)}: {resource.Name}");
-            return resource.ToModel();
+            _logger.LogInformation($"Downloading {nameof(UserRoleResource)}: {resource.Name}");
+            return await Task.FromResult(resource.ToModel());
         }
 
-        private Team ReadTeam(TeamResource resource)
+        private async Task<Team> ReadTeam(TeamResource resource)
         {
-            Logger.Info($"Downloading {nameof(TeamResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
+            _logger.LogInformation($"Downloading {nameof(TeamResource)}: {resource.Name}");
+            return await resource.ToModel(_repository);
         }
 
-        private Tenant ReadTenant(TenantResource resource)
+        private async Task<Tenant> ReadTenant(TenantResource resource)
         {
-            Logger.Info($"Downloading {nameof(TenantResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
+            _logger.LogInformation($"Downloading {nameof(TenantResource)}: {resource.Name}");
+            return await resource.ToModel(_repository);
         }
 
-        private TagSet ReadTagSet(TagSetResource resource)
+        private async Task<TagSet> ReadTagSet(TagSetResource resource)
         {
-            Logger.Info($"Downloading {nameof(TagSetResource)}: {resource.Name}");
-            return resource.ToModel(_repository);
+            _logger.LogInformation($"Downloading {nameof(TagSetResource)}: {resource.Name}");
+            return await Task.FromResult(resource.ToModel(_repository));
         }
     }
 }

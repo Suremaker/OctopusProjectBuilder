@@ -1,55 +1,43 @@
 ﻿using System.Collections.Generic;
-using Octopus.Client.Editors;
+using System.Threading.Tasks;
+using Octopus.Client.Editors.Async;
 using Octopus.Client.Model;
 using Octopus.Client.Model.Endpoints;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeMachineRepository : FakeNamedRepository<MachineResource>, IMachineRepository
     {
-        public MachineResource Discover(string host, int port = 10933, DiscoverableEndpointType? discoverableEndpointType = null)
+        public Task<MachineResource> Discover(string host, int port = 10933, DiscoverableEndpointType? discoverableEndpointType = null)
         {
-            return null;
+            throw new System.NotImplementedException();
         }
 
-        public MachineConnectionStatus GetConnectionStatus(MachineResource machine)
+        public Task<MachineConnectionStatus> GetConnectionStatus(MachineResource machine)
         {
-            return null;
+            throw new System.NotImplementedException();
         }
 
-        public List<MachineResource> FindByThumbprint(string thumbprint)
+        public Task<List<MachineResource>> FindByThumbprint(string thumbprint)
         {
-            return null;
+            throw new System.NotImplementedException();
         }
 
-        public IReadOnlyList<TaskResource> GetTasks(MachineResource machine)
+        public Task<IReadOnlyList<TaskResource>> GetTasks(MachineResource machine)
         {
-            return null;
+            throw new System.NotImplementedException();
         }
 
-        public IReadOnlyList<TaskResource> GetTasks(MachineResource machine, object pathParameters)
+        public Task<MachineEditor> CreateOrModify(string name, EndpointResource endpoint, EnvironmentResource[] environments, string[] roles,
+            TenantResource[] tenants, TagResource[] tenantTags)
         {
-            return null;
+            throw new System.NotImplementedException();
         }
 
-        public MachineEditor CreateOrModify(string name, EndpointResource endpoint, EnvironmentResource[] environments, string[] roles,
-            TenantResource[] tenants, TagResource[] tenantTags, TenantedDeploymentMode? tenantedDeploymentParticipation)
+        public Task<MachineEditor> CreateOrModify(string name, EndpointResource endpoint, EnvironmentResource[] environments, string[] roles)
         {
-            return null;
-        }
-
-        public MachineEditor CreateOrModify(string name, EndpointResource endpoint, EnvironmentResource[] environments,
-            string[] roles)
-        {
-            return null;
-        }
-
-        public ResourceCollection<MachineResource> List(int skip = 0, int? take = null, string ids = null, string name = null,
-            string partialName = null, string roles = null, bool? isDisabled = false, string healthStatuses = null,
-            string commStyles = null, string tenantIds = null, string tenantTags = null, string environmentIds = null)
-        {
-            return null;
+            throw new System.NotImplementedException();
         }
     }
 }

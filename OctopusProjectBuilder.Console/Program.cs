@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using Common.Logging;
-using Common.Logging.Simple;
+using System.Threading.Tasks;
 using Fclp;
+using Microsoft.Extensions.Logging;
+using Octopus.Client;
 using OctopusProjectBuilder.Uploader;
 using OctopusProjectBuilder.YamlReader;
 
@@ -11,12 +12,14 @@ namespace OctopusProjectBuilder.Console
 {
     class Program
     {
+        private static ILoggerFactory _loggerFactory;
+
         static int Main(string[] args)
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls | SecurityProtocolType.Ssl3;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-            LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(LogLevel.All, false, false, true, "", true);
-            var logger = LogManager.GetLogger<Program>();
+            _loggerFactory = new LoggerFactory().AddConsole();
+            ILogger logger = _loggerFactory.CreateLogger<Program>();
 
             var options = ReadOptions(args);
             if (options == null)
@@ -25,15 +28,15 @@ namespace OctopusProjectBuilder.Console
             try
             {
                 if (options.Action == Options.Verb.Upload)
-                    UploadDefinitions(options);
+                    UploadDefinitions(options).GetAwaiter().GetResult();
                 else if (options.Action == Options.Verb.Download)
-                    DownloadDefinitions(options);
+                    DownloadDefinitions(options).GetAwaiter().GetResult();
                 else if (options.Action == Options.Verb.CleanupConfig)
                     CleanupConfig(options);
             }
             catch (Exception e)
             {
-                logger.ErrorFormat("Application Error: {0}", e, e.Message);
+                logger.LogError(e, $"Application Error: {e.Message}");
                 return 1;
             }
             return 0;
@@ -41,19 +44,26 @@ namespace OctopusProjectBuilder.Console
 
         private static void CleanupConfig(Options options)
         {
-            new YamlSystemModelRepository().CleanupConfig(options.DefinitionsDir);
+            new YamlSystemModelRepository(_loggerFactory).CleanupConfig(options.DefinitionsDir);
         }
 
-        private static void UploadDefinitions(Options options)
+        private static async Task UploadDefinitions(Options options)
         {
-            var model = new YamlSystemModelRepository().Load(options.DefinitionsDir);
-            new ModelUploader(options.OctopusUrl, options.OctopusApiKey).UploadModel(model);
+            var model = new YamlSystemModelRepository(_loggerFactory).Load(options.DefinitionsDir);
+            await new ModelUploader(await BuildRepository(options), _loggerFactory).UploadModel(model);
         }
 
-        private static void DownloadDefinitions(Options options)
+        private static async Task DownloadDefinitions(Options options)
         {
-            var model = new ModelDownloader(options.OctopusUrl, options.OctopusApiKey).DownloadModel();
-            new YamlSystemModelRepository().Save(model, options.DefinitionsDir);
+            var model = await new ModelDownloader(await BuildRepository(options), _loggerFactory).DownloadModel();
+            new YamlSystemModelRepository(_loggerFactory).Save(model, options.DefinitionsDir);
+        }
+
+        private static async Task<OctopusAsyncRepository> BuildRepository(Options options)
+        {
+            return new OctopusAsyncRepository(
+                await new OctopusClientFactory().CreateAsyncClient(
+                    new OctopusServerEndpoint(options.OctopusUrl, options.OctopusApiKey)));
         }
 
         public static Options ReadOptions(string[] args)

@@ -1,21 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Octopus.Client.Repositories;
+using System.Threading.Tasks;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeMachineRoleRepository : IMachineRoleRepository
     {
-        private readonly List<string> _roles = new List<string>();
-
-        public List<string> GetAllRoleNames()
+        public Task<List<string>> GetAllRoleNames()
         {
-            return _roles.ToList();
-        }
-
-        public void Add(string name)
-        {
-            _roles.Add(name);
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,19 +1,27 @@
-﻿using Octopus.Client.Editors;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Octopus.Client.Editors.Async;
 using Octopus.Client.Model;
 using Octopus.Client.Model.Triggers;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeProjectTriggersRepository : FakeRepository<ProjectTriggerResource>, IProjectTriggerRepository
     {
-        public ProjectTriggerResource FindByName(ProjectResource project, string name)
+        public Task<List<ProjectTriggerResource>> FindAll()
         {
-            return FindOne(t => t.Name == name && t.ProjectId == project.Id);
+            return Task.FromResult(_items);
         }
 
-        public ProjectTriggerEditor CreateOrModify(ProjectResource project, string name, TriggerFilterResource filter,
-            TriggerActionResource action)
+        public Task<ProjectTriggerResource> FindByName(ProjectResource project, string name)
+        {
+            var trigger = _items.FirstOrDefault(m => string.Equals(m.Name, name, System.StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(trigger);
+        }
+
+        public Task<ProjectTriggerEditor> CreateOrModify(ProjectResource project, string name, TriggerFilterResource filter, TriggerActionResource action)
         {
             throw new System.NotImplementedException();
         }

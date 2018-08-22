@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
@@ -7,7 +8,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class TenantConverter
     {
-        public static TenantResource UpdateWith(this TenantResource resource, Tenant model, IOctopusRepository repository)
+        public static async Task<TenantResource> UpdateWith(this TenantResource resource, Tenant model, IOctopusAsyncRepository repository)
         {
             resource.Name = model.Identifier.Name;
 
@@ -16,20 +17,20 @@ namespace OctopusProjectBuilder.Uploader.Converters
             resource.ProjectEnvironments.Clear();
             foreach (var projectEnvironment in model.ProjectEnvironments)
             {
-                var project = repository.Projects.FindByName(projectEnvironment.Key);
-                var envs = new ReferenceCollection(projectEnvironment.Value.Select(x => repository.Environments.FindByName(x).Id));
-                resource.ProjectEnvironments.Add(project.Id, envs);
+                var project = await repository.Projects.FindByName(projectEnvironment.Key);
+                var environments = await Task.WhenAll(projectEnvironment.Value.Select(async e => await repository.Environments.FindByName(e)));
+                resource.ProjectEnvironments.Add(project.Id, new ReferenceCollection(environments.Select(e => e.Id)));
             }
 
             return resource;
         }
 
-        public static Tenant ToModel(this TenantResource resource, IOctopusRepository repository)
+        public static async Task<Tenant> ToModel(this TenantResource resource, IOctopusAsyncRepository repository)
         {
             return new Tenant(
                 new ElementIdentifier(resource.Name),
                 resource.TenantTags.Select(x => new ElementReference(x)).ToArray(),
-                resource.ProjectEnvironments.ToModel(repository));
+                await resource.ProjectEnvironments.ToModel(repository));
         }
     }
 }

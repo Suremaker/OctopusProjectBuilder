@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Octopus.Client.Extensibility;
+using System.Threading.Tasks;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.Uploader.Converters
@@ -16,9 +16,13 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 collection.Add(id);
         }
 
-        public static IEnumerable<ElementReference> ToModel<TResource>(this ReferenceCollection collection, IGet<TResource> repository) where TResource : INamedResource
+        public static IEnumerable<Task<ElementReference>> ToModel<TResource>(this ReferenceCollection collection, IGet<TResource> repository) where TResource : INamedResource
         {
-            return collection.Select(id => new ElementReference(repository.Get(id).Name));
+            return collection.Select(async id =>
+            {
+                var resource = await repository.Get(id);
+                return new ElementReference(resource.Name);
+            });
         }
 
         public static void UpdateWith(this IDictionary<string, ReferenceCollection> resource, IReadOnlyDictionary<string, IEnumerable<ElementReference>> model)

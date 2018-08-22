@@ -1,43 +1,36 @@
 ﻿using System.Collections.Generic;
-using Octopus.Client.Editors;
+using System.Threading.Tasks;
+using Octopus.Client.Editors.Async;
 using Octopus.Client.Model;
-using Octopus.Client.Repositories;
+using Octopus.Client.Repositories.Async;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 {
     internal class FakeEnvironmentRepository : FakeNamedRepository<EnvironmentResource>, IEnvironmentRepository
     {
-        public List<EnvironmentResource> GetAll()
+        public Task<List<EnvironmentResource>> GetAll()
         {
-            return null;
+            throw new System.NotImplementedException();
         }
 
-        public List<MachineResource> GetMachines(EnvironmentResource environment, int? skip, int? take = null, string partialName = null,
-            string roles = null, bool? isDisabled = false, string healthStatuses = null, string commStyles = null,
-            string tenantIds = null, string tenantTags = null)
+        public List<MachineResource> GetMachines(EnvironmentResource environment)
         {
-            return null;
+            throw new System.NotImplementedException();
         }
 
-        public EnvironmentsSummaryResource Summary(string ids = null, string partialName = null, string machinePartialName = null,
-            string roles = null, bool? isDisabled = false, string healthStatuses = null, string commStyles = null,
-            string tenantIds = null, string tenantTags = null, bool? hideEmptyEnvironments = false)
+        public Task Sort(string[] environmentIdsInOrder)
         {
-            return null;
+            throw new System.NotImplementedException();
         }
 
-        public void Sort(string[] environmentIdsInOrder)
+        public Task<EnvironmentEditor> CreateOrModify(string name)
         {
+            throw new System.NotImplementedException();
         }
 
-        public EnvironmentEditor CreateOrModify(string name)
+        public Task<EnvironmentEditor> CreateOrModify(string name, string description)
         {
-            return null;
-        }
-
-        public EnvironmentEditor CreateOrModify(string name, string description)
-        {
-            return null;
+            throw new System.NotImplementedException();
         }
     }
 }

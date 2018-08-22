@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
+using AutoFixture;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.TestUtils;
 using OctopusProjectBuilder.YamlReader.Tests.Helpers;
-using Ploeh.AutoFixture;
 
 namespace OctopusProjectBuilder.YamlReader.Tests
 {
@@ -32,7 +33,7 @@ namespace OctopusProjectBuilder.YamlReader.Tests
         [Test]
         public void Repository_should_save_and_load_model()
         {
-            var repository = new YamlSystemModelRepository();
+            var repository = new YamlSystemModelRepository(new NullLoggerFactory());
 
             var expected = _fixture.Create<SystemModel>();
             repository.Save(expected, _directory);

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoFixture;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.TestUtils;
 using OctopusProjectBuilder.Uploader.Tests.Helpers;
-using Ploeh.AutoFixture;
 using Environment = OctopusProjectBuilder.Model.Environment;
 using Permission = OctopusProjectBuilder.Model.Permission;
 using TenantedDeploymentMode = OctopusProjectBuilder.Model.TenantedDeploymentMode;
@@ -25,8 +26,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
         public void SetUp()
         {
             _repository = new FakeOctopusRepository();
-            _downloader = new ModelDownloader(_repository);
-            _uploader = new ModelUploader(_repository);
+            _downloader = new ModelDownloader(_repository, new NullLoggerFactory());
+            _uploader = new ModelUploader(_repository, new NullLoggerFactory());
         }
 
         [Test]
@@ -36,8 +37,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddProjectGroup(CreateItemWithRename<ProjectGroup>(false))
                 .AddProjectGroup(CreateItemWithRename<ProjectGroup>(false))
                 .Build();
-            _uploader.UploadModel(expected);
-            var actual = _downloader.DownloadModel();
+            _uploader.UploadModel(expected).GetAwaiter();
+            var actual = _downloader.DownloadModel().GetAwaiter().GetResult();
 
             actual.AssertDeepEqualsTo(expected);
         }
@@ -53,16 +54,16 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var model1 = new SystemModelBuilder()
                 .AddProjectGroup(new ProjectGroup(new ElementIdentifier(name1), description1))
                 .Build();
-            _uploader.UploadModel(model1);
+            _uploader.UploadModel(model1).GetAwaiter();
 
-            var originalId = _repository.ProjectGroups.FindByName(model1.ProjectGroups.Single().Identifier.Name).Id;
+            var originalId = _repository.ProjectGroups.FindByName(model1.ProjectGroups.Single().Identifier.Name).GetAwaiter().GetResult().Id;
 
             var model2 = new SystemModelBuilder()
                 .AddProjectGroup(new ProjectGroup(new ElementIdentifier(name2, name1), description2))
                 .Build();
-            _uploader.UploadModel(model2);
+            _uploader.UploadModel(model2).GetAwaiter();
 
-            var actual = _repository.ProjectGroups.Get(originalId);
+            var actual = _repository.ProjectGroups.Get(originalId).GetAwaiter().GetResult();
             Assert.That(actual.Name, Is.EqualTo(name2));
             Assert.That(actual.Description, Is.EqualTo(description2));
         }
@@ -83,9 +84,11 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
                     Enumerable.Empty<Phase>()))
                 .Build();
-            _uploader.UploadModel(model1);
+            _uploader.UploadModel(model1).GetAwaiter();
 
-            var originalId = _repository.Lifecycles.FindOne(l => l.Name == model1.Lifecycles.Single().Identifier.Name)
+            var originalId = _repository.Lifecycles
+                .FindOne(l => l.Name == model1.Lifecycles.Single().Identifier.Name)
+                .GetAwaiter().GetResult()
                 .Id;
 
             var model2 = new SystemModelBuilder()
@@ -96,9 +99,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     new RetentionPolicy(0, RetentionPolicy.RetentionUnit.Items),
                     Enumerable.Empty<Phase>()))
                 .Build();
-            _uploader.UploadModel(model2);
+            _uploader.UploadModel(model2).GetAwaiter();
 
-            var actual = _repository.Lifecycles.Get(originalId);
+            var actual = _repository.Lifecycles.Get(originalId).GetAwaiter().GetResult();
             Assert.That(actual.Name, Is.EqualTo(name2));
             Assert.That(actual.Description, Is.EqualTo(description2));
         }
@@ -118,10 +121,11 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     LibraryVariableSet.VariableSetContentType.Variables,
                     Enumerable.Empty<Variable>()))
                 .Build();
-            _uploader.UploadModel(model1);
+            _uploader.UploadModel(model1).GetAwaiter();
 
             var originalId = _repository.LibraryVariableSets
                 .FindOne(l => l.Name == model1.LibraryVariableSets.Single().Identifier.Name)
+                .GetAwaiter().GetResult()
                 .Id;
 
             var model2 = new SystemModelBuilder()
@@ -131,9 +135,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     LibraryVariableSet.VariableSetContentType.Variables,
                     Enumerable.Empty<Variable>()))
                 .Build();
-            _uploader.UploadModel(model2);
+            _uploader.UploadModel(model2).GetAwaiter();
 
-            var actual = _repository.LibraryVariableSets.Get(originalId);
+            var actual = _repository.LibraryVariableSets.Get(originalId).GetAwaiter().GetResult();
             Assert.That(actual.Name, Is.EqualTo(name2));
             Assert.That(actual.Description, Is.EqualTo(description2));
         }
@@ -159,9 +163,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
             _repository.Lifecycles.Create(new LifecycleResource { Name = "lifecycle1" });
             _repository.ProjectGroups.Create(new ProjectGroupResource { Name = "group1" });
 
-            _uploader.UploadModel(model1);
+            _uploader.UploadModel(model1).GetAwaiter();
 
-            var originalId = _repository.Projects.FindByName(model1.Projects.Single().Identifier.Name).Id;
+            var originalId = _repository.Projects.FindByName(model1.Projects.Single().Identifier.Name).GetAwaiter().GetResult().Id;
 
             var model2 = new SystemModelBuilder()
                 .AddProject(new Project(new ElementIdentifier(name2, name1), description2, false, false, false,
@@ -172,9 +176,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>(),
                     TenantedDeploymentMode.TenantedOrUntenanted))
                 .Build();
-            _uploader.UploadModel(model2);
+            _uploader.UploadModel(model2).GetAwaiter();
 
-            var actual = _repository.Projects.Get(originalId);
+            var actual = _repository.Projects.Get(originalId).GetAwaiter().GetResult();
             Assert.That(actual.Name, Is.EqualTo(name2));
             Assert.That(actual.Description, Is.EqualTo(description2));
         }
@@ -264,13 +268,13 @@ namespace OctopusProjectBuilder.Uploader.Tests
 
             _repository.Machines.Create(new MachineResource { Name = "m1" });
             _repository.Machines.Create(new MachineResource { Name = "m2" });
-            _repository.FakeMachineRoles.Add("r1");
-            _repository.FakeMachineRoles.Add("r2");
+            //_repository.FakeMachineRoles.Add("r1");
+            //_repository.FakeMachineRoles.Add("r2");
             _repository.Channels.Create(new ChannelResource { Name = "ch1" });
             _repository.Channels.Create(new ChannelResource { Name = "ch2" });
 
-            _uploader.UploadModel(expected);
-            var actual = _downloader.DownloadModel();
+            _uploader.UploadModel(expected).GetAwaiter();
+            var actual = _downloader.DownloadModel().GetAwaiter().GetResult();
 
             actual.AssertDeepEqualsTo(expected);
         }
@@ -323,8 +327,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddLifecycle(lifecycle)
                 .Build();
 
-            _uploader.UploadModel(expected);
-            var actual = _downloader.DownloadModel();
+            _uploader.UploadModel(expected).GetAwaiter();
+            var actual = _downloader.DownloadModel().GetAwaiter().GetResult();
 
             actual.AssertDeepEqualsTo(expected);
         }
@@ -360,13 +364,13 @@ namespace OctopusProjectBuilder.Uploader.Tests
 
             _repository.Machines.Create(new MachineResource { Name = "m1" });
             _repository.Machines.Create(new MachineResource { Name = "m2" });
-            _repository.FakeMachineRoles.Add("r1");
-            _repository.FakeMachineRoles.Add("r2");
+            //_repository.FakeMachineRoles.Add("r1");
+            //_repository.FakeMachineRoles.Add("r2");
             _repository.Channels.Create(new ChannelResource { Name = "ch1" });
             _repository.Channels.Create(new ChannelResource { Name = "ch2" });
 
-            _uploader.UploadModel(expected);
-            var actual = _downloader.DownloadModel();
+            _uploader.UploadModel(expected).GetAwaiter();
+            var actual = _downloader.DownloadModel().GetAwaiter().GetResult();
 
             actual.AssertDeepEqualsTo(expected);
         }
@@ -378,8 +382,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddEnvironment(CreateItemWithRename<Environment>(false))
                 .AddEnvironment(CreateItemWithRename<Environment>(false))
                 .Build();
-            _uploader.UploadModel(expected);
-            var actual = _downloader.DownloadModel();
+            _uploader.UploadModel(expected).GetAwaiter();
+            var actual = _downloader.DownloadModel().GetAwaiter().GetResult();
 
             actual.AssertDeepEqualsTo(expected);
         }
@@ -395,16 +399,16 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var model1 = new SystemModelBuilder()
                 .AddEnvironment(new Environment(new ElementIdentifier(name1), description1))
                 .Build();
-            _uploader.UploadModel(model1);
+            _uploader.UploadModel(model1).GetAwaiter();
 
-            var originalId = _repository.Environments.FindByName(model1.Environments.Single().Identifier.Name).Id;
+            var originalId = _repository.Environments.FindByName(model1.Environments.Single().Identifier.Name).GetAwaiter().GetResult().Id;
 
             var model2 = new SystemModelBuilder()
                 .AddEnvironment(new Environment(new ElementIdentifier(name2, name1), description2))
                 .Build();
-            _uploader.UploadModel(model2);
+            _uploader.UploadModel(model2).GetAwaiter();
 
-            var actual = _repository.Environments.Get(originalId);
+            var actual = _repository.Environments.Get(originalId).GetAwaiter().GetResult();
             Assert.That(actual.Name, Is.EqualTo(name2));
             Assert.That(actual.Description, Is.EqualTo(description2));
         }
@@ -416,8 +420,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddUserRole(CreateItemWithRename<UserRole>(false))
                 .AddUserRole(CreateItemWithRename<UserRole>(false))
                 .Build();
-            _uploader.UploadModel(expected);
-            var actual = _downloader.DownloadModel();
+            _uploader.UploadModel(expected).GetAwaiter();
+            var actual = _downloader.DownloadModel().GetAwaiter().GetResult();
 
             actual.AssertDeepEqualsTo(expected);
         }
@@ -434,17 +438,17 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddUserRole(new UserRole(new ElementIdentifier(name1), description1,
                     CreateItem<IEnumerable<Permission>>()))
                 .Build();
-            _uploader.UploadModel(model1);
+            _uploader.UploadModel(model1).GetAwaiter();
 
-            var originalId = _repository.UserRoles.FindByName(model1.UserRoles.Single().Identifier.Name).Id;
+            var originalId = _repository.UserRoles.FindByName(model1.UserRoles.Single().Identifier.Name).GetAwaiter().GetResult().Id;
 
             var model2 = new SystemModelBuilder()
                 .AddUserRole(new UserRole(new ElementIdentifier(name2, name1), description2,
                     CreateItem<IEnumerable<Permission>>()))
                 .Build();
-            _uploader.UploadModel(model2);
+            _uploader.UploadModel(model2).GetAwaiter();
 
-            var actual = _repository.UserRoles.Get(originalId);
+            var actual = _repository.UserRoles.Get(originalId).GetAwaiter().GetResult();
             Assert.That(actual.Name, Is.EqualTo(name2));
             Assert.That(actual.Description, Is.EqualTo(description2));
         }
@@ -458,16 +462,16 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var model1 = new SystemModelBuilder()
                 .AddTagSet(new TagSet(new ElementIdentifier(name1), CreateItem<IEnumerable<string>>()))
                 .Build();
-            _uploader.UploadModel(model1);
+            _uploader.UploadModel(model1).GetAwaiter();
 
-            var originalId = _repository.TagSets.FindByName(model1.TagSets.Single().Identifier.Name).Id;
+            var originalId = _repository.TagSets.FindByName(model1.TagSets.Single().Identifier.Name).GetAwaiter().GetResult().Id;
 
             var model2 = new SystemModelBuilder()
                 .AddTagSet(new TagSet(new ElementIdentifier(name2, name1), CreateItem<IEnumerable<string>>()))
                 .Build();
-            _uploader.UploadModel(model2);
+            _uploader.UploadModel(model2).GetAwaiter();
 
-            var actual = _repository.TagSets.Get(originalId);
+            var actual = _repository.TagSets.Get(originalId).GetAwaiter().GetResult();
             Assert.That(actual.Name, Is.EqualTo(name2));
         }
 
@@ -480,16 +484,16 @@ namespace OctopusProjectBuilder.Uploader.Tests
             var model1 = new SystemModelBuilder()
                 .AddTenant(new Tenant(new ElementIdentifier(name1), CreateItem<IEnumerable<ElementReference>>(), new Dictionary<string, IEnumerable<string>>()))
                 .Build();
-            _uploader.UploadModel(model1);
+            _uploader.UploadModel(model1).GetAwaiter();
 
-            var originalId = _repository.Tenants.FindByName(model1.Tenants.Single().Identifier.Name).Id;
+            var originalId = _repository.Tenants.FindByName(model1.Tenants.Single().Identifier.Name).GetAwaiter().GetResult().Id;
 
             var model2 = new SystemModelBuilder()
                 .AddTenant(new Tenant(new ElementIdentifier(name2, name1), CreateItem<IEnumerable<ElementReference>>(), new Dictionary<string, IEnumerable<string>>()))
                 .Build();
-            _uploader.UploadModel(model2);
+            _uploader.UploadModel(model2).GetAwaiter();
 
-            var actual = _repository.Tenants.Get(originalId);
+            var actual = _repository.Tenants.Get(originalId).GetAwaiter().GetResult();
             Assert.That(actual.Name, Is.EqualTo(name2));
         }
 
@@ -501,8 +505,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddTagSet(new TagSet(new ElementIdentifier("ts2"), new List<string> { "t3", "t4" }))
                 .Build();
 
-            _uploader.UploadModel(expected);
-            var actual = _downloader.DownloadModel();
+            _uploader.UploadModel(expected).GetAwaiter();
+            var actual = _downloader.DownloadModel().GetAwaiter().GetResult();
 
             actual.AssertDeepEqualsTo(expected);
         }
@@ -567,8 +571,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddEnvironment(environment1)
                 .Build();
 
-            _uploader.UploadModel(expected);
-            var actual = _downloader.DownloadModel();
+            _uploader.UploadModel(expected).GetAwaiter();
+            var actual = _downloader.DownloadModel().GetAwaiter().GetResult();
 
             actual.AssertDeepEqualsTo(expected);
         }
@@ -615,8 +619,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
 
             _repository.Users.Register(new RegisterCommand { Username = "username1" });
 
-            _uploader.UploadModel(expected);
-            var actual = _downloader.DownloadModel();
+            _uploader.UploadModel(expected).GetAwaiter();
+            var actual = _downloader.DownloadModel().GetAwaiter().GetResult();
 
             actual.AssertDeepEqualsTo(expected);
         }
@@ -636,9 +640,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<ElementReference>(),
                     Enumerable.Empty<ElementReference>()))
                 .Build();
-            _uploader.UploadModel(model1);
+            _uploader.UploadModel(model1).GetAwaiter();
 
-            var originalId = _repository.Teams.FindByName(model1.Teams.Single().Identifier.Name).Id;
+            var originalId = _repository.Teams.FindByName(model1.Teams.Single().Identifier.Name).GetAwaiter().GetResult().Id;
 
             var model2 = new SystemModelBuilder()
                 .AddTeam(new Team(
@@ -649,9 +653,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<ElementReference>(),
                     Enumerable.Empty<ElementReference>()))
                 .Build();
-            _uploader.UploadModel(model2);
+            _uploader.UploadModel(model2).GetAwaiter();
 
-            var actual = _repository.Teams.Get(originalId);
+            var actual = _repository.Teams.Get(originalId).GetAwaiter().GetResult();
             Assert.That(actual.Name, Is.EqualTo(name2));
         }
 
@@ -662,8 +666,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 .AddMachinePolicy(CreateItemWithRename<MachinePolicy>(false))
                 .AddMachinePolicy(CreateItemWithRename<MachinePolicy>(false))
                 .Build();
-            _uploader.UploadModel(expected);
-            var actual = _downloader.DownloadModel();
+            _uploader.UploadModel(expected).GetAwaiter();
+            var actual = _downloader.DownloadModel().GetAwaiter().GetResult();
 
             actual.AssertDeepEqualsTo(expected);
         }
@@ -685,9 +689,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     CreateItem<Model.MachineUpdatePolicy>(),
                     CreateItem<Model.MachineCleanupPolicy>()))
                 .Build();
-            _uploader.UploadModel(model1);
+            _uploader.UploadModel(model1).GetAwaiter();
 
-            var originalId = _repository.MachinePolicies.FindByName(model1.MachinePolicies.Single().Identifier.Name).Id;
+            var originalId = _repository.MachinePolicies.FindByName(model1.MachinePolicies.Single().Identifier.Name).GetAwaiter().GetResult().Id;
 
             var model2 = new SystemModelBuilder()
                 .AddMachinePolicy(new MachinePolicy(
@@ -698,9 +702,9 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     CreateItem<Model.MachineUpdatePolicy>(),
                     CreateItem<Model.MachineCleanupPolicy>()))
                 .Build();
-            _uploader.UploadModel(model2);
+            _uploader.UploadModel(model2).GetAwaiter();
 
-            var actual = _repository.MachinePolicies.Get(originalId);
+            var actual = _repository.MachinePolicies.Get(originalId).GetAwaiter().GetResult();
             Assert.That(actual.Name, Is.EqualTo(name2));
             Assert.That(actual.Description, Is.EqualTo(description2));
         }
