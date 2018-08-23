@@ -1,9 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <PackageId>OctopusProjectBuilder.Console</PackageId>
+    <Version>1.0.0</Version>
+    <Description>Console application allowing to configure Octopus resources from YAML files.</Description>
+    <Company>Wojciech Kotlarski</Company>
+    <Copyright>Copyright © Wojciech Kotlarski 2016</Copyright>
+    <Authors>Wojciech Kotlarski</Authors>
+    <PackageLicenseUrl>http://opensource.org/licenses/BSD-2-Clause</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Suremaker/OctopusProjectBuilder</PackageProjectUrl>
+    <PackageTags>octopus yaml configuration</PackageTags>
+    <ApplicationIcon />
+    <PackageReleaseNotes>Please visit https://github.com/Suremaker/OctopusProjectBuilder/releases for details.</PackageReleaseNotes>
     <ToolCommandName>octopus-project-builder</ToolCommandName>
     <PackAsTool>True</PackAsTool>
-     <OutputType>Exe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
@@ -18,6 +29,17 @@
     <ProjectReference Include="..\OctopusProjectBuilder.Model\OctopusProjectBuilder.Model.csproj" />
     <ProjectReference Include="..\OctopusProjectBuilder.Uploader\OctopusProjectBuilder.Uploader.csproj" />
     <ProjectReference Include="..\OctopusProjectBuilder.YamlReader\OctopusProjectBuilder.YamlReader.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Link>LICENSE</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\LICENSE-YamlDotNet">
+      <Link>LICENSE-YamlDotNet</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
