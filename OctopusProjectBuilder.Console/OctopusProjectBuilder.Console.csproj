@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <ToolCommandName>octopus-project-builder</ToolCommandName>
@@ -6,14 +6,6 @@
      <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="OctopusProjectBuilder.Console.bat" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="OctopusProjectBuilder.Console.bat" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Common.Logging" Version="3.4.1" />
@@ -26,12 +18,6 @@
     <ProjectReference Include="..\OctopusProjectBuilder.Model\OctopusProjectBuilder.Model.csproj" />
     <ProjectReference Include="..\OctopusProjectBuilder.Uploader\OctopusProjectBuilder.Uploader.csproj" />
     <ProjectReference Include="..\OctopusProjectBuilder.YamlReader\OctopusProjectBuilder.YamlReader.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="OctopusProjectBuilder.Console.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>
