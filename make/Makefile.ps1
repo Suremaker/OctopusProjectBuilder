@@ -64,7 +64,7 @@ Define-Step -Name 'Documentation generation' -Target 'build' -Body {
 Define-Step -Name 'Packaging' -Target 'build' -Body {
 	. (require 'psmake.mod.packaging')
 	call dotnet publish OctopusProjectBuilder.Console\OctopusProjectBuilder.Console.csproj --configuration Release --no-build
-	call dotnet pack OctopusProjectBuilder.Console/OctopusProjectBuilder.Console.csproj --configuration Release --output . /p:PackageVersion=$VERSION
+	call dotnet pack OctopusProjectBuilder.Console/OctopusProjectBuilder.Console.csproj --configuration Release --output .. /p:PackageVersion=$VERSION
 }
 
 Define-Step -Name 'Update Wiki' -Target 'update-wiki' -Body {
