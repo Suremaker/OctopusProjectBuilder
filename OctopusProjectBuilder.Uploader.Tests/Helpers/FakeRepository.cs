@@ -13,7 +13,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
     {
         protected readonly List<T> _items = new List<T>();
 
-        public Task<T> Create(T resource)
+        public Task<T> Create(T resource, object pathParameters = null)
         {
             resource.Id = Guid.NewGuid().ToString();
             OnCreate(resource);

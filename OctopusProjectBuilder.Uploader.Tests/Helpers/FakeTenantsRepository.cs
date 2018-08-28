@@ -34,6 +34,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new System.NotImplementedException();
         }
 
+        public Task<List<TenantResource>> FindAll(string name, string[] tags = null, int pageSize = 2147483647)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task<List<TenantResource>> FindAll(string name, string[] tags = null)
         {
             throw new System.NotImplementedException();

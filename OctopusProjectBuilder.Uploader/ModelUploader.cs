@@ -7,6 +7,7 @@ using Octopus.Client.Model;
 using Octopus.Client.Repositories.Async;
 using OctopusProjectBuilder.Uploader.Converters;
 using Microsoft.Extensions.Logging;
+using Octopus.Client.Extensibility;
 using OctopusProjectBuilder.Model;
 
 namespace OctopusProjectBuilder.Uploader

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
+using TenantedDeploymentMode = Octopus.Client.Model.TenantedDeploymentMode;
 
 namespace OctopusProjectBuilder.Uploader.Converters
 {
@@ -20,7 +21,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             resource.LifecycleId = lifecycleResourceId;
             resource.ProjectGroupId = projectGroupResourceId;
 
-            resource.TenantedDeploymentMode = (ProjectTenantedDeploymentMode)model.TenantedDeploymentMode;
+            resource.TenantedDeploymentMode = (TenantedDeploymentMode) model.TenantedDeploymentMode;
             resource.IncludedLibraryVariableSetIds = (await Task.WhenAll(model.IncludedLibraryVariableSetRefs.Select(async r => await repository.LibraryVariableSets.ResolveResourceId(r)).ToList())).ToList();
             if (model.VersioningStrategy != null)
                 resource.VersioningStrategy = (resource.VersioningStrategy ?? new VersioningStrategyResource()).UpdateWith(model.VersioningStrategy);
@@ -49,7 +50,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 new ElementReference(projectGroupResource.Name),
                 resource.VersioningStrategy?.ToModel(),
                 await Task.WhenAll(triggers.Items.Select(t => t.ToModel(repository))),
-                (TenantedDeploymentMode)resource.TenantedDeploymentMode);
+                (OctopusProjectBuilder.Model.TenantedDeploymentMode)resource.TenantedDeploymentMode);
         }
     }
 }

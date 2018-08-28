@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Octopus.Client.Editors.Async;
+using Octopus.Client.Extensibility;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories.Async;
 
@@ -38,6 +39,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new NotImplementedException();
         }
 
+        public Task<ResourceCollection<ReleaseResource>> GetReleases(ProjectResource project, int skip = 0, int? take = null, string searchByVersion = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IReadOnlyList<ReleaseResource>> GetAllReleases(ProjectResource project)
         {
             throw new NotImplementedException();
@@ -49,6 +55,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         }
 
         public Task<ResourceCollection<ChannelResource>> GetChannels(ProjectResource project)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ProgressionResource> GetProgression(ProjectResource project)
         {
             throw new NotImplementedException();
         }

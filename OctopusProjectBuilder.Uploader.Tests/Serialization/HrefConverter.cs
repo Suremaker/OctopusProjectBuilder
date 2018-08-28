@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Octopus.Client.Extensibility;
 using Octopus.Client.Model;
 
 namespace OctopusProjectBuilder.Uploader.Tests.Serialization
