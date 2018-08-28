@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Octopus.Client.Extensibility;
 using Octopus.Client.Model;
 using Octopus.Client.Repositories.Async;
 using OctopusProjectBuilder.Model;

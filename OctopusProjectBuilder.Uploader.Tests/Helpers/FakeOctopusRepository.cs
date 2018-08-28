@@ -40,6 +40,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public IBackupRepository Backups { get; }
         public IBuiltInPackageRepositoryRepository BuiltInPackageRepository { get; }
         public ICommunityActionTemplateRepository CommunityActionTemplates { get; }
+        public IConfigurationRepository Configuration { get; }
         public IDashboardConfigurationRepository DashboardConfigurations { get; }
         public IDashboardRepository Dashboards { get; }
         public IDeploymentProcessRepository DeploymentProcesses { get; }
@@ -53,7 +54,9 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public ILifecyclesRepository Lifecycles { get; }
         public IMachineRepository Machines { get; }
         public IMachineRoleRepository MachineRoles { get; }
+        public IMigrationRepository Migrations { get; }
         public IMachinePolicyRepository MachinePolicies { get; }
+        public IPerformanceConfigurationRepository PerformanceConfiguration { get; }
         public IProjectGroupRepository ProjectGroups { get; }
         public IProjectRepository Projects { get; }
         public IReleaseRepository Releases { get; }
@@ -65,9 +68,12 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         public ITeamsRepository Teams { get; }
         public ITagSetRepository TagSets { get; }
         public ITenantRepository Tenants { get; }
+        public ITenantVariablesRepository TenantVariables { get; }
         public IUserRepository Users { get; }
         public IUserRolesRepository UserRoles { get; }
         public IVariableSetRepository VariableSets { get; }
+        public IWorkerPoolRepository WorkerPools { get; }
+        public IWorkerRepository Workers { get; }
         public IChannelRepository Channels { get; }
         public IProjectTriggerRepository ProjectTriggers { get; }
         public IAccountRepository Accounts { get; }

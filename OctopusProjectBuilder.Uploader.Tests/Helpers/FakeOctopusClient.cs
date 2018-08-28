@@ -102,6 +102,7 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
 
         public RootResource RootDocument { get; }
         public IOctopusAsyncRepository Repository { get; }
+        public bool IsUsingSecureConnection { get; }
         public event Action<OctopusRequest> SendingOctopusRequest;
         public event Action<OctopusResponse> ReceivedOctopusResponse;
         public event Action<HttpRequestMessage> BeforeSendingHttpRequest;
