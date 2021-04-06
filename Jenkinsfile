@@ -6,7 +6,7 @@ pipeline {
  stages {
   stage('Checkout') {
    steps {
-    git credentialsId: 'userId', url: 'E:/Repositories/OctopusProjectBuilder.git', branch: 'master'
+    git url: 'E:/Repositories/OctopusProjectBuilder.git', branch: 'master'
    }
   }
   stage('Restore Packages') {
