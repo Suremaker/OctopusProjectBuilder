@@ -10,7 +10,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
         public static MachineHealthCheckPolicy ToModel(this Octopus.Client.Model.MachineHealthCheckPolicy resource)
         {
             return new MachineHealthCheckPolicy(
-                resource.HealthCheckInterval,
+                resource.HealthCheckInterval ?? TimeSpan.Zero,
                 ToScriptPolicy(resource.TentacleEndpointHealthCheckPolicy),
                 ToScriptPolicy(resource.SshEndpointHealthCheckPolicy));
         }

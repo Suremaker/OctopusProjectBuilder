@@ -25,5 +25,10 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<ResourceCollection<ProjectTriggerResource>> FindByRunbook(params string[] runbookIds)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

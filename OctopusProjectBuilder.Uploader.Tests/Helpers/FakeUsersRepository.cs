@@ -30,6 +30,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new NotImplementedException();
         }
 
+        public Task<UserResource> FindByUsername(string username)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<UserResource> Create(string username, string displayName, string password = null, string emailAddress = null)
         {
             throw new NotImplementedException();
@@ -65,6 +70,16 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new NotImplementedException();
         }
 
+        public Task<SpaceResource[]> GetSpaces(UserResource user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiKeyCreatedResource> CreateApiKey(UserResource user, string purpose = null, DateTimeOffset? expires = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<UserPermissionSetResource> GetPermissions(UserResource user)
         {
             throw new NotImplementedException();
@@ -76,6 +91,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         }
 
         public Task<List<ApiKeyResource>> GetApiKeys(UserResource user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RevokeApiKey(ApiKeyResourceBase apiKey)
         {
             throw new NotImplementedException();
         }

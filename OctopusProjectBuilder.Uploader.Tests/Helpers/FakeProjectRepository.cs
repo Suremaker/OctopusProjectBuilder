@@ -39,6 +39,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new NotImplementedException();
         }
 
+        public IProjectBetaRepository Beta()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<ResourceCollection<ReleaseResource>> GetReleases(ProjectResource project, int skip = 0, int? take = null, string searchByVersion = null)
         {
             throw new NotImplementedException();
@@ -59,6 +64,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new NotImplementedException();
         }
 
+        public Task<IReadOnlyList<ChannelResource>> GetAllChannels(ProjectResource project)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<ProgressionResource> GetProgression(ProjectResource project)
         {
             throw new NotImplementedException();
@@ -70,12 +80,48 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             return Task.FromResult(new ResourceCollection<ProjectTriggerResource>(projectTriggers, new LinkCollection()));
         }
 
+        public Task<IReadOnlyList<ProjectTriggerResource>> GetAllTriggers(ProjectResource project)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task SetLogo(ProjectResource project, string fileName, Stream contents)
         {
             throw new NotImplementedException();
         }
 
         public Task<ProjectEditor> CreateOrModify(string name, ProjectGroupResource projectGroup, LifecycleResource lifecycle)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ProjectEditor> CreateOrModify(string name, ProjectGroupResource projectGroup, LifecycleResource lifecycle, string description,
+            string cloneId = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResourceCollection<RunbookSnapshotResource>> GetRunbookSnapshots(ProjectResource project, int skip = 0, int? take = null, string searchByName = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IReadOnlyList<RunbookSnapshotResource>> GetAllRunbookSnapshots(ProjectResource project)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<RunbookSnapshotResource> GetRunbookSnapshotByName(ProjectResource project, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResourceCollection<RunbookResource>> GetRunbooks(ProjectResource project, int skip = 0, int? take = null, string searchByName = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IReadOnlyList<RunbookResource>> GetAllRunbooks(ProjectResource project)
         {
             throw new NotImplementedException();
         }

@@ -11,5 +11,10 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<MachinePolicyResource> GetTemplate()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

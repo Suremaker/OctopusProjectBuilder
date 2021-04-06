@@ -2,7 +2,8 @@
   "profiles": {
     "OctopusProjectBuilder.Console": {
       "commandName": "Project",
-      "commandLineArgs": "--action upload -octopusUrl \\\"http://localhost:xxxx\\\" --octopusApiKey \\\"octopus api key\\\" --definitions \\\"path to definitions\\\""
+      "dev": "API-DECA5WD4UTKSNJC2HOSHMESRJ2GSZH2",
+      "commandLineArgs": "--action upload -octopusUrl \\\"http://localhost:8069\\\" --octopusApiKey \\\"API-N6MHSOWMNK2OWCTNOTPFKPKW7K6PPXHQ\\\" --definitions \\\"test\\\""
     }
   }
 }

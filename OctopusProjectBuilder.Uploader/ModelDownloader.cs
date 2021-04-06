@@ -22,16 +22,16 @@ namespace OctopusProjectBuilder.Uploader
         public async Task<SystemModel> DownloadModel()
         {
             return new SystemModel(
-                await Task.WhenAll((await _repository.MachinePolicies.FindAll()).Select(ReadMachinePolicy)),
-                await Task.WhenAll((await _repository.Lifecycles.FindAll()).Select(ReadLifecycle)),
+                await Task.WhenAll((await _repository.MachinePolicies.FindMany(x => false)).Select(ReadMachinePolicy)),
+                await Task.WhenAll((await _repository.Lifecycles.FindMany(x => false)).Select(ReadLifecycle)),
                 await Task.WhenAll((await _repository.ProjectGroups.FindAll()).Select(ReadProjectGroup)),
                 await Task.WhenAll((await _repository.LibraryVariableSets.FindAll()).Select(ReadLibraryVariableSet)),
-                await Task.WhenAll((await _repository.Projects.FindAll()).Select(ReadProject)),
+                await Task.WhenAll((await _repository.Projects.FindMany(x => x.Name == "Tyler Content Manager")).Select(ReadProject)),
                 await Task.WhenAll((await _repository.Environments.FindAll()).Select(ReadEnvironment)),
-                await Task.WhenAll((await _repository.UserRoles.FindAll()).Select(ReadUserRole)),
-                await Task.WhenAll((await _repository.Teams.FindAll()).Select(ReadTeam)),
-                await Task.WhenAll((await _repository.Tenants.FindAll()).Select(ReadTenant)),
-                await Task.WhenAll((await _repository.TagSets.FindAll()).Select(ReadTagSet)));
+                await Task.WhenAll((await _repository.UserRoles.FindMany(x => false)).Select(ReadUserRole)),
+                await Task.WhenAll((await _repository.Teams.FindMany(x => false)).Select(ReadTeam)),
+                await Task.WhenAll((await _repository.Tenants.FindMany(x => false)).Select(ReadTenant)),
+                await Task.WhenAll((await _repository.TagSets.FindMany(x => false)).Select(ReadTagSet)));
         }
 
         private async Task<MachinePolicy> ReadMachinePolicy(MachinePolicyResource resource)

@@ -22,6 +22,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             return Task.CompletedTask;
         }
 
+        public IDeploymentProcessBetaRepository Beta()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<ReleaseTemplateResource> GetTemplate(DeploymentProcessResource deploymentProcess, ChannelResource channel)
         {
             throw new NotImplementedException();

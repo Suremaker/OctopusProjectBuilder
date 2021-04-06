@@ -7,8 +7,16 @@ namespace OctopusProjectBuilder.Uploader.Converters
     {
         public static ProjectTriggerAutoDeployAction ToModel(this TriggerActionResource resource)
         {
-            var autoDeployActionResource = (AutoDeployActionResource)resource;
-            return new ProjectTriggerAutoDeployAction(autoDeployActionResource.ShouldRedeployWhenMachineHasBeenDeployedTo);
+            if (resource is AutoDeployActionResource)
+            {
+                var autoDeployActionResource = (AutoDeployActionResource) resource;
+                return new ProjectTriggerAutoDeployAction(autoDeployActionResource
+                    .ShouldRedeployWhenMachineHasBeenDeployedTo);
+            }
+            else
+            {
+                return new ProjectTriggerAutoDeployAction(false);
+            }
         }
 
         public static AutoDeployActionResource FromModel(this ProjectTriggerAutoDeployAction model)

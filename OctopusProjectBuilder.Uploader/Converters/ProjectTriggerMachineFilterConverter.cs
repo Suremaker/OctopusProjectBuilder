@@ -11,8 +11,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
     {
         public static async Task<ProjectTriggerMachineFilter> ToModel(this TriggerFilterResource resource, IOctopusAsyncRepository repository)
         {
-            var machineFilterResource = (MachineFilterResource)resource;
-
+            var machineFilterResource = (MachineFilterResource) resource;
+                
             var environments = await Task.WhenAll(machineFilterResource.EnvironmentIds.Select(async v => new ElementReference((await repository.Environments.Get(v)).Name)));
             var roles = machineFilterResource.Roles.Select(v => new ElementReference(v));
             var eventGroups = machineFilterResource.EventGroups.Select(v => new ElementReference(v));

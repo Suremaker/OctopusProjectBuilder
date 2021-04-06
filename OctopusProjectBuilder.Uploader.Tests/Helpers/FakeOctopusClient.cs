@@ -70,7 +70,17 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new NotImplementedException();
         }
 
+        public Task Put<TResource>(string path, TResource resource, object pathParameters = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<TResource> Update<TResource>(string path, TResource resource, object pathParameters = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Delete(string path, object pathParameters = null, object resource = null)
         {
             throw new NotImplementedException();
         }
@@ -91,6 +101,26 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         }
 
         public Uri QualifyUri(string path, object parameters = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SignIn(LoginCommand loginCommand)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SignOut()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IOctopusSpaceAsyncRepository ForSpace(SpaceResource space)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IOctopusSystemAsyncRepository ForSystem()
         {
             throw new NotImplementedException();
         }

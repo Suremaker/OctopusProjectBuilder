@@ -14,6 +14,11 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
             throw new System.NotImplementedException();
         }
 
+        public Task<MultiTenancyStatusResource> Status()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task SetLogo(TenantResource tenant, string fileName, Stream contents)
         {
             throw new System.NotImplementedException();
@@ -45,6 +50,16 @@ namespace OctopusProjectBuilder.Uploader.Tests.Helpers
         }
 
         public Task<TenantEditor> CreateOrModify(string name)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<TenantEditor> CreateOrModify(string name, string description)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<TenantEditor> CreateOrModify(string name, string description, string cloneId)
         {
             throw new System.NotImplementedException();
         }
