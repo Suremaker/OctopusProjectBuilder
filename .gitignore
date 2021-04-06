@@ -9,3 +9,5 @@ make/psmake.*
 reports/
 wiki/
 Manual.md
+.idea/
+launchSettings.json

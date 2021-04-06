@@ -31,6 +31,10 @@ namespace OctopusProjectBuilder.YamlReader.Model
         
         [YamlMember(Order = 6)]
         public YamlVariablePrompt Prompt { get; set; }
+        
+        [YamlMember(Order = 7)]
+        [Description("Variable file value. \\(Please note that OctopusProjectBuilder is not able to retrieve values of sensitive variables from Octopus\\)")]
+        public string File { get; set; }
 
         public static YamlVariable FromModel(Variable model)
         {
@@ -47,7 +51,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
 
         public Variable ToModel()
         {
-            return new Variable(Name, IsEditable, IsSensitive, Value, (Scope ?? new YamlVariableScope()).ToModel(), Prompt?.ToModel());
+            return new Variable(Name, IsEditable, IsSensitive, (File != null ? System.IO.File.ReadAllText(File) : Value), (Scope ?? new YamlVariableScope()).ToModel(), Prompt?.ToModel());
         }
     }
 }
