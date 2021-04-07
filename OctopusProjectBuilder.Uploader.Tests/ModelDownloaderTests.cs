@@ -157,7 +157,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<ElementReference>(),
                     new ElementReference("lifecycle1"),
                     new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>(),
-                    TenantedDeploymentMode.TenantedOrUntenanted))
+                    TenantedDeploymentMode.TenantedOrUntenanted,
+                    Enumerable.Empty<ActionTemplateParameterResource>()))
                 .Build();
 
             _repository.Lifecycles.Create(new LifecycleResource { Name = "lifecycle1" });
@@ -174,7 +175,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<ElementReference>(),
                     new ElementReference("lifecycle1"),
                     new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>(),
-                    TenantedDeploymentMode.TenantedOrUntenanted))
+                    TenantedDeploymentMode.TenantedOrUntenanted,
+                    Enumerable.Empty<ActionTemplateParameterResource>()))
                 .Build();
             _uploader.UploadModel(model2).GetAwaiter();
 
@@ -248,13 +250,13 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 new[] { new ElementReference(libraryVariableSet.Identifier.Name) },
                 new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name),
                 CreateItem<VersioningStrategy>(), Enumerable.Empty<ProjectTrigger>(),
-                TenantedDeploymentMode.TenantedOrUntenanted);
+                TenantedDeploymentMode.TenantedOrUntenanted, Enumerable.Empty<ActionTemplateParameterResource>());
             var project2 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(),
                 CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables,
                 new[] { new ElementReference(libraryVariableSet.Identifier.Name) },
                 new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name),
                 null, new[] { CreateProjectTrigger("m1", "env1"), CreateProjectTrigger("m2", "env2") },
-                TenantedDeploymentMode.TenantedOrUntenanted);
+                TenantedDeploymentMode.TenantedOrUntenanted, Enumerable.Empty<ActionTemplateParameterResource>());
 
             var expected = new SystemModelBuilder()
                 .AddProject(project1)
@@ -556,7 +558,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 new[] { new ElementReference(libraryVariableSet.Identifier.Name) },
                 new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name),
                 CreateItem<VersioningStrategy>(), Enumerable.Empty<ProjectTrigger>(),
-                TenantedDeploymentMode.TenantedOrUntenanted);
+                TenantedDeploymentMode.TenantedOrUntenanted, Enumerable.Empty<ActionTemplateParameterResource>());
 
             var tenant = new Tenant(new ElementIdentifier("t1"),
                 new[] { new ElementReference(tagset.Identifier.Name) },
@@ -596,7 +598,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 Enumerable.Empty<ElementReference>(),
                 new ElementReference("lifecycle1"),
                 new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>(),
-                TenantedDeploymentMode.TenantedOrUntenanted);
+                TenantedDeploymentMode.TenantedOrUntenanted, Enumerable.Empty<ActionTemplateParameterResource>());
             var environment1 = new Environment(new ElementIdentifier("env1"), CreateItem<string>());
 
             var team = new Team(
