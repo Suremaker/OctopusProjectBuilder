@@ -24,9 +24,9 @@ pipeline {
     bat "$dotnet build --configuration Release"
    }
   }
-  stage('Pack') {
+  stage('Publish') {
    steps {
-    bat "$dotnet pack --no-build --output nupkgs"
+    bat "$dotnet --configuration Release --runtime win-x64 --output \"E:/OctopusProjectBuilder/$env.BRANCH_NAME\""
    }
   }
  }

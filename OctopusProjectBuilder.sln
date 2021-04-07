@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE-YamlDotNet = LICENSE-YamlDotNet
 		Manual.md = Manual.md
 		README.md = README.md
+		Jenkinsfile = Jenkinsfile
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctopusProjectBuilder.Console", "OctopusProjectBuilder.Console\OctopusProjectBuilder.Console.csproj", "{A3E6150A-A08F-4114-A9EE-7C0CE6BF942D}"
