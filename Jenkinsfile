@@ -26,7 +26,7 @@ pipeline {
   }
   stage('Publish') {
    steps {
-    bat "$dotnet --configuration Release --runtime win-x64 --output \"E:/OctopusProjectBuilder/$env.BRANCH_NAME\""
+    bat "$dotnet publish --configuration Release --runtime win-x64 --output \"E:/OctopusProjectBuilder/$env.BRANCH_NAME\""
    }
   }
  }
