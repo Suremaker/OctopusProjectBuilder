@@ -4,11 +4,6 @@ pipeline {
   dotnet = '"C:\\Program Files\\dotnet\\dotnet.exe"'
  }
  stages {
-  stage('Checkout') {
-   steps {
-    git url: 'E:/Repositories/OctopusProjectBuilder.git', branch: 'master'
-   }
-  }
   stage('Restore Packages') {
    steps {
     bat "$dotnet restore --configfile NuGet.Config"
