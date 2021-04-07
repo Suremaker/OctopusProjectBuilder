@@ -15,6 +15,11 @@ namespace OctopusProjectBuilder.Uploader.Converters
 
         public static async Task<DeploymentProcessResource> UpdateWith(this DeploymentProcessResource resource, DeploymentProcess model, IOctopusAsyncRepository repository)
         {
+            if (model == null)
+            {
+                return resource;
+            }
+            
             resource.Steps.Clear();
             foreach (var step in model.DeploymentSteps.Select(s => new DeploymentStepResource().UpdateWith(s, repository)))
                 resource.Steps.Add(await step);

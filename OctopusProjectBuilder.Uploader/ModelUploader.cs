@@ -115,7 +115,10 @@ namespace OctopusProjectBuilder.Uploader
                 variableSetResource,
                 projectResource.Name);
 
-            await UploadProjectTriggers(projectResource, project.Triggers);
+            if (project.Triggers != null)
+            {
+                await UploadProjectTriggers(projectResource, project.Triggers);
+            }
         }
 
         private async Task UploadProjectTriggers(ProjectResource projectResource, IEnumerable<ProjectTrigger> triggers)

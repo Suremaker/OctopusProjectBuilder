@@ -34,14 +34,14 @@ namespace OctopusProjectBuilder.YamlReader.Model
 
         [Description("Disable a project to prevent releases or deployments from being created.")]
         [YamlMember(Order = 8)]
-        public bool IsDisabled { get; set; }
+        public bool? IsDisabled { get; set; }
 
         [YamlMember(Order = 9)]
-        public bool AutoCreateRelease { get; set; }
+        public bool? AutoCreateRelease { get; set; }
 
         [Description("Skips package deployment and installation if it is already installed.")]
         [YamlMember(Order = 10)]
-        public bool DefaultToSkipIfAlreadyInstalled { get; set; }
+        public bool? DefaultToSkipIfAlreadyInstalled { get; set; }
 
         [Description("Versioning strategy.")]
         [YamlMember(Order = 11)]
@@ -58,9 +58,13 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [Description("Project variables.")]
         [YamlMember(Order = 14)]
         public YamlVariable[] Variables { get; set; }
+        
+        [Description("Project templates.")]
+        [YamlMember(Order = 15)]
+        public YamlTemplateVariable[] Templates { get; set; }
 
         [Description("Project triggers.")]
-        [YamlMember(Order = 15)]
+        [YamlMember(Order = 16)]
         public YamlProjectTrigger[] Triggers { get; set; }
 
         public void ApplyTemplate(YamlTemplates templates)
@@ -72,20 +76,25 @@ namespace OctopusProjectBuilder.YamlReader.Model
 
         public Project ToModel()
         {
+            TenantedDeploymentMode? tenantedDeploymentMode = TenantedDeploymentMode != null
+                ? (TenantedDeploymentMode?) Enum.Parse(typeof(TenantedDeploymentMode), TenantedDeploymentMode)
+                : null;
+            
             return new Project(
                 ToModelName(),
                 Description,
                 IsDisabled,
                 AutoCreateRelease,
                 DefaultToSkipIfAlreadyInstalled,
-                DeploymentProcess.ToModel(),
-                Variables.EnsureNotNull().Select(v => v.ToModel()),
-                IncludedLibraryVariableSetRefs.EnsureNotNull().Select(reference => new ElementReference(reference)),
+                DeploymentProcess?.ToModel(),
+                Variables?.Select(v => v.ToModel()),
+                IncludedLibraryVariableSetRefs?.Select(reference => new ElementReference(reference)),
                 new ElementReference(LifecycleRef),
                 new ElementReference(ProjectGroupRef),
                 VersioningStrategy?.ToModel(),
-                Triggers.EnsureNotNull().Select(t => t.ToModel()),
-                (TenantedDeploymentMode)Enum.Parse(typeof(TenantedDeploymentMode), TenantedDeploymentMode ?? default(TenantedDeploymentMode).ToString()));
+                Triggers?.Select(t => t.ToModel()),
+                tenantedDeploymentMode,
+                Templates?.Select(t => t.ToModel()));
         }
 
         public static YamlProject FromModel(Project model)
@@ -105,7 +114,8 @@ namespace OctopusProjectBuilder.YamlReader.Model
                 IncludedLibraryVariableSetRefs = model.IncludedLibraryVariableSetRefs.Select(r => r.Name).ToArray().NullIfEmpty(),
                 VersioningStrategy = YamlVersioningStrategy.FromModel(model.VersioningStrategy),
                 Triggers = model.Triggers.Select(YamlProjectTrigger.FromModel).ToArray().NullIfEmpty(),
-                TenantedDeploymentMode = model.TenantedDeploymentMode.ToString()
+                TenantedDeploymentMode = model.TenantedDeploymentMode.ToString(),
+                Templates = model.Templates.Select(YamlTemplateVariable.FromModel).ToArray().NullIfEmpty()
             };
         }
     }
