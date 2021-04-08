@@ -33,8 +33,8 @@ namespace OctopusProjectBuilder.Console
                     DownloadDefinitions(options).GetAwaiter().GetResult();
                 else if (options.Action == Options.Verb.CleanupConfig)
                     CleanupConfig(options);
-                else if (options.Action == Options.Verb.Download)
-                    ValidateConfig(options);
+                else if (options.Action == Options.Verb.Validate)
+                    ValidateConfig(options).GetAwaiter().GetResult();
             }
             catch (Exception e)
             {
@@ -44,10 +44,10 @@ namespace OctopusProjectBuilder.Console
             return 0;
         }
 
-        private static bool ValidateConfig(Options options)
+        private static async Task ValidateConfig(Options options)
         {
             var model = new YamlSystemModelRepository(_loggerFactory).Load(options.DefinitionsDir);
-            return model != null;
+            await new ModelUploader(new FakeOctopusRepository(), _loggerFactory).UploadModel(model);
         }
 
         private static void CleanupConfig(Options options)

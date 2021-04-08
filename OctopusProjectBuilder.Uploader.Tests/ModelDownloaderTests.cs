@@ -7,7 +7,7 @@ using NUnit.Framework;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.TestUtils;
-using OctopusProjectBuilder.Uploader.Tests.Helpers;
+using OctopusProjectBuilder.Uploader;
 using Environment = OctopusProjectBuilder.Model.Environment;
 using Permission = OctopusProjectBuilder.Model.Permission;
 using TenantedDeploymentMode = OctopusProjectBuilder.Model.TenantedDeploymentMode;
