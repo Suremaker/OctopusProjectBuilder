@@ -33,6 +33,8 @@ namespace OctopusProjectBuilder.Console
                     DownloadDefinitions(options).GetAwaiter().GetResult();
                 else if (options.Action == Options.Verb.CleanupConfig)
                     CleanupConfig(options);
+                else if (options.Action == Options.Verb.Download)
+                    ValidateConfig(options);
             }
             catch (Exception e)
             {
@@ -40,6 +42,12 @@ namespace OctopusProjectBuilder.Console
                 return 1;
             }
             return 0;
+        }
+
+        private static bool ValidateConfig(Options options)
+        {
+            var model = new YamlSystemModelRepository(_loggerFactory).Load(options.DefinitionsDir);
+            return model != null;
         }
 
         private static void CleanupConfig(Options options)
@@ -71,8 +79,8 @@ namespace OctopusProjectBuilder.Console
             var parser = new FluentCommandLineParser<Options>();
             parser.Setup(o => o.Action).As('a', "action").Required().WithDescription($"Action to perform: {string.Join(", ", Enum.GetValues(typeof(Options.Verb)).Cast<object>())}");
             parser.Setup(o => o.DefinitionsDir).As('d', "definitions").Required().WithDescription("Definitions directory");
-            parser.Setup(o => o.OctopusUrl).As('u', "octopusUrl").Required().WithDescription("Octopus Url");
-            parser.Setup(o => o.OctopusApiKey).As('k', "octopusApiKey").Required().WithDescription("Octopus API key");
+            parser.Setup(o => o.OctopusUrl).As('u', "octopusUrl").WithDescription("Octopus Url");
+            parser.Setup(o => o.OctopusApiKey).As('k', "octopusApiKey").WithDescription("Octopus API key");
             parser.SetupHelp("?", "help").Callback(text => System.Console.WriteLine(text));
 
             var result = parser.Parse(args);
