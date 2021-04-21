@@ -63,7 +63,8 @@ namespace OctopusProjectBuilder.Console
 
         private static async Task DownloadDefinitions(Options options)
         {
-            var model = await new ModelDownloader(await BuildRepository(options), _loggerFactory).DownloadModel();
+            var model = await new ModelDownloader(await BuildRepository(options), _loggerFactory)
+                .DownloadModel(options.ProjectName);
             new YamlSystemModelRepository(_loggerFactory).Save(model, options.DefinitionsDir);
         }
 
