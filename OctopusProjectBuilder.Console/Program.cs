@@ -81,6 +81,7 @@ namespace OctopusProjectBuilder.Console
             parser.Setup(o => o.DefinitionsDir).As('d', "definitions").Required().WithDescription("Definitions directory");
             parser.Setup(o => o.OctopusUrl).As('u', "octopusUrl").WithDescription("Octopus Url");
             parser.Setup(o => o.OctopusApiKey).As('k', "octopusApiKey").WithDescription("Octopus API key");
+            parser.Setup(o => o.ProjectName).As('p', "projectName").WithDescription("Project Name");
             parser.SetupHelp("?", "help").Callback(text => System.Console.WriteLine(text));
 
             var result = parser.Parse(args);

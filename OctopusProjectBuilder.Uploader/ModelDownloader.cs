@@ -19,14 +19,15 @@ namespace OctopusProjectBuilder.Uploader
             _logger = loggerFactory.CreateLogger<ModelDownloader>();
         }
 
-        public async Task<SystemModel> DownloadModel()
+        public async Task<SystemModel> DownloadModel(string projectName = null)
         {
             return new SystemModel(
                 await Task.WhenAll((await _repository.MachinePolicies.FindMany(x => false)).Select(ReadMachinePolicy)),
                 await Task.WhenAll((await _repository.Lifecycles.FindMany(x => false)).Select(ReadLifecycle)),
                 await Task.WhenAll((await _repository.ProjectGroups.FindAll()).Select(ReadProjectGroup)),
                 await Task.WhenAll((await _repository.LibraryVariableSets.FindAll()).Select(ReadLibraryVariableSet)),
-                await Task.WhenAll((await _repository.Projects.FindMany(x => x.Name == "Tyler Content Manager")).Select(ReadProject)),
+                await Task.WhenAll((await _repository.Projects
+                    .FindMany(x => projectName == null || x.Name == projectName)).Select(ReadProject)),
                 await Task.WhenAll((await _repository.Environments.FindAll()).Select(ReadEnvironment)),
                 await Task.WhenAll((await _repository.UserRoles.FindMany(x => false)).Select(ReadUserRole)),
                 await Task.WhenAll((await _repository.Teams.FindMany(x => false)).Select(ReadTeam)),
