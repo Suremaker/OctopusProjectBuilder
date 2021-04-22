@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Fclp;
 using Microsoft.Extensions.Logging;
 using Octopus.Client;
+using Octopus.Client.Model;
 using OctopusProjectBuilder.Uploader;
 using OctopusProjectBuilder.YamlReader;
 
@@ -47,7 +48,15 @@ namespace OctopusProjectBuilder.Console
         private static async Task ValidateConfig(Options options)
         {
             var model = new YamlSystemModelRepository(_loggerFactory).Load(options.DefinitionsDir);
-            await new ModelUploader(new FakeOctopusRepository(), _loggerFactory).UploadModel(model);
+            var fakeRepository = new FakeOctopusRepository();
+            await fakeRepository.Lifecycles.Create(new LifecycleResource()
+            {
+                Id = "default",
+                Name = "Default Lifecycle"
+            });
+            
+            await new ModelUploader(fakeRepository, _loggerFactory).UploadModel(model);
+            
         }
 
         private static void CleanupConfig(Options options)
