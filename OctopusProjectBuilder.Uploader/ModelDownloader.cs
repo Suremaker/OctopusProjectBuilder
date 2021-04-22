@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Octopus.Client;
@@ -21,13 +22,23 @@ namespace OctopusProjectBuilder.Uploader
 
         public async Task<SystemModel> DownloadModel(string projectName = null)
         {
+            List<ProjectResource> projects;
+            projects = projectName != null ?
+                Enumerable.Repeat(await _repository.Projects.FindByName(projectName), 1).ToList() :
+                (await _repository.Projects.FindAll()).ToList();
+
+            List<ChannelResource> channels;
+            channels = projectName != null ?
+                (await _repository.Channels.FindMany(c => projects.Any(p => p.Id == c.ProjectId))).ToList() :
+                (await _repository.Channels.FindAll()).ToList();
+            
             return new SystemModel(
                 await Task.WhenAll((await _repository.MachinePolicies.FindMany(x => false)).Select(ReadMachinePolicy)),
                 await Task.WhenAll((await _repository.Lifecycles.FindMany(x => false)).Select(ReadLifecycle)),
                 await Task.WhenAll((await _repository.ProjectGroups.FindAll()).Select(ReadProjectGroup)),
                 await Task.WhenAll((await _repository.LibraryVariableSets.FindAll()).Select(ReadLibraryVariableSet)),
-                await Task.WhenAll((await _repository.Projects
-                    .FindMany(x => projectName == null || x.Name == projectName)).Select(ReadProject)),
+                await Task.WhenAll(projects.Select(ReadProject)),
+                await Task.WhenAll(channels.Select(ReadChannel)),
                 await Task.WhenAll((await _repository.Environments.FindAll()).Select(ReadEnvironment)),
                 await Task.WhenAll((await _repository.UserRoles.FindMany(x => false)).Select(ReadUserRole)),
                 await Task.WhenAll((await _repository.Teams.FindMany(x => false)).Select(ReadTeam)),
@@ -56,6 +67,12 @@ namespace OctopusProjectBuilder.Uploader
         private async Task<Project> ReadProject(ProjectResource resource)
         {
             _logger.LogInformation($"Downloading {nameof(ProjectResource)}: {resource.Name}");
+            return await resource.ToModel(_repository);
+        }
+        
+        private async Task<Channel> ReadChannel(ChannelResource resource)
+        {
+            _logger.LogInformation($"Downloading {nameof(ChannelResource)}: {resource.Name}");
             return await resource.ToModel(_repository);
         }
 

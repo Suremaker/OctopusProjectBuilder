@@ -45,6 +45,9 @@ namespace OctopusProjectBuilder.Uploader
 
             foreach (var project in model.Projects)
                 await UploadProject(project);
+            
+            foreach (var channel in model.Channels)
+                await UploadChannel(channel);
 
             foreach (var tenant in model.Tenants)
                 await UploadTenant(tenant);
@@ -119,6 +122,14 @@ namespace OctopusProjectBuilder.Uploader
             {
                 await UploadProjectTriggers(projectResource, project.Triggers);
             }
+        }
+        
+        private async Task UploadChannel(Channel channel)
+        {
+            var projectResource = await LoadResource(_repository.Projects, new ElementIdentifier(channel.ProjectName));
+            var resource = await LoadResource(name => _repository.Channels.FindByName(projectResource, name), channel.Identifier);
+            await resource.UpdateWith(channel, _repository);
+            await Upsert(_repository.Channels, resource);
         }
 
         private async Task UploadProjectTriggers(ProjectResource projectResource, IEnumerable<ProjectTrigger> triggers)

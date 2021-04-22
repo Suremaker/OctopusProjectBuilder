@@ -8,6 +8,7 @@ namespace OctopusProjectBuilder.Model
         private readonly List<Environment> _environments = new List<Environment>();
         private readonly List<ProjectGroup> _projectGroups = new List<ProjectGroup>();
         private readonly List<Project> _projects = new List<Project>();
+        private readonly List<Channel> _channels = new List<Channel>();
         private readonly List<Lifecycle> _lifecycles = new List<Lifecycle>();
         private readonly List<LibraryVariableSet> _libraryVariableSets = new List<LibraryVariableSet>();
         private readonly List<UserRole> _userRoles = new List<UserRole>();
@@ -30,6 +31,12 @@ namespace OctopusProjectBuilder.Model
         public SystemModelBuilder AddProject(Project project)
         {
             _projects.Add(project);
+            return this;
+        }
+
+        public SystemModelBuilder AddChannel(Channel channel)
+        {
+            _channels.Add(channel);
             return this;
         }
 
@@ -83,6 +90,7 @@ namespace OctopusProjectBuilder.Model
                 _projectGroups,
                 _libraryVariableSets,
                 _projects,
+                _channels,
                 _environments,
                 _userRoles,
                 _teams,

@@ -76,6 +76,7 @@ namespace OctopusProjectBuilder.YamlReader
                 .Concat(splitModel.Environments.EnsureNotNull().Select(x => $"Environment_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Concat(splitModel.ProjectGroups.EnsureNotNull().Select(x => $"ProjectGroup_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Concat(splitModel.Projects.EnsureNotNull().Select(x => $"Project_{x.Name.SanitiseNameIfNeeded()}.yml"))
+                .Concat(splitModel.Channels.EnsureNotNull().Select(x => $"Channel_{x.ProjectName.SanitiseNameIfNeeded()}_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Concat(splitModel.Lifecycles.EnsureNotNull().Select(x => $"Lifecycle_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Concat(splitModel.LibraryVariableSets.EnsureNotNull().Select(x => $"LibraryVariableSet_{x.Name.SanitiseNameIfNeeded()}.yml"))
                 .Concat(splitModel.UserRoles.EnsureNotNull().Select(x => $"UserRole_{x.Name.SanitiseNameIfNeeded()}.yml"))
