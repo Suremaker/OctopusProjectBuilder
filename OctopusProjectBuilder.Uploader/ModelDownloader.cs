@@ -34,7 +34,7 @@ namespace OctopusProjectBuilder.Uploader
             
             return new SystemModel(
                 await Task.WhenAll((await _repository.MachinePolicies.FindMany(x => false)).Select(ReadMachinePolicy)),
-                await Task.WhenAll((await _repository.Lifecycles.FindMany(x => false)).Select(ReadLifecycle)),
+                await Task.WhenAll((await _repository.Lifecycles.FindAll()).Select(ReadLifecycle)),
                 await Task.WhenAll((await _repository.ProjectGroups.FindAll()).Select(ReadProjectGroup)),
                 await Task.WhenAll((await _repository.LibraryVariableSets.FindAll()).Select(ReadLibraryVariableSet)),
                 await Task.WhenAll(projects.Select(ReadProject)),
