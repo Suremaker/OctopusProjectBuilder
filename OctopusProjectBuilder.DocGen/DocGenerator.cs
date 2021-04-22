@@ -94,7 +94,14 @@ namespace OctopusProjectBuilder.DocGen
 
         private static string GetDefaultValueText(Type type)
         {
-            return type.IsValueType ? Activator.CreateInstance(type).ToString() : "null";
+            if (Nullable.GetUnderlyingType(type) == null)
+            {
+                return type.IsValueType ? Activator.CreateInstance(type).ToString() : "null";
+            }
+            else
+            {
+                return "null";
+            }
         }
 
         private static string GetDescription(MemberInfo memberInfo)
