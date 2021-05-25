@@ -21,7 +21,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
         {
             resource.Name = model.Name;
             resource.ActionType = model.ActionType;
-            resource.Properties.UpdateWith(model.Properties);
+            resource.Properties.UpdateWith(repository, model.Properties);
             resource.Environments.UpdateWith(await Task.WhenAll(model.EnvironmentRefs.Select(r => repository.Environments.ResolveResourceId(r))));
             return resource;
         }

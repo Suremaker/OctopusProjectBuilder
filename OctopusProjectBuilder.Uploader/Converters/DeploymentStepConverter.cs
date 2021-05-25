@@ -25,7 +25,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             resource.Condition = (DeploymentStepCondition)model.Condition;
             resource.RequiresPackagesToBeAcquired = model.RequiresPackagesToBeAcquired;
             resource.StartTrigger = (DeploymentStepStartTrigger)model.StartTrigger;
-            resource.Properties.UpdateWith(model.Properties);
+            resource.Properties.UpdateWith(repository, model.Properties);
             resource.Actions.Clear();
             foreach (var action in model.Actions.Select(a => new DeploymentActionResource().UpdateWith(a, repository)))
                 resource.Actions.Add(await action);
