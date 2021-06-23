@@ -23,6 +23,12 @@ namespace OctopusProjectBuilder.Uploader.Converters
         public static async Task<DeploymentStepResource> UpdateWith(this DeploymentStepResource resource,
             DeploymentStep model, IOctopusAsyncRepository repository, DeploymentStepResource oldStep)
         {
+            // Preserve the old Id
+            if (oldStep != null)
+            {
+                resource.Id = oldStep.Id;
+            }
+            
             resource.Name = model.Name;
             resource.Condition = (DeploymentStepCondition)model.Condition;
             resource.RequiresPackagesToBeAcquired = model.RequiresPackagesToBeAcquired;

@@ -26,6 +26,12 @@ namespace OctopusProjectBuilder.Uploader.Converters
             DeploymentAction model, IOctopusAsyncRepository repository,
             DeploymentActionResource oldAction)
         {
+            // Preserve the Id
+            if (oldAction != null)
+            {
+                resource.Id = oldAction.Id;
+            }
+            
             resource.Name = model.Name;
             resource.IsDisabled = model.IsDisabled;
             resource.Condition = (DeploymentActionCondition) model.Condition;
