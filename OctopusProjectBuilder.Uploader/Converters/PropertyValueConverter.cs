@@ -11,13 +11,34 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class PropertyValueConverter
     {
+        private static readonly string octopusTemplateId = "Octopus.Action.Template.Id";
+        private static readonly string octopusTemplateVersion = "Octopus.Action.Template.Version";
+        
+        delegate bool TestProperty(IReadOnlyDictionary<string, PropertyValue> model,
+            IDictionary<string, PropertyValueResource> oldProperties);
+        
         private static readonly ILogger<ModelUploader> _logger;
-        private static readonly List<String> protectedIds = new List<string>();
+        private static readonly IDictionary<String, TestProperty> protectedIds;
 
         static PropertyValueConverter()
         {
+            protectedIds = new Dictionary<String, TestProperty>();
+            
             // DO NOT attempt to overwrite template version IDs if not specified.  Leave this up to Octopus.
-            protectedIds.Add("Octopus.Action.Template.Version");
+            protectedIds.Add("Octopus.Action.Template.Version", (model, oldProperties) =>
+            {
+                if (oldProperties.ContainsKey(octopusTemplateId) && model.ContainsKey(octopusTemplateId))
+                {
+                    // We should only keep a template version if the model doesn't specify a changed
+                    // template ID.  If it changed, we shouldn't try to keep the old one.
+                    return oldProperties[octopusTemplateId].Value == model[octopusTemplateId].Value;
+                }
+                else
+                {
+                    // In any other case, there is no reason to preserve this old version value.
+                    return false;
+                }
+            });
         }
 
         public static PropertyValue ToModel(this PropertyValueResource resource)
@@ -32,14 +53,11 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 .ToDictionary(kv => kv.Item1, kv => kv.Item2);
         }
 
-        public static async Task UpdateWith(this IDictionary<string, PropertyValueResource> resource, IOctopusAsyncRepository repository,
-            IReadOnlyDictionary<string, PropertyValue> model)
+        public static async Task UpdateWith(this IDictionary<string, PropertyValueResource> resource,
+            IOctopusAsyncRepository repository,
+            IReadOnlyDictionary<string, PropertyValue> model,
+            IDictionary<string, PropertyValueResource> oldProperties)
         {
-            foreach (var s in resource.Where(kv => !protectedIds.Contains(kv.Key)).ToList())
-            {
-                resource.Remove(s.Key);
-            }
-
             foreach (var keyValuePair in model)
             {
                 string value = keyValuePair.Value.Value;
@@ -104,6 +122,18 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 resource.Add(keyValuePair.Key,
                     new PropertyValueResource(value, keyValuePair.Value.IsSensitive));
             }
+            
+            
+            if (oldProperties != null)
+            {
+                foreach (var propertyToKeep in oldProperties
+                    .Where(old => protectedIds.ContainsKey(old.Key))
+                    .Where(old => !resource.ContainsKey(old.Key))
+                    .Where(old => protectedIds[old.Key].Invoke(model, oldProperties)))
+                {
+                    resource.Add(propertyToKeep);
+                }
+            }
 
             PropertyValueResource actionTemplateId = resource
                 .Where(a => a.Key == "Octopus.Action.Template.Id")
@@ -124,6 +154,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 {
                     if (versionNumber < actionTemplate.Version)
                     {
+                        
                         _logger.LogWarning(
                             $"An old version of step template {actionTemplate.Name} is being referenced by " +
                             $"a deployment step! You specified (or were defaulted to) #{versionNumber}, but the lat" +

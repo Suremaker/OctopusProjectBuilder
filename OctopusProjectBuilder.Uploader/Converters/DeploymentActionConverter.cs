@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,13 +20,16 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 await Task.WhenAll(resource.Environments.ToModel(repository.Environments)));
         }
 
-        public static async Task<DeploymentActionResource> UpdateWith(this DeploymentActionResource resource, DeploymentAction model, IOctopusAsyncRepository repository)
+        public static async Task<DeploymentActionResource> UpdateWith(this DeploymentActionResource resource,
+            DeploymentAction model, IOctopusAsyncRepository repository,
+            DeploymentActionResource oldAction)
         {
             resource.Name = model.Name;
             resource.ActionType = model.ActionType;
             resource.Environments.UpdateWith(await Task.WhenAll(model.EnvironmentRefs.Select(r => repository.Environments.ResolveResourceId(r))));
 
-            await resource.Properties.UpdateWith(repository, model.Properties);
+            await resource.Properties.UpdateWith(repository, model.Properties,
+                oldAction != null ? oldAction.Properties : new Dictionary<string, PropertyValueResource>());
             switch (resource.ActionType)
             {
                 case "Octopus.TentaclePackage":
