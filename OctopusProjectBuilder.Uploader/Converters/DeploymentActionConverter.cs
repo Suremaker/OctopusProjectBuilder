@@ -26,7 +26,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             DeploymentActionResource oldAction)
         {
             resource.Name = model.Name;
-            resource.IsDisabled = model.Disabled;
+            resource.IsDisabled = model.IsDisabled;
             resource.ActionType = model.ActionType;
             resource.Environments.UpdateWith(await Task.WhenAll(model.EnvironmentRefs.Select(r => repository.Environments.ResolveResourceId(r))));
 

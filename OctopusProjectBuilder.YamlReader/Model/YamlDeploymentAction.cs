@@ -19,7 +19,7 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
         
         [Description("Defines if this action is disabled.")]
         [YamlMember(Order = 2)]
-        public bool Disabled { get; set; }
+        public bool IsDisabled { get; set; }
 
         [Description("Indicates that the resource is template based.")]
         [YamlMember(Order = 3)]
@@ -47,7 +47,7 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
             return new YamlDeploymentAction
             {
                 Name = model.Name,
-                Disabled = model.Disabled,
+                IsDisabled = model.IsDisabled,
                 ActionType = model.ActionType,
                 Properties = YamlPropertyValue.FromModel(model.Properties),
                 EnvironmentRefs = model.EnvironmentRefs.Select(r => r.Name).ToArray().NullIfEmpty()
@@ -56,7 +56,7 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
 
         public DeploymentAction ToModel()
         {
-            return new DeploymentAction(Name, Disabled, ActionType, YamlPropertyValue.ToModel(Properties), EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)));
+            return new DeploymentAction(Name, IsDisabled, ActionType, YamlPropertyValue.ToModel(Properties), EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)));
         }
     }
 }
