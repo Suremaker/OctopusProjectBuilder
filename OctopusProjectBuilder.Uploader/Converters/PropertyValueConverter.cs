@@ -14,7 +14,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
         private static readonly string octopusTemplateId = "Octopus.Action.Template.Id";
         private static readonly string octopusTemplateVersion = "Octopus.Action.Template.Version";
         
-        delegate bool TestProperty(IReadOnlyDictionary<string, PropertyValue> model,
+        delegate bool TestProperty(IDictionary<string, PropertyValueResource> model,
             IDictionary<string, PropertyValueResource> oldProperties);
         
         private static readonly ILogger<ModelUploader> _logger;
@@ -25,7 +25,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             protectedIds = new Dictionary<String, TestProperty>();
             
             // DO NOT attempt to overwrite template version IDs if not specified.  Leave this up to Octopus.
-            protectedIds.Add("Octopus.Action.Template.Version", (model, oldProperties) =>
+            protectedIds.Add(octopusTemplateVersion, (model, oldProperties) =>
             {
                 if (oldProperties.ContainsKey(octopusTemplateId) && model.ContainsKey(octopusTemplateId))
                 {
@@ -129,14 +129,14 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 foreach (var propertyToKeep in oldProperties
                     .Where(old => protectedIds.ContainsKey(old.Key))
                     .Where(old => !resource.ContainsKey(old.Key))
-                    .Where(old => protectedIds[old.Key].Invoke(model, oldProperties)))
+                    .Where(old => protectedIds[old.Key].Invoke(resource, oldProperties)))
                 {
                     resource.Add(propertyToKeep);
                 }
             }
 
             PropertyValueResource actionTemplateId = resource
-                .Where(a => a.Key == "Octopus.Action.Template.Id")
+                .Where(a => a.Key == octopusTemplateId)
                 .Select(a => a.Value)
                 .FirstOrDefault();
             
@@ -144,7 +144,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
             {
                 ActionTemplateResource actionTemplate = await repository.ActionTemplates.Get(actionTemplateId.Value);
                 PropertyValueResource actionTemplateVersion = resource
-                    .Where(a => a.Key == "Octopus.Action.Template.Version")
+                    .Where(a => a.Key == octopusTemplateVersion)
                     .Select(a => a.Value)
                     .FirstOrDefault();
                 int versionNumber = actionTemplateVersion != null ? 
@@ -154,8 +154,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 {
                     if (versionNumber < actionTemplate.Version)
                     {
-                        
-                        _logger.LogWarning(
+                        Console.Error.WriteLine(
                             $"An old version of step template {actionTemplate.Name} is being referenced by " +
                             $"a deployment step! You specified (or were defaulted to) #{versionNumber}, but the lat" +
                             $"est version of this step template is #{actionTemplate.Version}. Consider upgrading the " +
@@ -173,10 +172,9 @@ namespace OctopusProjectBuilder.Uploader.Converters
                     }
                 }
 
-                if (!resource.ContainsKey("Octopus.Action.Template.Version"))
+                if (!resource.ContainsKey(octopusTemplateVersion))
                 {
-                    resource.Add("Octopus.Action.Template.Version",
-                        new PropertyValueResource(versionNumber.ToString()));
+                    resource.Add(octopusTemplateVersion, new PropertyValueResource(versionNumber.ToString()));
                 }
             }
         }
