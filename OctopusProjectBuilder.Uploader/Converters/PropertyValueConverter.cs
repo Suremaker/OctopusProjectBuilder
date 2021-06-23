@@ -94,7 +94,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 catch (Exception exception)
                 {
                     throw new ArgumentException("Problem transforming value \"" + keyValuePair.Key + "\" of type \"" +
-                                                keyValuePair.Value.ValueType + "\" value=\"" + keyValuePair.Value + "\"",
+                                                keyValuePair.Value.ValueType + "\" value=\"" + 
+                                                keyValuePair.Value.Value + "\"",
                         exception);
                 }
 
