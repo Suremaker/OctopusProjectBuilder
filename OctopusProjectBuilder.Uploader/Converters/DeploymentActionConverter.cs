@@ -26,12 +26,6 @@ namespace OctopusProjectBuilder.Uploader.Converters
             DeploymentAction model, IOctopusAsyncRepository repository,
             DeploymentActionResource oldAction)
         {
-            // Preserve the Id
-            if (oldAction != null)
-            {
-                resource.Id = oldAction.Id;
-            }
-            
             resource.Name = model.Name;
             resource.IsDisabled = model.IsDisabled;
             resource.Condition = (DeploymentActionCondition) model.Condition;
@@ -40,6 +34,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
 
             await resource.Properties.UpdateWith(repository, model.Properties,
                 oldAction != null ? oldAction.Properties : new Dictionary<string, PropertyValueResource>());
+            
             switch (resource.ActionType)
             {
                 case "Octopus.TentaclePackage":
@@ -47,14 +42,18 @@ namespace OctopusProjectBuilder.Uploader.Converters
                     {
                         throw new ConstraintException("No package ID specified for package action" + resource.Name);
                     }
-
                     break;
                 case "Octopus.Script":
                     if (!resource.Properties.ContainsKey("Octopus.Action.Script.ScriptBody"))
                     {
                         throw new ConstraintException("No script body specified for script action in " + resource.Name);
                     }
-
+                    break;
+                case "Octopus.DeployRelease":
+                    if (!resource.Properties.ContainsKey("Octopus.Action.DeployRelease.ProjectId"))
+                    {
+                        throw new ConstraintException("No project ID specified for release action in " + resource.Name);
+                    }
                     break;
             }
             
