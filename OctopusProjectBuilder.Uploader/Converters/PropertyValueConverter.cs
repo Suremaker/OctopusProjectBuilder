@@ -40,6 +40,39 @@ namespace OctopusProjectBuilder.Uploader.Converters
                     case "EnvironmentNameToId":
                         value = (await repository.Environments.FindByName(value)).Id;
                         break;
+                    case "StepTemplateNameToId":
+                        value = (await repository.ActionTemplates.FindByName(value)).Id;
+                        break;
+                    case "FeedNameToId":
+                        value = (await repository.Feeds.FindByName(value)).Id;
+                        break;
+                    case "MachineNameToId":
+                        value = (await repository.Machines.FindByName(value)).Id;
+                        break;
+                    case "SpaceNameToId":
+                        value = (await repository.Spaces.FindByName(value)).Id;
+                        break;
+                    case "TenantNameToId":
+                        value = (await repository.Tenants.FindByName(value)).Id;
+                        break;
+                    case "LifecycleNameToId":
+                        value = (await repository.Lifecycles.FindByName(value)).Id;
+                        break;
+                    case "CertificateNameToId":
+                        value = (await repository.Certificates.FindByName(value)).Id;
+                        break;
+                    case "ProxyNameToId":
+                        value = (await repository.Proxies.FindByName(value)).Id;
+                        break;
+                    case "TagSetNameToId":
+                        value = (await repository.TagSets.FindByName(value)).Id;
+                        break;
+                    case "UserRoleNameToId":
+                        value = (await repository.UserRoles.FindByName(value)).Id;
+                        break;
+                    case "RunbookNameToId":
+                        value = (await repository.Runbooks.FindByName(value)).Id;
+                        break;
                     default:
                         throw new ArgumentException("ValueType: " + keyValuePair.Value.ValueType);
                 }
