@@ -16,7 +16,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [YamlMember(Order = 1)]
         public string Key { get; set; }
 
-        [Description("Property value type.")]
+        [Description("Property value type. This describes the transformation that should be applied to the value of this. Options are: Literal (default), ProjectNameToId, EnvironmentNameToId, StepTemplateNameToId, FeedNameToId, MachineNameToId, SpaceNameToId, TenantNameToId, LifecycleNameToId, CertificateNameToId, ProxyNameToId, TagSetNameToId, UserRoleNameToId, RunbookNameToId")]
         [YamlMember(Order = 2)]
         public string ValueType { get; set; } = "Literal";
 
@@ -24,7 +24,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [YamlMember(Order = 3)]
         public string Value { get; set; }
         
-        [Description("Property value file content.")]
+        [Description("An optionally provided path to a file to override Value with.")]
         [YamlMember(Order = 4)]
         public string File { get; set; }
 
