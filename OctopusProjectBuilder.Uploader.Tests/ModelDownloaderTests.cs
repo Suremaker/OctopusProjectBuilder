@@ -208,10 +208,12 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     CreateItem<DeploymentStep.StepStartTrigger>(),
                     CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new[]
                     {
-                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(), CreateItem<string>(),
+                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
+                            CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
                             CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
                             new[] {new ElementReference("env1")}),
-                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(), CreateItem<string>(),
+                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
+                            CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
                             CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
                             new[] {new ElementReference("env2")})
                     }),
@@ -219,7 +221,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     CreateItem<DeploymentStep.StepStartTrigger>(),
                     CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new[]
                     {
-                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(), CreateItem<string>(),
+                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
+                            CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
                             CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
                             new[] {new ElementReference("env1")})
                     })
@@ -536,7 +539,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     CreateItem<DeploymentStep.StepStartTrigger>(),
                     CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new[]
                     {
-                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(), CreateItem<string>(),
+                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
+                            CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
                             CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
                             new[] {new ElementReference("env1")}),
                     })
