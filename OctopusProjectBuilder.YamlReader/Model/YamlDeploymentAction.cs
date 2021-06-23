@@ -28,13 +28,17 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
         [Description("Action type.")]
         [YamlMember(Order = 4)]
         public string ActionType { get; set; }
+        
+        [Description("Action run condition.")]
+        [YamlMember(Order = 5)]
+        public DeploymentAction.ActionCondition Condition { get; set; }
 
         [Description("List of Environment references (based on the name) where action would be performed on. If none are specified, then action would be performed on all environments.")]
-        [YamlMember(Order = 5)]
+        [YamlMember(Order = 6)]
         public string[] EnvironmentRefs { get; set; }
 
         [Description("Action properties.")]
-        [YamlMember(Order = 6)]
+        [YamlMember(Order = 7)]
         public YamlPropertyValue[] Properties { get; set; }
 
         public void ApplyTemplate(YamlTemplates templates)
@@ -48,6 +52,7 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
             {
                 Name = model.Name,
                 IsDisabled = model.IsDisabled,
+                Condition = model.Condition,
                 ActionType = model.ActionType,
                 Properties = YamlPropertyValue.FromModel(model.Properties),
                 EnvironmentRefs = model.EnvironmentRefs.Select(r => r.Name).ToArray().NullIfEmpty()
@@ -56,7 +61,9 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
 
         public DeploymentAction ToModel()
         {
-            return new DeploymentAction(Name, IsDisabled, ActionType, YamlPropertyValue.ToModel(Properties), EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)));
+            return new DeploymentAction(Name, IsDisabled, Condition, ActionType,
+                YamlPropertyValue.ToModel(Properties),
+                EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)));
         }
     }
 }
