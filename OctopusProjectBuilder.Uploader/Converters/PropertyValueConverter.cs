@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
@@ -10,6 +11,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class PropertyValueConverter
     {
+        private static readonly ILogger<ModelUploader> _logger;
         private static readonly List<String> protectedIds = new List<string>();
 
         static PropertyValueConverter()
@@ -120,6 +122,15 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 
                 if (versionNumber != actionTemplate.Version)
                 {
+                    if (versionNumber < actionTemplate.Version)
+                    {
+                        _logger.LogWarning(
+                            $"An old version of step template {actionTemplate.Name} is being referenced by " +
+                            $"a deployment step! You specified (or were defaulted to) #{versionNumber}, but the lat" +
+                            $"est version of this step template is #{actionTemplate.Version}. Consider upgrading the " +
+                            "version of the step template referenced in this step in Octopus.");
+                    }
+                    
                     actionTemplate = await repository.ActionTemplates.GetVersion(actionTemplate, versionNumber);
                 }
 
