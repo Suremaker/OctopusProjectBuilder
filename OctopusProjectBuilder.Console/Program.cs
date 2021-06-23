@@ -6,6 +6,7 @@ using Fclp;
 using Microsoft.Extensions.Logging;
 using Octopus.Client;
 using Octopus.Client.Model;
+using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.Uploader;
 using OctopusProjectBuilder.YamlReader;
 
@@ -35,7 +36,7 @@ namespace OctopusProjectBuilder.Console
                 else if (options.Action == Options.Verb.CleanupConfig)
                     CleanupConfig(options);
                 else if (options.Action == Options.Verb.Validate)
-                    ValidateConfig(options).GetAwaiter().GetResult();
+                    ValidateConfig(options);
             }
             catch (Exception e)
             {
@@ -45,18 +46,9 @@ namespace OctopusProjectBuilder.Console
             return 0;
         }
 
-        private static async Task ValidateConfig(Options options)
+        private static SystemModel ValidateConfig(Options options)
         {
-            var model = new YamlSystemModelRepository(_loggerFactory).Load(options.DefinitionsDir);
-            var fakeRepository = new FakeOctopusRepository();
-            await fakeRepository.Lifecycles.Create(new LifecycleResource()
-            {
-                Id = "default",
-                Name = "Default Lifecycle"
-            });
-            
-            await new ModelUploader(fakeRepository, _loggerFactory).UploadModel(model);
-            
+            return new YamlSystemModelRepository(_loggerFactory).Load(options.DefinitionsDir);
         }
 
         private static void CleanupConfig(Options options)

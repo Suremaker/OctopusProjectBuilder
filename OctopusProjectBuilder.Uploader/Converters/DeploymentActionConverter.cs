@@ -1,6 +1,8 @@
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Octopus.Client;
+using Octopus.Client.Exceptions;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
 
@@ -21,8 +23,27 @@ namespace OctopusProjectBuilder.Uploader.Converters
         {
             resource.Name = model.Name;
             resource.ActionType = model.ActionType;
-            resource.Properties.UpdateWith(repository, model.Properties);
             resource.Environments.UpdateWith(await Task.WhenAll(model.EnvironmentRefs.Select(r => repository.Environments.ResolveResourceId(r))));
+
+            await resource.Properties.UpdateWith(repository, model.Properties);
+            switch (resource.ActionType)
+            {
+                case "Octopus.TentaclePackage":
+                    if (!resource.Properties.ContainsKey("Octopus.Action.Package.PackageId"))
+                    {
+                        throw new ConstraintException("No package ID specified for package action" + resource.Name);
+                    }
+
+                    break;
+                case "Octopus.Script":
+                    if (!resource.Properties.ContainsKey("Octopus.Action.Script.ScriptBody"))
+                    {
+                        throw new ConstraintException("No script body specified for script action in " + resource.Name);
+                    }
+
+                    break;
+            }
+            
             return resource;
         }
     }

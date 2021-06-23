@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
@@ -29,7 +30,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 .ToDictionary(kv => kv.Item1, kv => kv.Item2);
         }
 
-        public static async void UpdateWith(this IDictionary<string, PropertyValueResource> resource, IOctopusAsyncRepository repository,
+        public static async Task UpdateWith(this IDictionary<string, PropertyValueResource> resource, IOctopusAsyncRepository repository,
             IReadOnlyDictionary<string, PropertyValue> model)
         {
             foreach (var s in resource.Where(kv => !protectedIds.Contains(kv.Key)).ToList())
@@ -90,6 +91,41 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 
                 resource.Add(keyValuePair.Key,
                     new PropertyValueResource(value, keyValuePair.Value.IsSensitive));
+            }
+
+            PropertyValueResource actionTemplateId = resource
+                .Where(a => a.Key == "Octopus.Action.Template.Id")
+                .Select(a => a.Value)
+                .FirstOrDefault();
+            
+            if (actionTemplateId != null && !string.IsNullOrEmpty(actionTemplateId.Value))
+            {
+                ActionTemplateResource actionTemplate = await repository.ActionTemplates.Get(actionTemplateId.Value);
+                PropertyValueResource actionTemplateVersion = resource
+                    .Where(a => a.Key == "Octopus.Action.Template.Version")
+                    .Select(a => a.Value)
+                    .FirstOrDefault();
+                int versionNumber = actionTemplateVersion != null ? 
+                    int.Parse(actionTemplateVersion.Value) : actionTemplate.Version;
+                
+                if (versionNumber != actionTemplate.Version)
+                {
+                    actionTemplate = await repository.ActionTemplates.GetVersion(actionTemplate, versionNumber);
+                }
+
+                foreach (var keyValuePair in actionTemplate.Properties)
+                {
+                    if (!resource.ContainsKey(keyValuePair.Key))
+                    {
+                        resource.Add(keyValuePair);
+                    }
+                }
+
+                if (!resource.ContainsKey("Octopus.Action.Template.Version"))
+                {
+                    resource.Add("Octopus.Action.Template.Version",
+                        new PropertyValueResource(versionNumber.ToString()));
+                }
             }
         }
     }
