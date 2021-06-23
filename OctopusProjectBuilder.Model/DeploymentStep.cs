@@ -17,7 +17,8 @@ namespace OctopusProjectBuilder.Model
         {
             Success,
             Failure,
-            Always
+            Always,
+            Variable
         }
 
         public enum StepStartTrigger
