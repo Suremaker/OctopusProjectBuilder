@@ -9,6 +9,14 @@ namespace OctopusProjectBuilder.Uploader.Converters
 {
     public static class PropertyValueConverter
     {
+        private static readonly List<String> protectedIds = new List<string>();
+
+        static PropertyValueConverter()
+        {
+            // DO NOT attempt to overwrite template version IDs if not specified.  Leave this up to Octopus.
+            protectedIds.Add("Octopus.Action.Template.Version");
+        }
+
         public static PropertyValue ToModel(this PropertyValueResource resource)
         {
             return new PropertyValue(resource.IsSensitive,resource.Value);
@@ -24,7 +32,10 @@ namespace OctopusProjectBuilder.Uploader.Converters
         public static async void UpdateWith(this IDictionary<string, PropertyValueResource> resource, IOctopusAsyncRepository repository,
             IReadOnlyDictionary<string, PropertyValue> model)
         {
-            resource.Clear();
+            foreach (var s in resource.Where(kv => !protectedIds.Contains(kv.Key)).ToList())
+            {
+                resource.Remove(s.Key);
+            }
             
             foreach (var keyValuePair in model)
             {
