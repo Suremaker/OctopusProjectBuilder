@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Octopus.Client;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
+using Environment = System.Environment;
 
 namespace OctopusProjectBuilder.Uploader.Converters
 {
@@ -68,6 +70,20 @@ namespace OctopusProjectBuilder.Uploader.Converters
                     {
                         case "Literal":
                             break;
+                        case "PackageIdFromJsonProperty":
+                        case "FeedIdFromJsonProperty":
+                            string json = model[value].Value;
+                            dynamic package = JsonConvert.DeserializeObject(json);
+                            switch (keyValuePair.Value.ValueType)
+                            {
+                                case "PackageIdFromJsonProperty":
+                                    value = package.PackageId;
+                                    break;
+                                case "FeedIdFromJsonProperty":
+                                    value = package.FeedId;
+                                    break;
+                            }
+                            break;
                         case "ProjectNameToId":
                             value = (await repository.Projects.FindByName(value)).Id;
                             break;
@@ -107,9 +123,14 @@ namespace OctopusProjectBuilder.Uploader.Converters
                         case "RunbookNameToId":
                             value = (await repository.Runbooks.FindByName(value)).Id;
                             break;
+                        case "EnvironmentVariable":
+                            value = Environment.GetEnvironmentVariable(value);
+                            break;
                         default:
                             throw new ArgumentException("ValueType: " + keyValuePair.Value.ValueType);
                     }
+                    
+                    
                 }
                 catch (Exception exception)
                 {
