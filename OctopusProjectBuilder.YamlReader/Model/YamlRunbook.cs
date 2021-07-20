@@ -29,29 +29,29 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [YamlMember(Order = 5)]
         public string ProjectName { get; set; }
         
-        [Description("Runbook process definition.")]
-        [YamlMember(Order = 6)]
-        public YamlRunbookProcess Process { get; set; }
-        
         [Description("Runbook environment scope.")]
-        [YamlMember(Order = 7)]
+        [YamlMember(Order = 6)]
         public RunbookEnvironmentScope? EnvironmentScope { get; set; }
         
         [Description("List of Environment references (based on the name) where runbook would be performed on.")]
-        [YamlMember(Order = 8)]
+        [YamlMember(Order = 7)]
         public string[] EnvironmentRefs { get; set; }
 
         [Description("Runbook tenanted deployment mode.")]
-        [YamlMember(Order = 9)]
+        [YamlMember(Order = 8)]
         public TenantedDeploymentMode? MultiTenancyMode { get; set; }
         
         [Description("Runbook retention policy.")]
-        [YamlMember(Order = 10)]
+        [YamlMember(Order = 9)]
         public RunbookRetentionPeriod RetentionPolicy { get; set; }
         
         [Description("Runbook guided failure mode.")]
-        [YamlMember(Order = 11)]
+        [YamlMember(Order = 10)]
         public GuidedFailureMode? GuidedFailureMode { get; set; }
+        
+        [Description("Runbook process definition.")]
+        [YamlMember(Order = 11)]
+        public YamlRunbookProcess Process { get; set; }
         
         public void ApplyTemplate(YamlTemplates templates)
         {
