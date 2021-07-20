@@ -43,6 +43,8 @@ the property value `""${packageId} ver ${packageVersion}""` would be updated to 
         public YamlDeploymentStepTemplate[] DeploymentSteps { get; set; }
         [Description("List of Project templates")]
         public YamlProjectTemplate[] Projects { get; set; }
+        [Description("List of Runbook templates")]
+        public YamlRunbookTemplate[] Runbooks { get; set; }
 
         public static YamlTemplates MergeIn(YamlTemplates dst, YamlTemplates src)
         {
@@ -53,6 +55,7 @@ the property value `""${packageId} ver ${packageVersion}""` would be updated to 
             dst.DeploymentActions = dst.MergeItemsIn(src, x => x.DeploymentActions);
             dst.DeploymentSteps = dst.MergeItemsIn(src, x => x.DeploymentSteps);
             dst.Projects = dst.MergeItemsIn(src, x => x.Projects);
+            dst.Runbooks = dst.MergeItemsIn(src, x => x.Runbooks);
             return dst;
         }
     }

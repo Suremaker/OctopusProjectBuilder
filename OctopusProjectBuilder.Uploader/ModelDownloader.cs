@@ -32,6 +32,11 @@ namespace OctopusProjectBuilder.Uploader
                 (await _repository.Channels.FindMany(c => projects.Any(p => p.Id == c.ProjectId))).ToList() :
                 (await _repository.Channels.FindAll()).ToList();
             
+            List<RunbookResource> runbooks;
+            runbooks = projectName != null ?
+                (await _repository.Runbooks.FindMany(c => projects.Any(p => p.Id == c.ProjectId))).ToList() :
+                (await _repository.Runbooks.FindAll()).ToList();
+            
             return new SystemModel(
                 await Task.WhenAll((await _repository.MachinePolicies.FindMany(x => false)).Select(ReadMachinePolicy)),
                 await Task.WhenAll((await _repository.Lifecycles.FindAll()).Select(ReadLifecycle)),
@@ -43,7 +48,8 @@ namespace OctopusProjectBuilder.Uploader
                 await Task.WhenAll((await _repository.UserRoles.FindMany(x => false)).Select(ReadUserRole)),
                 await Task.WhenAll((await _repository.Teams.FindMany(x => false)).Select(ReadTeam)),
                 await Task.WhenAll((await _repository.Tenants.FindMany(x => false)).Select(ReadTenant)),
-                await Task.WhenAll((await _repository.TagSets.FindMany(x => false)).Select(ReadTagSet)));
+                await Task.WhenAll((await _repository.TagSets.FindMany(x => false)).Select(ReadTagSet)),
+                await Task.WhenAll(runbooks.Select(ReadRunbook)));
         }
 
         private async Task<MachinePolicy> ReadMachinePolicy(MachinePolicyResource resource)
@@ -110,6 +116,12 @@ namespace OctopusProjectBuilder.Uploader
         {
             _logger.LogInformation($"Downloading {nameof(TagSetResource)}: {resource.Name}");
             return await Task.FromResult(resource.ToModel(_repository));
+        }
+        
+        private async Task<Runbook> ReadRunbook(RunbookResource resource)
+        {
+            _logger.LogInformation($"Downloading {nameof(Runbook)}: {resource.Name}");
+            return await resource.ToModel(_repository);
         }
     }
 }

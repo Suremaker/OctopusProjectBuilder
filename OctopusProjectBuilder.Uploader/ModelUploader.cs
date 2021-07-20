@@ -46,6 +46,9 @@ namespace OctopusProjectBuilder.Uploader
             foreach (var project in model.Projects)
                 await UploadProject(project);
             
+            foreach (var runbook in model.Runbooks)
+                await UploadRunbook(runbook);
+            
             foreach (var channel in model.Channels)
                 await UploadChannel(channel);
 
@@ -122,6 +125,21 @@ namespace OctopusProjectBuilder.Uploader
             {
                 await UploadProjectTriggers(projectResource, project.Triggers);
             }
+        }
+        
+        private async Task UploadRunbook(Runbook runbook)
+        {
+            var runbookResource = await LoadResource(_repository.Runbooks, runbook.Identifier);
+            await runbookResource.UpdateWith(runbook, _repository);
+            var response = await Upsert(_repository.Runbooks, runbookResource);
+            runbookResource.RunbookProcessId = response.RunbookProcessId;
+
+            var runbookProcessResource = await _repository.RunbookProcesses.Get(runbookResource.RunbookProcessId);
+            await runbookProcessResource.UpdateWith(runbook.Process, _repository);
+
+            await Update(_repository.RunbookProcesses,
+                runbookProcessResource,
+                runbookResource.Name);
         }
         
         private async Task UploadChannel(Channel channel)

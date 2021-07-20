@@ -15,6 +15,7 @@ namespace OctopusProjectBuilder.Model
         private readonly List<Team> _teams = new List<Team>();
         private readonly List<Tenant> _tenants = new List<Tenant>();
         private readonly List<TagSet> _tagSets = new List<TagSet>();
+        private readonly List<Runbook> _runbooks = new List<Runbook>();
 
         public SystemModelBuilder AddProjectGroup(ProjectGroup group)
         {
@@ -82,6 +83,12 @@ namespace OctopusProjectBuilder.Model
             return this;
         }
 
+        public SystemModelBuilder AddRunbook(Runbook runbook)
+        {
+            _runbooks.Add(runbook);
+            return this;
+        }
+
         public SystemModel Build()
         {
             return new SystemModel(
@@ -95,7 +102,8 @@ namespace OctopusProjectBuilder.Model
                 _userRoles,
                 _teams,
                 _tenants, 
-                _tagSets);
+                _tagSets,
+                _runbooks);
         }
     }
 }
