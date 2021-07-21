@@ -1,16 +1,13 @@
-﻿using Octopus.Client.Model;
+﻿using System.Collections.Generic;
 
 namespace OctopusProjectBuilder.Model
 {
     public class DeploymentActionPackage
     {
-        public string DeploymentAction { get; set; }
-        public string PackageReference { get; set; }
-
-        public DeploymentActionPackage(string deploymentAction, string packageReference)
-        {
-            DeploymentAction = deploymentAction;
-            PackageReference = packageReference;
-        }
+        public string Name { get; set; }
+        public string PackageId { get; set; }
+        public string FeedId { get; set; }
+        public string AcquisitionLocation { get; set; }
+        public IDictionary<string, string> Properties { get; set; }
     }
 }

@@ -36,9 +36,13 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
         [Description("List of Environment references (based on the name) where action would be performed on. If none are specified, then action would be performed on all environments.")]
         [YamlMember(Order = 6)]
         public string[] EnvironmentRefs { get; set; }
+        
+        [Description("Action package references.")]
+        [YamlMember(Order = 7)]
+        public YamlDeploymentActionPackage[] Packages { get; set; }
 
         [Description("Action properties.")]
-        [YamlMember(Order = 7)]
+        [YamlMember(Order = 8)]
         public YamlPropertyValue[] Properties { get; set; }
 
         public void ApplyTemplate(YamlTemplates templates)
@@ -63,7 +67,8 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
         {
             return new DeploymentAction(Name, IsDisabled, Condition, ActionType,
                 YamlPropertyValue.ToModel(Properties),
-                EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)));
+                EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)),
+                Packages?.Select(x => x.ToModel()));
         }
     }
 }

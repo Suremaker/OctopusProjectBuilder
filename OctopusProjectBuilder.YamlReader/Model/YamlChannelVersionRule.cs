@@ -20,7 +20,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
         
         [Description("Action package names.")]
         [YamlMember(Order = 3)]
-        public YamlDeploymentActionPackage[] ActionPackages { get; set; }
+        public YamlChannelVersionRulePackage[] ActionPackages { get; set; }
         
         public ChannelVersionRule ToModel()
         {
@@ -33,7 +33,7 @@ namespace OctopusProjectBuilder.YamlReader.Model
             {
                 Tag = string.IsNullOrEmpty(model.Tag) ? null : model.Tag,
                 VersionRange = string.IsNullOrEmpty(model.VersionRange) ? null : model.VersionRange,
-                ActionPackages = model.ActionPackages.Select(package => YamlDeploymentActionPackage.FromModel(package)).ToArray()
+                ActionPackages = model.ActionPackages.Select(package => YamlChannelVersionRulePackage.FromModel(package)).ToArray()
             };
         }
         

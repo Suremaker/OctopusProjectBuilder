@@ -5,7 +5,7 @@ namespace OctopusProjectBuilder.Model
 {
     public class ChannelVersionRule
     {
-        public ChannelVersionRule(string tag, string versionRange, IEnumerable<DeploymentActionPackage> actionPackages)
+        public ChannelVersionRule(string tag, string versionRange, IEnumerable<ChannelVersionRulePackage> actionPackages)
         {
             Tag = tag;
             VersionRange = versionRange;
@@ -14,6 +14,6 @@ namespace OctopusProjectBuilder.Model
 
         public string Tag { get; set; }
         public string VersionRange { get; set; }
-        public IEnumerable<DeploymentActionPackage> ActionPackages { get; set; }
+        public IEnumerable<ChannelVersionRulePackage> ActionPackages { get; set; }
     }
 }

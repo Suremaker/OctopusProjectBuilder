@@ -47,12 +47,29 @@ namespace OctopusProjectBuilder.Uploader.Converters
         {
             return new PropertyValue(resource.IsSensitive,resource.Value);
         }
+        
+        public static Dictionary<string, PropertyValue> ToModel(this IDictionary<string, string> properties)
+        {
+            return properties
+                .Select(kv => Tuple.Create(kv.Key, ToModel(kv.Value)))
+                .ToDictionary(kv => kv.Item1, kv => kv.Item2);
+        }
 
         public static Dictionary<string, PropertyValue> ToModel(this IDictionary<string, PropertyValueResource> properties)
         {
             return properties
                 .Select(kv => Tuple.Create(kv.Key, ToModel(kv.Value)))
                 .ToDictionary(kv => kv.Item1, kv => kv.Item2);
+        }
+
+        public static async Task UpdateWith(this IDictionary<string, PropertyValueResource> resource,
+            IReadOnlyDictionary<string, string> model)
+        {
+            resource.Clear();
+            foreach (var keyValuePair in model)
+            {
+                resource.Add(keyValuePair.Key, keyValuePair.Value);
+            }
         }
 
         public static async Task UpdateWith(this IDictionary<string, PropertyValueResource> resource,
@@ -143,7 +160,6 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 resource.Add(keyValuePair.Key,
                     new PropertyValueResource(value, keyValuePair.Value.IsSensitive));
             }
-            
             
             if (oldProperties != null)
             {
