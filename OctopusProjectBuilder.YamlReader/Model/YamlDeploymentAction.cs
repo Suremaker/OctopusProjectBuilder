@@ -68,7 +68,7 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
             return new DeploymentAction(Name, IsDisabled, Condition, ActionType,
                 YamlPropertyValue.ToModel(Properties),
                 EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)),
-                Packages?.Select(x => x.ToModel()));
+                Packages.EnsureNotNull().Select(x => x.ToModel()));
         }
     }
 }
