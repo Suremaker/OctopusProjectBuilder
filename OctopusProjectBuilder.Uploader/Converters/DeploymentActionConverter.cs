@@ -63,6 +63,11 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 }
             }
 
+            if (resource.Packages.Any())
+            {
+                resource.CanBeUsedForProjectVersioning = true;
+            }
+
             await resource.Properties.UpdateWith(repository, new ReadOnlyDictionary<string, PropertyValue>(properties),
                 oldAction != null ? oldAction.Properties : new Dictionary<string, PropertyValueResource>());
 
