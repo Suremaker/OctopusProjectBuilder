@@ -86,6 +86,8 @@ namespace OctopusProjectBuilder.Uploader.Converters
                     switch (keyValuePair.Value.ValueType)
                     {
                         case "Literal":
+                        case "":
+                        case null:
                             break;
                         case "PackageIdFromJsonProperty":
                         case "FeedIdFromJsonProperty":
