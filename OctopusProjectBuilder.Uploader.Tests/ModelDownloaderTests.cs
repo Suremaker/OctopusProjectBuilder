@@ -211,11 +211,13 @@ namespace OctopusProjectBuilder.Uploader.Tests
                         new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
                             CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
                             CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
-                            new[] {new ElementReference("env1")}),
+                            new[] {new ElementReference("env1")},
+                            Enumerable.Empty<DeploymentActionPackage>()),
                         new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
                             CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
                             CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
-                            new[] {new ElementReference("env2")})
+                            new[] {new ElementReference("env2")},
+                            Enumerable.Empty<DeploymentActionPackage>())
                     }),
                 new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(),
                     CreateItem<DeploymentStep.StepStartTrigger>(),
@@ -224,7 +226,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                         new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
                             CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
                             CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
-                            new[] {new ElementReference("env1")})
+                            new[] {new ElementReference("env1")},
+                            Enumerable.Empty<DeploymentActionPackage>())
                     })
             });
             var scope = new Dictionary<VariableScopeType, IEnumerable<ElementReference>>
@@ -542,7 +545,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                         new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
                             CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
                             CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
-                            new[] {new ElementReference("env1")}),
+                            new[] {new ElementReference("env1")},
+                            Enumerable.Empty<DeploymentActionPackage>()),
                     })
             });
             var scope = new Dictionary<VariableScopeType, IEnumerable<ElementReference>>
