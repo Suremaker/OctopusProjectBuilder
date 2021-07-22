@@ -74,7 +74,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
 
         public static async Task UpdateWith(this IDictionary<string, PropertyValueResource> resource,
             IOctopusAsyncRepository repository,
-            IReadOnlyDictionary<string, PropertyValue> model,
+            IDictionary<string, PropertyValue> model,
             IDictionary<string, PropertyValueResource> oldProperties)
         {
             foreach (var keyValuePair in model)

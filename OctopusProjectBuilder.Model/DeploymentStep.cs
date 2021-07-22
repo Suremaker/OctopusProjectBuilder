@@ -10,7 +10,7 @@ namespace OctopusProjectBuilder.Model
         public StepCondition Condition { get; }
         public bool RequiresPackagesToBeAcquired { get; }
         public StepStartTrigger StartTrigger { get; }
-        public IReadOnlyDictionary<string, PropertyValue> Properties { get; }
+        public IDictionary<string, PropertyValue> Properties { get; }
         public IEnumerable<DeploymentAction> Actions { get; }
 
         public enum StepCondition
@@ -27,7 +27,9 @@ namespace OctopusProjectBuilder.Model
             StartWithPrevious
         }
 
-        public DeploymentStep(string name, StepCondition condition, bool requiresPackagesToBeAcquired, StepStartTrigger startTrigger, IReadOnlyDictionary<string, PropertyValue> properties, IEnumerable<DeploymentAction> actions)
+        public DeploymentStep(string name, StepCondition condition, bool requiresPackagesToBeAcquired, 
+            StepStartTrigger startTrigger, IDictionary<string, PropertyValue> properties, 
+            IEnumerable<DeploymentAction> actions)
         {
             Name = name;
             Condition = condition;

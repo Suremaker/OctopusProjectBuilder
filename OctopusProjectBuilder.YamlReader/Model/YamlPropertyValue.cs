@@ -32,12 +32,12 @@ namespace OctopusProjectBuilder.YamlReader.Model
         [YamlMember(Order = 4)]
         public bool IsSensitive { get; set; }
 
-        public static IReadOnlyDictionary<string, PropertyValue> ToModel(YamlPropertyValue[] properties)
+        public static IDictionary<string, PropertyValue> ToModel(YamlPropertyValue[] properties)
         {
             return properties.EnsureNotNull().ToDictionary(kv => kv.Key, kv => new PropertyValue(kv.IsSensitive, kv.File != null ? System.IO.File.ReadAllText(kv.File) : kv.Value, kv.ValueType));
         }
 
-        public static YamlPropertyValue[] FromModel(IReadOnlyDictionary<string, PropertyValue> properties)
+        public static YamlPropertyValue[] FromModel(IDictionary<string, PropertyValue> properties)
         {
             return properties.EnsureNotNull().Select(kv => new YamlPropertyValue { IsSensitive = kv.Value.IsSensitive, Value = kv.Value.Value, ValueType = kv.Value.ValueType, Key = kv.Key }).ToArray().NullIfEmpty();
         }

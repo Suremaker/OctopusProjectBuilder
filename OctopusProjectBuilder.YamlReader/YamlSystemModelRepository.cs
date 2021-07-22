@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.YamlReader.Helpers;
@@ -28,6 +30,11 @@ namespace OctopusProjectBuilder.YamlReader
             return model.ApplyTemplates().BuildWith(new SystemModelBuilder()).Build();
         }
 
+        public void Save(SystemModel model, string modelDirectory)
+        {
+            Save(model, modelDirectory, async yaml => { });
+        }
+
         private YamlOctopusModel[] LoadModels(string path)
         {
             _logger.LogInformation($"Loading: {Path.GetFileName(path)}");
@@ -51,11 +58,16 @@ namespace OctopusProjectBuilder.YamlReader
                 return _reader.Read(stream);
         }
 
-        public void Save(SystemModel model, string modelDirectory)
+        public async Task Save(SystemModel model, string modelDirectory, Func<YamlOctopusModel, Task> modelManipulator)
         {
             Directory.CreateDirectory(modelDirectory);
             foreach (var splitModel in model.SplitModel().Select(YamlOctopusModel.FromModel))
+            {
+                if (splitModel != null)
+                    await modelManipulator(splitModel);
+                
                 SaveModel(splitModel, GetModelPath(splitModel, modelDirectory));
+            }
         }
 
         private void SaveModel(YamlOctopusModel model, string path)

@@ -14,7 +14,6 @@ namespace OctopusProjectBuilder.YamlReader.Model
     {
         [Description("Template Id")]
         [YamlMember(Order = 1)]
-        [DefaultValue("")]
         public string Id { get; set; } = "";
         
         [Description("Variable name.")]

@@ -9,12 +9,12 @@ namespace OctopusProjectBuilder.Model
         public bool IsDisabled { get; }
         public ActionCondition Condition { get; }
         public string ActionType { get; }
-        public IReadOnlyDictionary<string, PropertyValue> Properties { get; }
+        public IDictionary<string, PropertyValue> Properties { get; }
         public IEnumerable<ElementReference> EnvironmentRefs { get; }
         public IEnumerable<DeploymentActionPackage> Packages { get;  }
 
         public DeploymentAction(string name, bool isDisabled, ActionCondition condition, 
-            string actionType, IReadOnlyDictionary<string, PropertyValue> properties,
+            string actionType, IDictionary<string, PropertyValue> properties,
             IEnumerable<ElementReference> environmentRefs,
             IEnumerable<DeploymentActionPackage> packages)
         {

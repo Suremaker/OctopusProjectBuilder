@@ -7,6 +7,7 @@
         public string OctopusApiKey { get; set; }
         public string ProjectName { get; set; }
         public string DefinitionsDir { get; set; }
+        public bool Normalize { get; set; }
         public Verb Action { get; set; }
     }
 }
