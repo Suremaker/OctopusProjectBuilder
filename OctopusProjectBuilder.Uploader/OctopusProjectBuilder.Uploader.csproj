@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Common.Logging" Version="3.4.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.2" />
-    <PackageReference Include="Octopus.Client" Version="4.39.4" />
+    <PackageReference Include="Octopus.Client" Version="11.2.3274" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Octopus.Client;
@@ -19,19 +20,40 @@ namespace OctopusProjectBuilder.Uploader
             _logger = loggerFactory.CreateLogger<ModelDownloader>();
         }
 
-        public async Task<SystemModel> DownloadModel()
+        public async Task<SystemModel> DownloadModel(string projectName = null)
         {
+            List<ProjectResource> projects;
+            projects = projectName != null ?
+                Enumerable.Repeat(await _repository.Projects.FindByName(projectName), 1).ToList() :
+                (await _repository.Projects.FindAll()).ToList();
+
+            List<ChannelResource> channels;
+            channels = projectName != null ?
+                (await _repository.Channels.FindMany(c => projects.Any(p => p.Id == c.ProjectId))).ToList() :
+                (await _repository.Channels.FindAll()).ToList();
+            
+            List<RunbookResource> runbooks;
+            runbooks = projectName != null ?
+                (await _repository.Runbooks.FindMany(c => projects.Any(p => p.Id == c.ProjectId))).ToList() :
+                (await _repository.Runbooks.FindAll()).ToList();
+            
             return new SystemModel(
-                await Task.WhenAll((await _repository.MachinePolicies.FindAll()).Select(ReadMachinePolicy)),
+                await Task.WhenAll((await _repository.MachinePolicies.FindMany(x => false)).Select(ReadMachinePolicy)),
                 await Task.WhenAll((await _repository.Lifecycles.FindAll()).Select(ReadLifecycle)),
-                await Task.WhenAll((await _repository.ProjectGroups.FindAll()).Select(ReadProjectGroup)),
-                await Task.WhenAll((await _repository.LibraryVariableSets.FindAll()).Select(ReadLibraryVariableSet)),
-                await Task.WhenAll((await _repository.Projects.FindAll()).Select(ReadProject)),
+                await Task.WhenAll((await _repository.ProjectGroups.FindAll())
+                    .Where(g => projectName == null || projects.Any(p => p.ProjectGroupId == g.Id))
+                    .Select(ReadProjectGroup)),
+                await Task.WhenAll((await _repository.LibraryVariableSets.FindAll())
+                    .Where(v => projectName == null || projects.Any(p => p.IncludedLibraryVariableSetIds.Contains(v.Id)))
+                    .Select(ReadLibraryVariableSet)),
+                await Task.WhenAll(projects.Select(ReadProject)),
+                await Task.WhenAll(channels.Select(ReadChannel)),
                 await Task.WhenAll((await _repository.Environments.FindAll()).Select(ReadEnvironment)),
-                await Task.WhenAll((await _repository.UserRoles.FindAll()).Select(ReadUserRole)),
-                await Task.WhenAll((await _repository.Teams.FindAll()).Select(ReadTeam)),
-                await Task.WhenAll((await _repository.Tenants.FindAll()).Select(ReadTenant)),
-                await Task.WhenAll((await _repository.TagSets.FindAll()).Select(ReadTagSet)));
+                await Task.WhenAll((await _repository.UserRoles.FindMany(x => false)).Select(ReadUserRole)),
+                await Task.WhenAll((await _repository.Teams.FindMany(x => false)).Select(ReadTeam)),
+                await Task.WhenAll((await _repository.Tenants.FindMany(x => false)).Select(ReadTenant)),
+                await Task.WhenAll((await _repository.TagSets.FindMany(x => false)).Select(ReadTagSet)),
+                await Task.WhenAll(runbooks.Select(ReadRunbook)));
         }
 
         private async Task<MachinePolicy> ReadMachinePolicy(MachinePolicyResource resource)
@@ -55,6 +77,12 @@ namespace OctopusProjectBuilder.Uploader
         private async Task<Project> ReadProject(ProjectResource resource)
         {
             _logger.LogInformation($"Downloading {nameof(ProjectResource)}: {resource.Name}");
+            return await resource.ToModel(_repository);
+        }
+        
+        private async Task<Channel> ReadChannel(ChannelResource resource)
+        {
+            _logger.LogInformation($"Downloading {nameof(ChannelResource)}: {resource.Name}");
             return await resource.ToModel(_repository);
         }
 
@@ -92,6 +120,12 @@ namespace OctopusProjectBuilder.Uploader
         {
             _logger.LogInformation($"Downloading {nameof(TagSetResource)}: {resource.Name}");
             return await Task.FromResult(resource.ToModel(_repository));
+        }
+        
+        private async Task<Runbook> ReadRunbook(RunbookResource resource)
+        {
+            _logger.LogInformation($"Downloading {nameof(Runbook)}: {resource.Name}");
+            return await resource.ToModel(_repository);
         }
     }
 }

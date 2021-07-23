@@ -10,13 +10,13 @@ namespace OctopusProjectBuilder.Uploader.Converters
         {
             resource.Name = model.Identifier.Name;
             resource.Description = model.Description;
-            resource.GrantedPermissions = model.Permissions.Select(p => (Octopus.Client.Model.Permission)p).ToList();
+            resource.GrantedSystemPermissions = model.Permissions.Select(p => (Octopus.Client.Model.Permission)p).ToList();
             return resource;
         }
 
         public static UserRole ToModel(this UserRoleResource resource)
         {
-            var permissions = resource.GrantedPermissions.Select(PermissionConverter.ToModel);
+            var permissions = resource.GrantedSystemPermissions.Select(PermissionConverter.ToModel);
             return new UserRole(new ElementIdentifier(resource.Name), resource.Description, permissions);
         }
     }

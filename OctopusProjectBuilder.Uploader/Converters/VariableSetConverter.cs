@@ -16,7 +16,12 @@ namespace OctopusProjectBuilder.Uploader.Converters
 
         public static async Task<VariableSetResource> UpdateWith(this VariableSetResource resource, IVariableSet model, IOctopusAsyncRepository repository, DeploymentProcessResource deploymentProcess, ProjectResource project)
         {
-            resource.Variables = (await Task.WhenAll(model.Variables.Select(v => new VariableResource().UpdateWith(v, repository, deploymentProcess, project)))).ToList();
+            if (model.Variables != null)
+            {
+                resource.Variables = (await Task.WhenAll(model.Variables.Select(v =>
+                    new VariableResource().UpdateWith(v, repository, deploymentProcess, project)))).ToList();
+            }
+
             return resource;
         }
     }

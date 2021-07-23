@@ -70,7 +70,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 case ScopeField.TenantTag:
                     return new ElementReference(id);
                 default:
-                    throw new InvalidOperationException($"Unsupported ScopeField: {key}");
+                    return new ElementReference(id);
             }
         }
 

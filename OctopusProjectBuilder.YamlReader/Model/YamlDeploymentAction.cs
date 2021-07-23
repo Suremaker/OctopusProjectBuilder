@@ -16,21 +16,33 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
         [Description("Unique name.")]
         [YamlMember(Order = 1)]
         public string Name { get; set; }
+        
+        [Description("Defines if this action is disabled.")]
+        [YamlMember(Order = 2)]
+        public bool IsDisabled { get; set; }
 
         [Description("Indicates that the resource is template based.")]
-        [YamlMember(Order = 2)]
+        [YamlMember(Order = 3)]
         public YamlTemplateReference UseTemplate { get; set; }
 
         [Description("Action type.")]
-        [YamlMember(Order = 3)]
+        [YamlMember(Order = 4)]
         public string ActionType { get; set; }
+        
+        [Description("Action run condition.")]
+        [YamlMember(Order = 5)]
+        public DeploymentAction.ActionCondition Condition { get; set; }
 
         [Description("List of Environment references (based on the name) where action would be performed on. If none are specified, then action would be performed on all environments.")]
-        [YamlMember(Order = 4)]
+        [YamlMember(Order = 6)]
         public string[] EnvironmentRefs { get; set; }
+        
+        [Description("Action package references.")]
+        [YamlMember(Order = 7)]
+        public YamlDeploymentActionPackage[] Packages { get; set; }
 
         [Description("Action properties.")]
-        [YamlMember(Order = 5)]
+        [YamlMember(Order = 8)]
         public YamlPropertyValue[] Properties { get; set; }
 
         public void ApplyTemplate(YamlTemplates templates)
@@ -43,6 +55,8 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
             return new YamlDeploymentAction
             {
                 Name = model.Name,
+                IsDisabled = model.IsDisabled,
+                Condition = model.Condition,
                 ActionType = model.ActionType,
                 Properties = YamlPropertyValue.FromModel(model.Properties),
                 EnvironmentRefs = model.EnvironmentRefs.Select(r => r.Name).ToArray().NullIfEmpty()
@@ -51,7 +65,10 @@ Because Octopus Action definitions are generic (based on ActionType and list of 
 
         public DeploymentAction ToModel()
         {
-            return new DeploymentAction(Name, ActionType, YamlPropertyValue.ToModel(Properties), EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)));
+            return new DeploymentAction(Name, IsDisabled, Condition, ActionType,
+                YamlPropertyValue.ToModel(Properties),
+                EnvironmentRefs.EnsureNotNull().Select(name => new ElementReference(name)),
+                Packages.EnsureNotNull().Select(x => x.ToModel()));
         }
     }
 }

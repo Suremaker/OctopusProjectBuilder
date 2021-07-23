@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "OctopusProjectBuilder.Console": {
-      "commandName": "Project",
-      "commandLineArgs": "--action upload -octopusUrl \\\"http://localhost:xxxx\\\" --octopusApiKey \\\"octopus api key\\\" --definitions \\\"path to definitions\\\""
-    }
-  }
-}

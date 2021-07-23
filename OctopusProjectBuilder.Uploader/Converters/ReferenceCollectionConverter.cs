@@ -25,7 +25,7 @@ namespace OctopusProjectBuilder.Uploader.Converters
                 return new ElementReference(resource.Name);
             });
         }
-
+        
         public static void UpdateWith(this IDictionary<string, ReferenceCollection> resource, IReadOnlyDictionary<string, IEnumerable<ElementReference>> model)
         {
             resource.Clear();

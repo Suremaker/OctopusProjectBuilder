@@ -45,6 +45,12 @@ namespace OctopusProjectBuilder.Uploader
 
             foreach (var project in model.Projects)
                 await UploadProject(project);
+            
+            foreach (var runbook in model.Runbooks)
+                await UploadRunbook(runbook);
+            
+            foreach (var channel in model.Channels)
+                await UploadChannel(channel);
 
             foreach (var tenant in model.Tenants)
                 await UploadTenant(tenant);
@@ -115,7 +121,33 @@ namespace OctopusProjectBuilder.Uploader
                 variableSetResource,
                 projectResource.Name);
 
-            await UploadProjectTriggers(projectResource, project.Triggers);
+            if (project.Triggers != null)
+            {
+                await UploadProjectTriggers(projectResource, project.Triggers);
+            }
+        }
+        
+        private async Task UploadRunbook(Runbook runbook)
+        {
+            var runbookResource = await LoadResource(_repository.Runbooks, runbook.Identifier);
+            await runbookResource.UpdateWith(runbook, _repository);
+            var response = await Upsert(_repository.Runbooks, runbookResource);
+            runbookResource.RunbookProcessId = response.RunbookProcessId;
+
+            var runbookProcessResource = await _repository.RunbookProcesses.Get(runbookResource.RunbookProcessId);
+            await runbookProcessResource.UpdateWith(runbook.Process, _repository);
+
+            await Update(_repository.RunbookProcesses,
+                runbookProcessResource,
+                runbookResource.Name);
+        }
+        
+        private async Task UploadChannel(Channel channel)
+        {
+            var projectResource = await LoadResource(_repository.Projects, new ElementIdentifier(channel.ProjectName));
+            var resource = await LoadResource(name => _repository.Channels.FindByName(projectResource, name), channel.Identifier);
+            await resource.UpdateWith(channel, _repository);
+            await Upsert(_repository.Channels, resource);
         }
 
         private async Task UploadProjectTriggers(ProjectResource projectResource, IEnumerable<ProjectTrigger> triggers)

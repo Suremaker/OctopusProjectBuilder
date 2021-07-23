@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
-using OctopusProjectBuilder.Uploader.Tests.Helpers;
+using OctopusProjectBuilder.Uploader;
 using TenantedDeploymentMode = OctopusProjectBuilder.Model.TenantedDeploymentMode;
 
 namespace OctopusProjectBuilder.Uploader.Tests
@@ -63,7 +63,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
         private static SystemModel CreateProjectModel(string lifecycleRef, string projectGroupRef, params Variable[] variables)
         {
             var deploymentProcess = new DeploymentProcess(new DeploymentStep[0]);
-            var project = new Project(new ElementIdentifier("prj"), string.Empty, false, false, false, deploymentProcess, variables, new ElementReference[0], new ElementReference(lifecycleRef), new ElementReference(projectGroupRef), null, Enumerable.Empty<ProjectTrigger>(), TenantedDeploymentMode.TenantedOrUntenanted);
+            var project = new Project(new ElementIdentifier("prj"), string.Empty, false, false, false, deploymentProcess, variables, new ElementReference[0], new ElementReference(lifecycleRef), new ElementReference(projectGroupRef), null, Enumerable.Empty<ProjectTrigger>(), TenantedDeploymentMode.TenantedOrUntenanted, Enumerable.Empty<ActionTemplateParameterResource>());
 
             return new SystemModelBuilder().AddProject(project).Build();
         }

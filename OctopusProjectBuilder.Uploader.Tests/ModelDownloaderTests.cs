@@ -7,7 +7,7 @@ using NUnit.Framework;
 using Octopus.Client.Model;
 using OctopusProjectBuilder.Model;
 using OctopusProjectBuilder.TestUtils;
-using OctopusProjectBuilder.Uploader.Tests.Helpers;
+using OctopusProjectBuilder.Uploader;
 using Environment = OctopusProjectBuilder.Model.Environment;
 using Permission = OctopusProjectBuilder.Model.Permission;
 using TenantedDeploymentMode = OctopusProjectBuilder.Model.TenantedDeploymentMode;
@@ -157,7 +157,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<ElementReference>(),
                     new ElementReference("lifecycle1"),
                     new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>(),
-                    TenantedDeploymentMode.TenantedOrUntenanted))
+                    TenantedDeploymentMode.TenantedOrUntenanted,
+                    Enumerable.Empty<ActionTemplateParameterResource>()))
                 .Build();
 
             _repository.Lifecycles.Create(new LifecycleResource { Name = "lifecycle1" });
@@ -174,7 +175,8 @@ namespace OctopusProjectBuilder.Uploader.Tests
                     Enumerable.Empty<ElementReference>(),
                     new ElementReference("lifecycle1"),
                     new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>(),
-                    TenantedDeploymentMode.TenantedOrUntenanted))
+                    TenantedDeploymentMode.TenantedOrUntenanted,
+                    Enumerable.Empty<ActionTemplateParameterResource>()))
                 .Build();
             _uploader.UploadModel(model2).GetAwaiter();
 
@@ -204,22 +206,28 @@ namespace OctopusProjectBuilder.Uploader.Tests
             {
                 new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(),
                     CreateItem<DeploymentStep.StepStartTrigger>(),
-                    CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new[]
+                    CreateItem<IDictionary<string, PropertyValue>>(), new[]
                     {
-                        new DeploymentAction(CreateItem<string>(), CreateItem<string>(),
-                            CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
-                            new[] {new ElementReference("env1")}),
-                        new DeploymentAction(CreateItem<string>(), CreateItem<string>(),
-                            CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
-                            new[] {new ElementReference("env2")})
+                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
+                            CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
+                            CreateItem<IDictionary<string, PropertyValue>>(),
+                            new[] {new ElementReference("env1")},
+                            Enumerable.Empty<DeploymentActionPackage>()),
+                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
+                            CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
+                            CreateItem<IDictionary<string, PropertyValue>>(),
+                            new[] {new ElementReference("env2")},
+                            Enumerable.Empty<DeploymentActionPackage>())
                     }),
                 new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(),
                     CreateItem<DeploymentStep.StepStartTrigger>(),
-                    CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new[]
+                    CreateItem<IDictionary<string, PropertyValue>>(), new[]
                     {
-                        new DeploymentAction(CreateItem<string>(), CreateItem<string>(),
-                            CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
-                            new[] {new ElementReference("env1")})
+                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
+                            CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
+                            CreateItem<IDictionary<string, PropertyValue>>(),
+                            new[] {new ElementReference("env1")},
+                            Enumerable.Empty<DeploymentActionPackage>())
                     })
             });
             var scope = new Dictionary<VariableScopeType, IEnumerable<ElementReference>>
@@ -248,13 +256,13 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 new[] { new ElementReference(libraryVariableSet.Identifier.Name) },
                 new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name),
                 CreateItem<VersioningStrategy>(), Enumerable.Empty<ProjectTrigger>(),
-                TenantedDeploymentMode.TenantedOrUntenanted);
+                TenantedDeploymentMode.TenantedOrUntenanted, Enumerable.Empty<ActionTemplateParameterResource>());
             var project2 = new Project(CreateItemWithRename<ElementIdentifier>(false), CreateItem<string>(),
                 CreateItem<bool>(), CreateItem<bool>(), CreateItem<bool>(), deploymentProcess, variables,
                 new[] { new ElementReference(libraryVariableSet.Identifier.Name) },
                 new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name),
                 null, new[] { CreateProjectTrigger("m1", "env1"), CreateProjectTrigger("m2", "env2") },
-                TenantedDeploymentMode.TenantedOrUntenanted);
+                TenantedDeploymentMode.TenantedOrUntenanted, Enumerable.Empty<ActionTemplateParameterResource>());
 
             var expected = new SystemModelBuilder()
                 .AddProject(project1)
@@ -532,11 +540,13 @@ namespace OctopusProjectBuilder.Uploader.Tests
             {
                 new DeploymentStep(CreateItem<string>(), CreateItem<DeploymentStep.StepCondition>(), CreateItem<bool>(),
                     CreateItem<DeploymentStep.StepStartTrigger>(),
-                    CreateItem<IReadOnlyDictionary<string, PropertyValue>>(), new[]
+                    CreateItem<IDictionary<string, PropertyValue>>(), new[]
                     {
-                        new DeploymentAction(CreateItem<string>(), CreateItem<string>(),
-                            CreateItem<IReadOnlyDictionary<string, PropertyValue>>(),
-                            new[] {new ElementReference("env1")}),
+                        new DeploymentAction(CreateItem<string>(), CreateItem<bool>(),
+                            CreateItem<DeploymentAction.ActionCondition>(), CreateItem<string>(),
+                            CreateItem<IDictionary<string, PropertyValue>>(),
+                            new[] {new ElementReference("env1")},
+                            Enumerable.Empty<DeploymentActionPackage>()),
                     })
             });
             var scope = new Dictionary<VariableScopeType, IEnumerable<ElementReference>>
@@ -556,7 +566,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 new[] { new ElementReference(libraryVariableSet.Identifier.Name) },
                 new ElementReference(lifecycle.Identifier.Name), new ElementReference(projectGroup.Identifier.Name),
                 CreateItem<VersioningStrategy>(), Enumerable.Empty<ProjectTrigger>(),
-                TenantedDeploymentMode.TenantedOrUntenanted);
+                TenantedDeploymentMode.TenantedOrUntenanted, Enumerable.Empty<ActionTemplateParameterResource>());
 
             var tenant = new Tenant(new ElementIdentifier("t1"),
                 new[] { new ElementReference(tagset.Identifier.Name) },
@@ -596,7 +606,7 @@ namespace OctopusProjectBuilder.Uploader.Tests
                 Enumerable.Empty<ElementReference>(),
                 new ElementReference("lifecycle1"),
                 new ElementReference("group1"), null, Enumerable.Empty<ProjectTrigger>(),
-                TenantedDeploymentMode.TenantedOrUntenanted);
+                TenantedDeploymentMode.TenantedOrUntenanted, Enumerable.Empty<ActionTemplateParameterResource>());
             var environment1 = new Environment(new ElementIdentifier("env1"), CreateItem<string>());
 
             var team = new Team(
