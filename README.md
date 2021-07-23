@@ -23,6 +23,10 @@ To see the yaml configuration manual, please take a look at [Configuration Manua
 
 * [Project Groups](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlProjectGroup)
 * [Projects](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlProject)
+  * Variables
+  * Variable Templates
+  * Runbooks
+  * Release Channels
 * [Lifecycles](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlLifecycle)
 * [Library Variable Sets](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlLibraryVariableSet) \(including script modules\)
 * [Environments](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlEnvironment)
@@ -34,6 +38,7 @@ OctopusProjectBuilder allows template definition for most repetative configurati
 * Projects - see [Project Templates](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlProjectTemplate)
 * Project Steps - see [Deployment Step Templates](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlDeploymentStepTemplate)
 * Project Step Actions - see [Deployment Action Templates](https://github.com/Suremaker/OctopusProjectBuilder/wiki/Manual#YamlDeploymentActionTemplate)
+* Project Runbooks
 
 It is possible to create parameterized templates with ability to parameterize any properties of string type.
 It is also possible to use templates for lower configuration sections in template of higher configuration sections. For example The Project template can use Step templates that can be composed from Action templates.
@@ -49,8 +54,11 @@ The OctopusProjectBuilder.Console.exe requires following paramters:
 |d:definitions|Definitions directory|
 |k:octopusApiKey|Octopus API key|
 |u:octopusUrl|Octopus Url|
+|p:projectName|Project name to restrict download for|
+|n:normalize|Normalize downloaded YAML and split out scripts into unique files|
 
 The **download** action allows to download the current Octopus configuration to the target directory,
+the **validate** action allows to validate (stage) the downloaded YAML configuration in an existing directory,
 the **upload** action allows to apply the yaml configuration on Octopus server, while
 the **cleanupConfig** action allows to rewrite the configuration, and it is helpful to reorder nodes, reformats parameters or remove the entries with default values.
 
